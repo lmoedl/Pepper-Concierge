@@ -1,0 +1,175 @@
+\documentclass[
+    DIV12,
+    %cleardouble=plain,
+    headings=normal,
+    pdftex,
+    %headexclude,footexclude,
+    final,
+    bibliography=totocnumbered
+    %draft
+]{scrreprt}
+
+\usepackage{spreadtab}
+\usepackage{xspace}
+\usepackage[ngerman]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[pdftex]{graphicx}
+\usepackage[bookmarks]{hyperref}
+\usepackage{scrpage2}
+\usepackage{longtable}
+\usepackage{caption, booktabs}
+\usepackage{pgf}
+\usepackage{float}
+\usepackage{xcolor}
+\usepackage{colortbl}
+\usepackage{relsize}
+\usepackage{fancyvrb}
+\usepackage{pdfpages} 
+\usepackage{multirow}
+\usepackage{tabularx}
+\usepackage{geometry}
+\usepackage{multicol}
+\usepackage{multido}
+\usepackage{listings}
+%\usepackage{hyperref}
+\usepackage[autostyle]{csquotes}
+\usepackage{eurosym}
+\usepackage{subfigure}
+
+\lstset{breaklines=true,
+breakatwhitespace = true,
+postbreak=\raisebox{0ex}[0ex][0ex]{\ensuremath{\color{red}\hookrightarrow\space}},
+escapechar=\^
+%literate={\_}{}{0\discretionary{\_}{}{\_}}%
+}
+
+%clearpage
+
+
+\usepackage[
+	backend=biber,       % Sortier-Compiler
+    style=verbose-trad2, % Zitationsstil   
+   sorting=nyt,        % Sortiervorschrift
+   abbreviate=false,   % Abkürzungen
+   % block=ragged        % Flattersatz
+       ]{biblatex}
+\bibliography{mybib}
+\bibstyle{IEEEtran}
+
+\newcommand{\tabitem}{~~\llap{\textbullet}~~}
+
+\graphicspath{{./}{./images/}{./chapter/images/}}
+
+ 
+
+% #################################################################
+
+%\hyphenation{Cha-otn-gsch-werl}
+%\setlength\headheight{1.75cm}
+
+\ihead{\includegraphics[height=0.05\textheight]{HS_Hof_Logo}}
+\chead{}
+\ohead{\includegraphics[height=0.05\textheight]{audi_logo}}
+\pagestyle{scrheadings}
+
+\setcounter{secnumdepth}{3}
+\setcounter{tocdepth}{3}
+\renewcommand{\arraystretch}{1}
+
+%\parskip0.5\baselineskip plus 0.125\baselineskip minus 0.25\baselineskip
+\parindent0em
+
+% #################################################################
+
+%\def\SECH{S\kern-.075em \lower.5ex\hbox{E}\kern-0.05em CH\xspace}
+%\def\SEARCH{S\kern-.075em \lower.5ex\hbox{E}\kern-0.05em AR\kern-.075em \raise.5ex\hbox{C}\kern-0.05em H\xspace}
+
+% #################################################################
+
+% ########Farbanpassung HS Hof #########
+\definecolor{HSHofgrey}{HTML}{646466}
+
+\addtokomafont{chapter}{\color{HSHofgrey}}
+\addtokomafont{section}{\color{HSHofgrey}}
+\addtokomafont{caption}{\color{HSHofgrey}}
+\addtokomafont{subsection}{\color{HSHofgrey}}
+\addtokomafont{subsubsection}{\color{HSHofgrey}}
+\setkomafont{captionlabel}{\color{HSHofgrey}}
+
+
+
+
+\automark[section]{chapter}
+\titlehead{{ \hfill \includegraphics[width = 0.5\textwidth]{HS_Hof_Logo} \hfill
+\includegraphics[width = 0.4\textwidth]{audi_logo}}
+\hfill
+}
+\subject{Bachelorarbeit}
+\title{In-App-Purchase für Lichtassistenzsysteme im Fahrzeug am Beispiel von Außenlichtfunktionen}
+\subtitle{\Large zur Erlangung des akademischen Grades \\
+Bachelor of Science}
+\author{vorgelegt von \\ \textbf{Lothar Mödl}}
+\date{
+\begin{tabular}{rl}
+\textbf{Studiengang:} & Mobile Computing \\\textbf{Fakultät:} & Informatik \\
+\end{tabular}
+}
+\publishers{\vfill
+	\begin{tabular}{rl}
+\textbf{Ausgabetermin}: & 16.01.2017  \\	
+\textbf{Abgabetermin}:  & 17.02.2017 \\	
+%   & \\	
+\textbf{Erstprüfer}:    & Prof. Dr. Peter Stöhr \\	
+\textbf{Zweitprüfer}:  & Prof. Dr. Michael Stepping\\	
+\textbf{Betreuer}: & Junhao Chen\\
+	\end{tabular}}
+
+
+%\author{Lothar Mödl}
+%\date{Version 0.0.1}
+
+% #################################################################
+
+\begin{document}
+\flushbottom
+\include{lstlisting_swift}
+\maketitle
+
+\pagenumbering{arabic}
+\tableofcontents
+% Kapitel 1
+\include{chapter/kapitel_01}
+				\cleardoublepage	
+
+			% Kapitel 2
+			\include{chapter/kapitel_02}
+			
+				\cleardoublepage	
+			% Kapitel 3
+			\include{chapter/kapitel_03}
+				\cleardoublepage
+			% Kapitel 4
+			\include{chapter/kapitel_04}
+				\cleardoublepage
+			\include{chapter/kapitel_05}
+			
+			\cleardoublepage
+			\include{chapter/kapitel_06}
+			
+			\cleardoublepage
+			\include{chapter/Verwendung}
+		
+			\cleardoublepage
+			\include{chapter/ausblick}
+			%\cleardoublepage
+			\printbibliography
+			%\include{chapter/Screenshots}	
+
+			% Literaturverzeichnis
+			% \nocite{*}
+			
+
+\listoffigures
+
+\end{document}
