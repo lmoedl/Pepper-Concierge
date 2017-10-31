@@ -24,7 +24,13 @@ import java.util.logging.Logger;
  */
 public class ConnectionManager {
     private String basicUrl = "http://192.168.0.11:8080/rest/";
-    
+
+    public ConnectionManager(String basicUrl) {
+        this.basicUrl = basicUrl;
+    }
+
+    public ConnectionManager() {
+    }
     
     public void sendPostRequest(String path, String data){
         try {
@@ -42,11 +48,23 @@ public class ConnectionManager {
             InputStream inputStream = connection.getInputStream();
             System.out.println(connection.getResponseCode());
             
+            inputStream.close();
+            outputStream.close();
+            connection.disconnect();
+            
         } catch (MalformedURLException ex) {
             Logger.getLogger(ConnectionManager.class.getName()).log(Level.SEVERE, null, ex);
         } catch (IOException ex) {
             Logger.getLogger(ConnectionManager.class.getName()).log(Level.SEVERE, null, ex);
         }
         
+    }
+
+    public String getBasicUrl() {
+        return basicUrl;
+    }
+
+    public void setBasicUrl(String basicUrl) {
+        this.basicUrl = basicUrl;
     }
 }

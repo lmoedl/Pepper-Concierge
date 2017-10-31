@@ -23,6 +23,9 @@ import com.aldebaran.qi.helper.proxies.ALSoundLocalization;
 import com.aldebaran.qi.helper.proxies.ALSpeechRecognition;
 import com.aldebaran.qi.helper.proxies.ALTextToSpeech;
 import com.aldebaran.qi.helper.proxies.ALTracker;
+import com.vmichalak.sonoscontroller.SonosDevice;
+import com.vmichalak.sonoscontroller.exception.SonosControllerException;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -211,7 +214,7 @@ public class BasicBehaviour {
                     //animatedSpeech.async().say("^start(animations/Stand/Waiting/MysticalPower_1) Es werde Licht! ^wait(animations/Stand/Waiting/MysticalPower_1)");
                     
                     //animationPlayer.run("animations/Stand/Waiting/Binoculars_1");
-                    animatedSpeech.async().say("Was kann ich für dich tun?");
+                    /*animatedSpeech.async().say("Was kann ich für dich tun?");
                     
                     
                     ArrayList<String> words2 = new ArrayList<>();
@@ -223,7 +226,10 @@ public class BasicBehaviour {
                     speechRecognition.setVocabulary(words2, Boolean.FALSE);
                     speechRecognition.pause(false);
                     speechRecognition.subscribe(Constants.APP_NAME);
-                    memory.subscribeToEvent("WordRecognized", "onWordRecognizedForMovingDemo::(m)", this);
+                    memory.subscribeToEvent("WordRecognized", "onWordRecognizedForMovingDemo::(m)", this);*/
+                    
+                    SonosDevice sonos = new SonosDevice("192.168.0.143");
+                    sonos.playUri("http://mp3.stream.tb-group.fm/tb.mp3?", "Technobase.fm");
                     
                     
                     break;
@@ -414,7 +420,7 @@ System.out.println("onHumanTracked: " + humanID);
         }
     }
     
-    public void onWordRecognizedForMovingDemo(Object words) throws InterruptedException, CallError {
+    public void onWordRecognizedForMovingDemo(Object words) throws InterruptedException, CallError, IOException, SonosControllerException {
         speechRecognition.pause(true);
         awareness.pauseAwareness();
 
@@ -452,6 +458,12 @@ System.out.println("onHumanTracked: " + humanID);
              case "aus":
                  connectionManager.sendPostRequest("items/Multimediawand_HUE6_Toggle", "OFF");
                  connectionManager.sendPostRequest("items/HMScheibentransparenz2_1_State", "ON");
+                 break;
+                 
+             case "sonos":
+                 SonosDevice sonos = new SonosDevice("192.168.0.143");
+                 sonos.playUri("http://mp3.stream.tb-group.fm/tb.mp3?", null);
+                 
                  break;
          }
          
