@@ -207,7 +207,24 @@ public class BasicBehaviour {
                     break;
                     
                 case Constants.Steps.STEP_COCHLOVIUS:
-                    demo();
+                    //demo();
+                    //animatedSpeech.async().say("^start(animations/Stand/Waiting/MysticalPower_1) Es werde Licht! ^wait(animations/Stand/Waiting/MysticalPower_1)");
+                    
+                    //animationPlayer.run("animations/Stand/Waiting/Binoculars_1");
+                    animatedSpeech.async().say("Was kann ich für dich tun?");
+                    
+                    
+                    ArrayList<String> words2 = new ArrayList<>();
+                    words2.add("ein");
+                    words2.add("aus");
+                    
+
+                    speechRecognition.pause(true);
+                    speechRecognition.setVocabulary(words2, Boolean.FALSE);
+                    speechRecognition.pause(false);
+                    speechRecognition.subscribe(Constants.APP_NAME);
+                    memory.subscribeToEvent("WordRecognized", "onWordRecognizedForMovingDemo::(m)", this);
+                    
                     
                     break;
                     
@@ -404,7 +421,7 @@ System.out.println("onHumanTracked: " + humanID);
         String word = ((List<String>) words).get(0);
         System.out.println("Word " + word);
         
-        if(word.equals("ende")){
+        /*if(word.equals("ende")){
             
         }else {
             switch(word){
@@ -420,7 +437,26 @@ System.out.println("onHumanTracked: " + humanID);
                     break;
                 
             }
-        }
+        }*/
+        
+        ConnectionManager connectionManager = new ConnectionManager();
+                    
+         switch(word){
+             case "ein":
+                animatedSpeech.async().say("^start(animations/Stand/Waiting/MysticalPower_1) Es werde Licht! ^wait(animations/Stand/Waiting/MysticalPower_1)");
+
+                 connectionManager.sendPostRequest("items/Multimediawand_HUE6_Toggle", "ON");
+                 connectionManager.sendPostRequest("items/HMScheibentransparenz2_1_State", "OFF");
+                 break;
+                 
+             case "aus":
+                 connectionManager.sendPostRequest("items/Multimediawand_HUE6_Toggle", "OFF");
+                 connectionManager.sendPostRequest("items/HMScheibentransparenz2_1_State", "ON");
+                 break;
+         }
+         
+         //animatedSpeech.async().say("Und was jetzt?");
+         //speechRecognition.pause(false);
     }
 
 }
