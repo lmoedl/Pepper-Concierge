@@ -1,0 +1,186 @@
+Group	AlleDinge
+
+Group	Multimediawand (AlleDinge)
+Group	Bad (AlleDinge)
+Group	Allgemein (AlleDinge)
+
+Group	HueLeuchten (AlleDinge)
+Group	HueToggles (HueLeuchten)
+Group	HueDimmer (HueLeuchten)
+Group 	HueColor (HueLeuchten)
+Group	HueColorTemp (HueLeuchten)
+
+Group 	FMS (AlleDinge)
+Group 	FMSMotion (FMS)
+Group 	FMSTemperature (FMS)
+Group 	FMSLuminance (FMS)
+Group 	FMSBattery (FMS)
+Group 	FMSAlarm (FMS)
+
+Group 	HMTaster (AlleDinge)
+
+Group 	NetatmoLuftsensor (AlleDinge)
+
+Group 	Sonos (AlleDinge)
+
+Group:String:AND("CLOSED","OPEN") HMFenster (AlleDinge)
+
+Group 	HMFunkschalter (AlleDinge)
+
+
+//*** Multimediawand ***
+
+Switch Multimediawand_HUE1_Toggle 			"Multimediawand: Schalter Hue-Leuchte 1" 			<switch>			(Multimediawand, HueToggles)
+Switch Multimediawand_HUE2_Toggle 			"Multimediawand: Schalter Hue-Leuchte 2" 			<switch> 			(Multimediawand, HueToggles)
+Switch Multimediawand_HUE3_Toggle 			"Multimediawand: Schalter Hue-Leuchte 3" 			<switch>			(Multimediawand, HueToggles)
+Switch Multimediawand_HUE4_Toggle 			"Multimediawand: Schalter Hue-Leuchte 4" 			<switch>			(Multimediawand, HueToggles)
+Switch Multimediawand_HUE5_Toggle 			"Multimediawand: Schalter Hue-Leuchte 5" 			<switch>			(Multimediawand, HueToggles)
+Switch Multimediawand_HUE6_Toggle 			"Multimediawand: Schalter Hue-Leuchte 6" 			<switch>			(Multimediawand, HueToggles)
+
+Dimmer Multimediawand_HUE1_Dimmer 			"Multimediawand: Helligkeit Hue-Leuchte 1" 			<dimmablelight>		(Multimediawand, HueDimmer)
+Dimmer Multimediawand_HUE2_Dimmer 			"Multimediawand: Helligkeit Hue-Leuchte 2" 			<dimmablelight> 	(Multimediawand, HueDimmer)
+Dimmer Multimediawand_HUE3_Dimmer 			"Multimediawand: Helligkeit Hue-Leuchte 3" 			<dimmablelight>		(Multimediawand, HueDimmer)
+Dimmer Multimediawand_HUE4_Dimmer 			"Multimediawand: Helligkeit Hue-Leuchte 4" 			<dimmablelight>		(Multimediawand, HueDimmer)
+Dimmer Multimediawand_HUE5_Dimmer 			"Multimediawand: Helligkeit Hue-Leuchte 5" 			<dimmablelight>		(Multimediawand, HueDimmer)
+Dimmer Multimediawand_HUE6_Dimmer 			"Multimediawand: Helligkeit Hue-Leuchte 6" 			<dimmablelight>		(Multimediawand, HueDimmer)
+
+Color Multimediawand_HUE1_Color 			"Multimediawand: Farbe Hue-Leuchte 1" 				<rgb>				(Multimediawand, HueColor)
+Color Multimediawand_HUE2_Color				"Multimediawand: Farbe Hue-Leuchte 2" 				<rgb>				(Multimediawand, HueColor)
+Color Multimediawand_HUE3_Color				"Multimediawand: Farbe Hue-Leuchte 3" 				<rgb>				(Multimediawand, HueColor)
+Color Multimediawand_HUE4_Color				"Multimediawand: Farbe Hue-Leuchte 4" 				<rgb>				(Multimediawand, HueColor)
+Color Multimediawand_HUE5_Color				"Multimediawand: Farbe Hue-Leuchte 5" 				<rgb>				(Multimediawand, HueColor)
+Color Multimediawand_HUE6_Color				"Multimediawand: Farbe Hue-Leuchte 6" 				<rgb>				(Multimediawand, HueColor)
+
+Dimmer Multimediawand_HUE1_ColorTemp		"Multimediawand: Farbtemperatur Hue-Leuchte 1"		<slider>			(Multimediawand, HueColorTemp)
+Dimmer Multimediawand_HUE2_ColorTemp		"Multimediawand: Farbtemperatur Hue-Leuchte 2"		<slider>			(Multimediawand, HueColorTemp)
+Dimmer Multimediawand_HUE3_ColorTemp		"Multimediawand: Farbtemperatur Hue-Leuchte 3"		<slider>			(Multimediawand, HueColorTemp)
+Dimmer Multimediawand_HUE4_ColorTemp		"Multimediawand: Farbtemperatur Hue-Leuchte 4"		<slider>			(Multimediawand, HueColorTemp)
+Dimmer Multimediawand_HUE5_ColorTemp		"Multimediawand: Farbtemperatur Hue-Leuchte 5"		<slider>			(Multimediawand, HueColorTemp)
+Dimmer Multimediawand_HUE6_ColorTemp		"Multimediawand: Farbtemperatur Hue-Leuchte 6"		<slider>			(Multimediawand, HueColorTemp)
+
+
+Switch	Multimediawand_FMS1_Motion			"Multimediawand: Bewegungsmelder Multisensor 1"			<shield>	    (Multimediawand, FMSMotion)
+Switch	Multimediawand_FMS2_Motion			"Multimediawand: Bewegungsmelder Multisensor 2"			<shield>	    (Multimediawand, FMSMotion)
+
+Number Multimediawand_FMS1_Temp				"Multimediawand: Temperatur Multisensor 1 [%.2f °C]"	<temperature> 	(Multimediawand, FMSTemperature)
+Number Multimediawand_FMS2_Temp				"Multimediawand: Temperatur Multisensor 2 [%.2f °C]"	<temperature> 	(Multimediawand, FMSTemperature)
+
+Number Multimediawand_FMS1_Lum				"Multimediawand: Helligkeit Multisensor 1"				<sun> 			(Multimediawand, FMSLuminance)
+Number Multimediawand_FMS2_Lum				"Multimediawand: Helligkeit Multisensor 2"				<sun> 			(Multimediawand, FMSLuminance)
+
+Number Multimediawand_FMS1_Battery			"Multimediawand: Batteriestand Multisensor 1 [%d %%]"	<energy>		(Multimediawand, FMSBattery)
+Number Multimediawand_FMS2_Battery			"Multimediawand: Batteriestand Multisensor 2 [%d %%]"	<energy>		(Multimediawand, FMSBattery)
+
+Switch Multimediawand_FMS1_Manipulation 	"Multimediawand: Manipulation Multisensor 1"			<shield>		(Multimediawand, FMSAlarm)
+Switch Multimediawand_FMS2_Manipulation 	"Multimediawand: Manipulation Multisensor 2"			<shield>		(Multimediawand, FMSAlarm)
+
+
+Switch MultimediawandHMTaster1_1_PressShort	"Multimediawand: HMTaster 1 - Oben Kurz"				<wallswitch>	(Multimediawand, HMTaster)
+Switch MultimediawandHMTaster1_1_PressLong	"Multimediawand: HMTaster 1 - Oben Lang"				<wallswitch>	(Multimediawand, HMTaster)
+Switch MultimediawandHMTaster1_2_PressShort	"Multimediawand: HMTaster 1 - Unten Kurz"				<wallswitch>	(Multimediawand, HMTaster)
+Switch MultimediawandHMTaster1_2_PressLong	"Multimediawand: HMTaster 1 - Unten Lang"				<wallswitch>	(Multimediawand, HMTaster)
+
+
+Number  NAInnenraumsensorMultimediaraum_CO2            	"Multimediawand: Innenraumsensor CO2 [%s ppm]"             <carbondioxide>         (Multimediawand, NetatmoLuftsensor)
+Number  NAInnenraumsensorMultimediaraum_Humidity   		"Multimediawand: Innenraumsensor Feuchtigkeit [%s %%]"     <humidity>              (Multimediawand, NetatmoLuftsensor)
+Number  NAInnenraumsensorMultimediaraum_HeatIndex 		"Multimediawand: Innenraumsensor Heatindex [%s]"           <temperature>           (Multimediawand, NetatmoLuftsensor)
+Number  NAInnenraumsensorMultimediaraum_Humidex     	"Multimediawand: Innenraumsensor Humindex [%s]"            <temperature>           (Multimediawand, NetatmoLuftsensor)
+Number  NAInnenraumsensorMultimediaraum_Temperature   	"Multimediawand: Innenraumsensor Temperatur [%s °C]"       <temperature>           (Multimediawand, NetatmoLuftsensor)
+
+
+// Player Multimediawand_Sonos_Control		"Multimediawand: Sonos Control"					<player>	(Sonos, Multimediawand)
+String Multimediawand_Sonos_CurrentTrack 	"Multimediawand: Sonos Aktueller Titel [%s]"	<player>	(Sonos, Multimediawand)
+Switch Multimediawand_Sonos_Mute 			"Multimediawand: Sonos Mute"					<player>	(Sonos, Multimediawand)
+String Multimediawand_Sonos_PlayPlaylist 	"Multimediawand: Sonos Spiele Playlist"			<player>	(Sonos, Multimediawand)
+Switch Multimediawand_Sonos_SetAlarm 		"Multimediawand: Sonos Alarm Einstellen"		<player>	(Sonos, Multimediawand)
+Switch Multimediawand_Sonos_Shuffle  		"Multimediawand: Sonos Shuffle"					<player>	(Sonos, Multimediawand)
+Switch Multimediawand_Sonos_Stop  			"Multimediawand: Sonos Stop"					<player>	(Sonos, Multimediawand)
+Dimmer Multimediawand_Sonos_Volume 			"Multimediawand: Sonos Lautstärke"				<player>	(Sonos, Multimediawand)
+
+
+//*** Badezimmer ***
+
+Switch Bad_HUE1_Toggle 		"Bad: Schalter Hue-Leuchte 1" 			<switch>		(Bad, HueToggles)
+Switch Bad_HUE2_Toggle 		"Bad: Schalter Hue-Leuchte 2" 			<switch> 		(Bad, HueToggles)
+Switch Bad_HUE3_Toggle 		"Bad: Schalter Hue-Leuchte 3" 			<switch>		(Bad, HueToggles)
+Switch Bad_HUE4_Toggle 		"Bad: Schalter Hue-Leuchte 4" 			<switch>		(Bad, HueToggles)
+Switch Bad_HUE5_Toggle 		"Bad: Schalter Hue-Leuchte 5" 			<switch>		(Bad, HueToggles)
+Switch Bad_HUE6_Toggle 		"Bad: Schalter Hue-Leuchte 6" 			<switch>		(Bad, HueToggles)
+
+Dimmer Bad_HUE1_Dimmer 		"Bad: Helligkeit Hue-Leuchte 1" 		<dimmablelight>	(Bad, HueDimmer)
+Dimmer Bad_HUE2_Dimmer 		"Bad: Helligkeit Hue-Leuchte 2" 		<dimmablelight> (Bad, HueDimmer)
+Dimmer Bad_HUE3_Dimmer 		"Bad: Helligkeit Hue-Leuchte 3" 		<dimmablelight> (Bad, HueDimmer)
+Dimmer Bad_HUE4_Dimmer 		"Bad: Helligkeit Hue-Leuchte 4" 		<dimmablelight>	(Bad, HueDimmer)
+Dimmer Bad_HUE5_Dimmer 		"Bad: Helligkeit Hue-Leuchte 5" 		<dimmablelight>	(Bad, HueDimmer)
+Dimmer Bad_HUE6_Dimmer 		"Bad: Helligkeit Hue-Leuchte 6" 		<dimmablelight>	(Bad, HueDimmer)
+
+Color Bad_HUE1_Color 		"Bad: Farbe Hue-Leuchte 1" 				<rgb>			(Bad, HueColor)
+Color Bad_HUE2_Color		"Bad: Farbe Hue-Leuchte 2" 				<rgb>			(Bad, HueColor)
+Color Bad_HUE3_Color		"Bad: Farbe Hue-Leuchte 3" 				<rgb>			(Bad, HueColor)
+Color Bad_HUE4_Color		"Bad: Farbe Hue-Leuchte 4" 				<rgb>			(Bad, HueColor)
+Color Bad_HUE5_Color		"Bad: Farbe Hue-Leuchte 5" 				<rgb>			(Bad, HueColor)
+Color Bad_HUE6_Color		"Bad: Farbe Hue-Leuchte 6" 				<rgb>			(Bad, HueColor)
+
+Dimmer Bad_HUE1_ColorTemp	"Bad: Farbtemperatur Hue-Leuchte 1"		<slider>		(Bad, HueColorTemp)
+Dimmer Bad_HUE2_ColorTemp	"Bad: Farbtemperatur Hue-Leuchte 2"		<slider>		(Bad, HueColorTemp)
+Dimmer Bad_HUE3_ColorTemp	"Bad: Farbtemperatur Hue-Leuchte 3"		<slider>		(Bad, HueColorTemp)
+Dimmer Bad_HUE4_ColorTemp	"Bad: Farbtemperatur Hue-Leuchte 4"		<slider>		(Bad, HueColorTemp)
+Dimmer Bad_HUE5_ColorTemp	"Bad: Farbtemperatur Hue-Leuchte 5"		<slider>		(Bad, HueColorTemp)
+Dimmer Bad_HUE6_ColorTemp	"Bad: Farbtemperatur Hue-Leuchte 6"		<slider>		(Bad, HueColorTemp)
+
+
+Switch	Bad_FMS1_Motion			"Bad: Bewegungsmelder Multisensor 1"		<motion>		(Bad, FMSMotion)
+Switch	Bad_FMS2_Motion			"Bad: Bewegungsmelder Multisensor 2"		<motion>		(Bad, FMSMotion)
+
+Number 	Bad_FMS1_Temp			"Bad: Temperatur Multisensor 1 [%.2f °C]"	<temperature> 	(Bad, FMSTemperature)
+Number 	Bad_FMS2_Temp			"Bad: Temperatur Multisensor 2 [%.2f °C]"	<temperature> 	(Bad, FMSTemperature)
+
+Number 	Bad_FMS1_Lum			"Bad: Helligkeit Multisensor 1 [%S lum]"	<temperature> 	(Bad, FMSLuminance)
+Number 	Bad_FMS2_Lum			"Bad: Helligkeit Multisensor 2 [%S lum]"	<temperature> 	(Bad, FMSLuminance)
+
+Number 	Bad_FMS1_Battery		"Bad: Batteriestand Multisensor 1 [%d %%]"	<battery>		(Bad, FMSBattery)
+Number 	Bad_FMS2_Battery		"Bad: Batteriestand Multisensor 2 [%d %%]"	<battery>		(Bad, FMSBattery)
+
+Switch 	Bad_FMS1_Manipulation 	"Bad: Manipulation Multisensor 1"			<alarm>			(Bad, FMSAlarm)
+Switch 	Bad_FMS2_Manipulation 	"Bad: Manipulation Multisensor 2"			<alarm>			(Bad, FMSAlarm)
+
+
+Switch BadHMTaster1_1_PressShort	"Bad: HMTaster 1 - Oben Kurz"			<wallswitch>	(Bad, HMTaster)
+Switch BadHMTaster1_1_PressLong		"Bad: HMTaster 1 - Oben Lang"			<wallswitch>	(Bad, HMTaster)
+Switch BadHMTaster1_2_PressShort	"Bad: HMTaster 1 - Unten Kurz"			<wallswitch>	(Bad, HMTaster)
+Switch BadHMTaster1_2_PressLong		"Bad: HMTaster 1 - Unten Lang"			<wallswitch>	(Bad, HMTaster)
+
+
+Number	NAInnenraumsensorBad_CO2			"Bad: Innenraumsensor CO2 [%s ppm]"			<carbondioxide>		(Bad, NetatmoLuftsensor)
+Number	NAInnenraumsensorBad_Humidity 		"Bad: Innenraumsensor Feuchtigkeit [%s %%]"	<humidity>			(Bad, NetatmoLuftsensor)
+Number	NAInnenraumsensorBad_HeatIndex 		"Bad: Innenraumsensor Heatindex [%s]"		<temperature>		(Bad, NetatmoLuftsensor)
+Number	NAInnenraumsensorBad_Humidex 		"Bad: Innenraumsensor Humindex [%s]"		<temperature>		(Bad, NetatmoLuftsensor)
+Number	NAInnenraumsensorBad_Temperature	"Bad: Innenraumsensor Temperatur [%s °C]"	<temperature>		(Bad, NetatmoLuftsensor)
+
+
+// Player Bad_Sonos_Control		"Bad: Sonos Control"				<player>	(Sonos, Bad)
+String Bad_Sonos_CurrentTrack 	"Bad: Sonos Aktueller Titel [%s]"	<player>	(Sonos, Bad)
+Switch Bad_Sonos_Mute 			"Bad: Sonos Mute"					<player>	(Sonos, Bad)
+String Bad_Sonos_PlayPlaylist 	"Bad: Sonos Spiele Playlist"		<player>	(Sonos, Bad)
+Switch Bad_Sonos_SetAlarm 		"Bad: Sonos Alarm Einstellen"		<player>	(Sonos, Bad)
+Switch Bad_Sonos_Shuffle  		"Bad: Sonos Shuffle"				<player>	(Sonos, Bad)
+Switch Bad_Sonos_Stop  			"Bad: Sonos Stop"					<player>	(Sonos, Bad)
+Dimmer Bad_Sonos_Volume 		"Bad: Sonos Lautstärke"				<player>	(Sonos, Bad)
+
+
+//*** Allgemeine Geräte ***
+
+String HMFS1_1_State			"Fensterkontakt 1: [%s]"				<window>		(Allgemein, HMFenster)
+String HMFS2_1_State			"Fensterkontakt 2: [%s]"				<window>		(Allgemein, HMFenster)
+String HMFS3_1_State			"Fensterkontakt 3: [%s]"				<window>		(Allgemein, HMFenster)
+String HMFS4_1_State			"Fensterkontakt 4: [%s]"				<window>		(Allgemein, HMFenster)
+String HMFS5_1_State			"Fensterkontakt 5: [%s]"				<window>		(Allgemein, HMFenster)
+String HMFS6_1_State			"Fensterkontakt 6: [%s]"				<window>		(Allgemein, HMFenster)
+String HMFS7_1_State			"Fensterkontakt 7: [%s]"				<window>		(Allgemein, HMFenster)
+String HMFS8_1_State			"Fensterkontakt 8: [%s]"				<window>		(Allgemein, HMFenster)
+String HMFS9_1_State			"Fensterkontakt 9: [%s]"				<window>		(Allgemein, HMFenster)
+
+Switch HMScheibentransparenz1_1_State	"Transparenz Trennschreibe 1"	<switch>		(Allgemein, HMFunkschalter)
+Switch HMScheibentransparenz2_1_State	"Transparenz Trennschreibe 2"	<switch>		(Allgemein, HMFunkschalter)
+
+
