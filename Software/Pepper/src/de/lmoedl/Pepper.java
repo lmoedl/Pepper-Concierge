@@ -29,12 +29,6 @@ public class Pepper {
         
         BasicBehaviour basicBehaviour = new BasicBehaviour(application);
         basicBehaviour.start();
-//        Speeche speeche = new Speeche(session);
-//        try {
-//            speeche.detect();
-//        } catch (Exception ex) {
-//            Logger.getLogger(Pepper.class.getName()).log(Level.SEVERE, null, ex);
-//        }
         
         application.run();
     }

@@ -24,7 +24,7 @@ public class Constants {
         public static final String STEP_END = "STEP_END";
         public static final String STEP_FACERECOGNITION = "STEP_FACERECOGNITION";
         public static final String STEP_SOUNDLOCALIZATION = "STEP_SOUNDLOCALIZATION";
-        public static final String STEP_COCHLOVIUS = "STEP_COCHLOVIUS";
+        public static final String STEP_DEMO = "STEP_DEMO";
     }
     
     class BasicAwareness {
