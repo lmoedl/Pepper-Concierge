@@ -19,6 +19,7 @@ import com.aldebaran.qi.helper.proxies.ALFaceDetection;
 import com.aldebaran.qi.helper.proxies.ALLogger;
 import com.aldebaran.qi.helper.proxies.ALMemory;
 import com.aldebaran.qi.helper.proxies.ALMotion;
+import com.aldebaran.qi.helper.proxies.ALNavigation;
 import com.aldebaran.qi.helper.proxies.ALNotificationManager;
 import com.aldebaran.qi.helper.proxies.ALSoundDetection;
 import com.aldebaran.qi.helper.proxies.ALSoundLocalization;
@@ -51,6 +52,7 @@ public class BasicBehaviour {
     private ALSoundLocalization soundLocalization;
     private ALTracker tracker;
     private ALAnimationPlayer animationPlayer;
+    private ALNavigation navigation;
 
     private String currentState;
     
@@ -61,6 +63,7 @@ public class BasicBehaviour {
     private long targetReachedId = 0;
     private long humanDetectedId = 0;
     private long humanDetectedDemoId = 0;
+    private long speechRecognitionId = 0;
     
 
     public BasicBehaviour(Application application) {
@@ -81,6 +84,7 @@ public class BasicBehaviour {
             soundLocalization = new ALSoundLocalization(session);
             tracker = new ALTracker(session);
             animationPlayer = new ALAnimationPlayer(session);
+            navigation = new ALNavigation(session);
             
             config();
         } catch (Exception ex) {
@@ -115,7 +119,7 @@ public class BasicBehaviour {
                     awareness.setStimulusDetectionEnabled(Constants.BasicAwareness.Stimulus.TOUCH, true);
 
                     awareness.startAwareness();
-                    animatedSpeech.say("Hallo i bims, 1 nicer Roboter vong Aussehen her.");
+                    animatedSpeech.say("Hallo i bims, 1 neicer Roboter vong Aussehen her.");
                     animatedSpeech.say("Ich bin so ein schlauer Hengst, ich kann dir sogar mit meinem Kopf folgen. Was sagst du dazu?");
 
                     memory.subscribeToEvent("RearTactilTouched", "onTouchEnd::(f)", this);
@@ -132,8 +136,11 @@ public class BasicBehaviour {
                     
                 case Constants.Steps.STEP_END:
                     awareness.stopAwareness();
-                    motion.rest();
+                    memory.unsubscribeToEvent(speechRecognitionId);
+                    speechRecognition.pause(true);
+                    speechRecognition.stop(0);
                     speechRecognition.exit();
+                    motion.rest();
                     application.stop();
                     break;
             }
@@ -175,7 +182,7 @@ public class BasicBehaviour {
                 memory.unsubscribeToEvent(humanDetectedDemoId);
 
                 //textToSpeech.say("Mensch gefunden");
-                animatedSpeech.say("Hallo i bims 1 dummer Roboter. ^startSound(Aldebaran/enu_ono_laugh_10)");
+                animatedSpeech.say("Hallo i bims 1 dummer Roboter. ^start(animations/Stand/Emotions/Positive/Laugh_1) ^wait(animations/Stand/Emotions/Positive/Laugh_1)");
                 animatedSpeech.say("Was kann ich für dich tun?");
                 
                 
@@ -190,7 +197,7 @@ public class BasicBehaviour {
                     speechRecognition.setVocabulary(words1, Boolean.FALSE);
                     speechRecognition.pause(false);
                     speechRecognition.subscribe(Constants.APP_NAME);
-                    memory.subscribeToEvent("WordRecognized", "onWordRecognizedForMovingDemo::(m)", this);
+                    speechRecognitionId = memory.subscribeToEvent("WordRecognized", "onWordRecognizedForMovingDemo::(m)", this);
                 
 
                 //humanDetectedDemoId = memory.subscribeToEvent("ALBasicAwareness/HumanTracked", "onHumanTrackedDemo::(i)", this);
@@ -213,18 +220,17 @@ public class BasicBehaviour {
         System.out.println("Word " + word);
 
             switch(word){
-                case "wo":
-                case "bist":
-                case "du":
+                case "wo bist du":
                     animatedSpeech.say("^start(animations/Stand/Gestures/Hey_1) Hallöchen i bims hier ^wait(animations/Stand/Gestures/Hey_1)");
+                    restartSpeechRecognition();
                     break;
                     
                 case "tanzen":
-                    animationPlayer.run("animations/Stand/Reactions/ShakeBody_1");
-                    animationPlayer.run("animations/Stand/Waiting/FunnyDancer_1");
-                    animationPlayer.run("animations/Stand/Waiting/Waddle_2");
-                    animationPlayer.run("dialog_impossible_moves/animations/CrossArms");
-                    
+                    animationPlayer.run("animations/Stand/Waiting/AirGuitar_1");
+                    //animationPlayer.run("animations/Stand/Waiting/FunnyDancer_1");
+                    //animationPlayer.run("animations/Stand/Gestures/Wings_1");
+                    //animationPlayer.run("dialog_impossible_moves/animations/CrossArms");
+                    restartSpeechRecognition();
                     break;
                     
                 case "laufen":
@@ -232,20 +238,29 @@ public class BasicBehaviour {
                     //TODO: Autonomous Life enable
                     
                     //Backup
-                    motion.moveTo(0f, 0f, 180f);
-                    motion.moveTo(8f, 0f, 0f);
-                    motion.moveTo(0f, 0f, 180f);
+                    motion.moveTo(0f, 0f, new Float(Math.toRadians(180)));
+                    navigation.navigateTo(8f, 0f);
+                    motion.moveTo(0f, 0f, new Float(Math.toRadians(180)));
+                    
+                    restartSpeechRecognition();
                     break;
                 
                 case "ende":
                     stateMachine(Constants.Steps.STEP_END);
                     break;
+                    
+                    default: 
+                        restartSpeechRecognition();
                 
         }
 
-         animatedSpeech.async().say("Und was jetzt?");
-         speechRecognition.pause(false);
+         
 
+    }
+    
+    public void restartSpeechRecognition() throws CallError, InterruptedException{
+         animatedSpeech.say("Und was jetzt?");
+         speechRecognition.pause(false);
     }
 
 }
