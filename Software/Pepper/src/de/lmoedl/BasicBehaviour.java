@@ -11,6 +11,8 @@ import com.aldebaran.qi.Session;
 import com.aldebaran.qi.helper.EventCallback;
 import com.aldebaran.qi.helper.proxies.ALAnimatedSpeech;
 import com.aldebaran.qi.helper.proxies.ALAnimationPlayer;
+import com.aldebaran.qi.helper.proxies.ALAutonomousLife;
+import com.aldebaran.qi.helper.proxies.ALAutonomousMoves;
 import com.aldebaran.qi.helper.proxies.ALBasicAwareness;
 import com.aldebaran.qi.helper.proxies.ALDialog;
 import com.aldebaran.qi.helper.proxies.ALFaceDetection;
@@ -180,6 +182,7 @@ public class BasicBehaviour {
                  ArrayList<String> words1 = new ArrayList<>();
                     words1.add("wo bist du");
                     words1.add("tanzen");
+                    words1.add("laufen");
                     words1.add("ende");
    
 
@@ -209,10 +212,6 @@ public class BasicBehaviour {
         String word = ((List<String>) words).get(0);
         System.out.println("Word " + word);
 
-        if(word.equals("ende")){
-
-            
-        }else {
             switch(word){
                 case "wo":
                 case "bist":
@@ -227,13 +226,21 @@ public class BasicBehaviour {
                     animationPlayer.run("dialog_impossible_moves/animations/CrossArms");
                     
                     break;
+                    
+                case "laufen":
+                    //ALAutonomousLife autonomousLife = new ALAutonomousLife(session);
+                    //TODO: Autonomous Life enable
+                    
+                    //Backup
+                    motion.moveTo(0f, 0f, 180f);
+                    motion.moveTo(8f, 0f, 0f);
+                    motion.moveTo(0f, 0f, 180f);
+                    break;
                 
                 case "ende":
                     stateMachine(Constants.Steps.STEP_END);
                     break;
                 
-            }
-
         }
 
          animatedSpeech.async().say("Und was jetzt?");
