@@ -17,6 +17,7 @@ import com.aldebaran.qi.helper.proxies.ALFaceDetection;
 import com.aldebaran.qi.helper.proxies.ALLogger;
 import com.aldebaran.qi.helper.proxies.ALMemory;
 import com.aldebaran.qi.helper.proxies.ALMotion;
+import com.aldebaran.qi.helper.proxies.ALNavigation;
 import com.aldebaran.qi.helper.proxies.ALNotificationManager;
 import com.aldebaran.qi.helper.proxies.ALSoundDetection;
 import com.aldebaran.qi.helper.proxies.ALSoundLocalization;
@@ -53,6 +54,9 @@ public class BasicBehaviour {
     private ALSoundLocalization soundLocalization;
     private ALTracker tracker;
     private ALAnimationPlayer animationPlayer;
+    private ALNavigation navigation;
+    
+    private ConnectionManager connectionManager;
 
     private String currentState;
     
@@ -63,6 +67,7 @@ public class BasicBehaviour {
     private long targetReachedId = 0;
     private long humanDetectedId = 0;
     private long humanDetectedDemoId = 0;
+    private long speechRecognitionId = 0;
     
 
     public BasicBehaviour(Application application) {
@@ -83,6 +88,8 @@ public class BasicBehaviour {
             soundLocalization = new ALSoundLocalization(session);
             tracker = new ALTracker(session);
             animationPlayer = new ALAnimationPlayer(session);
+            connectionManager = new ConnectionManager();
+            navigation = new ALNavigation(session);
             
             config();
         } catch (Exception ex) {
@@ -240,9 +247,11 @@ public class BasicBehaviour {
                     
                     
                 case Constants.Steps.STEP_END:
-                    awareness.stopAwareness();
-                    motion.rest();
+                    memory.unsubscribeToEvent(speechRecognitionId);
+                    speechRecognition.pause(true);
+                    speechRecognition.stop(0);
                     speechRecognition.exit();
+                    motion.rest();
                     application.stop();
                     break;
             }
@@ -376,7 +385,7 @@ System.out.println("onHumanTracked: " + humanID);
         System.out.println(arm1);
         motion.angleInterpolationWithSpeed(jointNames, arm1, 0.7f);
         //animationPlayer.run("animations/Stand/BodyTalk/BodyTalk_9");
-
+        
     }
     
     public void onHumanTrackedDemo(Integer humanID) throws Exception {
@@ -431,29 +440,12 @@ System.out.println("onHumanTracked: " + humanID);
         String word = ((List<String>) words).get(0);
         System.out.println("Word " + word);
         
-        /*if(word.equals("ende")){
-            
-        }else {
-            switch(word){
-                case "wo":
-                    animatedSpeech.say("^start(animations/Stand/Gestures/Hey_1) Hallöchen i bims hier ^wait(animations/Stand/Gestures/Hey_1)");
-                    break;
-                    
-                case "tanzen":
-                    
-                
-                case "ende":
-                    
-                    break;
-                
-            }
-        }*/
         
-        ConnectionManager connectionManager = new ConnectionManager();
+        
                     
          switch(word){
              case "licht ein":
-                animatedSpeech.say("^start(animations/Stand/Waiting/MysticalPower_1) Es werde Licht! ^wait(animations/Stand/Waiting/MysticalPower_1)");
+                animatedSpeech.async().say("^start(animations/Stand/Waiting/MysticalPower_1) Es werde Licht! ^wait(animations/Stand/Waiting/MysticalPower_1)");
 
                  connectionManager.sendPostRequest("items/Multimediawand_HUE6_Toggle", "ON");
                  connectionManager.sendPostRequest("items/HMScheibentransparenz2_1_State", "OFF");
