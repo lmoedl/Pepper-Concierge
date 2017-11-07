@@ -19,6 +19,7 @@ import com.aldebaran.qi.helper.proxies.ALMemory;
 import com.aldebaran.qi.helper.proxies.ALMotion;
 import com.aldebaran.qi.helper.proxies.ALNavigation;
 import com.aldebaran.qi.helper.proxies.ALNotificationManager;
+import com.aldebaran.qi.helper.proxies.ALRobotPosture;
 import com.aldebaran.qi.helper.proxies.ALSoundDetection;
 import com.aldebaran.qi.helper.proxies.ALSoundLocalization;
 import com.aldebaran.qi.helper.proxies.ALSpeechRecognition;
@@ -101,7 +102,8 @@ public class BasicBehaviour {
         //stateMachine(Constants.Steps.STEP_FACERECOGNITION);
         //stateMachine(Constants.Steps.STEP_SOUNDLOCALIZATION);
         //stateMachine(Constants.Steps.STEP_END);
-        stateMachine(Constants.Steps.STEP_COCHLOVIUS);
+        //stateMachine(Constants.Steps.STEP_COCHLOVIUS);
+        stateMachine(Constants.Steps.STEP_DIALOG);
     }
     
     private void config() throws CallError, InterruptedException, Exception{
@@ -245,12 +247,21 @@ public class BasicBehaviour {
                     
                     break;
                     
+                case Constants.Steps.STEP_DIALOG:
+                    dialog.setLanguage(Constants.LANGUAGE);
+                    String topic = dialog.loadTopic(getClass().getResource("TestDialog.top").getPath());
+                    dialog.subscribe(Constants.APP_NAME);
+                    dialog.activateTopic(topic);
+                    
+                    break;
+                    
                     
                 case Constants.Steps.STEP_END:
                     memory.unsubscribeToEvent(speechRecognitionId);
                     speechRecognition.pause(true);
-                    speechRecognition.stop(0);
-                    speechRecognition.exit();
+                    speechRecognition.removeAllContext();
+                    //speechRecognition.stop(0);
+                    //speechRecognition.exit();
                     motion.rest();
                     application.stop();
                     break;
@@ -376,7 +387,6 @@ System.out.println("onHumanTracked: " + humanID);
     public void demo() throws CallError, InterruptedException, Exception{
         //stateMachine(Constants.Steps.STEP_STARUP);
         //humanDetectedDemoId = memory.subscribeToEvent("ALBasicAwareness/HumanTracked", "onHumanTrackedDemo::(i)", this);
-            
         
         String[] jointNames = new String[]{"LShoulderPitch", "LShoulderRoll", "LElbowYaw", "LElbowRoll"};
         double[] arm1 = {Math.toRadians(-40), Math.toRadians(25), Math.toRadians(0), Math.toRadians(-40)};

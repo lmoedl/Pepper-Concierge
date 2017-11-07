@@ -67,4 +67,8 @@ public class ConnectionManager {
     public void setBasicUrl(String basicUrl) {
         this.basicUrl = basicUrl;
     }
+    
+    public static void switchOn(){
+        new ConnectionManager().sendPostRequest("items/Multimediawand_HUE6_Toggle", "ON");
+    }
 }
