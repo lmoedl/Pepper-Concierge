@@ -70,6 +70,8 @@ public class BasicBehaviour {
     private long humanDetectedDemoId = 0;
     private long speechRecognitionId = 0;
     
+    private String topic;
+    
 
     public BasicBehaviour(Application application) {
         this.session = application.session();
@@ -116,6 +118,7 @@ public class BasicBehaviour {
         motion.wakeUp();
         
         memory.subscribeToEvent("RearTactilTouched", "onTouchEnd::(f)", this);
+        memory.subscribeToEvent("SwitchLight", "onLightSwitch::(s)", this);
     }
 
     private void stateMachine(String step) {
@@ -249,17 +252,23 @@ public class BasicBehaviour {
                     
                 case Constants.Steps.STEP_DIALOG:
                     dialog.setLanguage(Constants.LANGUAGE);
-                    String topic = dialog.loadTopic(getClass().getResource("TestDialog.top").getPath());
+                    //System.out.println(getClass().getClassLoader().getResource("TestDialog.top").getPath());
+                    topic = dialog.loadTopic("/home/nao/TestDialog.top");
                     dialog.subscribe(Constants.APP_NAME);
                     dialog.activateTopic(topic);
-                    
                     break;
                     
                     
                 case Constants.Steps.STEP_END:
                     memory.unsubscribeToEvent(speechRecognitionId);
                     speechRecognition.pause(true);
+                    speechRecognition.stop(1);
                     speechRecognition.removeAllContext();
+                    
+                    dialog.deactivateTopic(topic);
+                    dialog.unloadTopic(topic);
+                    dialog.unsubscribe(Constants.APP_NAME);
+                    dialog.resetAll();
                     //speechRecognition.stop(0);
                     //speechRecognition.exit();
                     motion.rest();
@@ -482,6 +491,11 @@ System.out.println("onHumanTracked: " + humanID);
     public void restartSpeecheRecognition() throws CallError, InterruptedException{
         animatedSpeech.say("Und was jetzt?");
         speechRecognition.pause(false);
+    }
+    
+    public void onLightSwitch(String value) {
+        System.out.println(Constants.APP_NAME + " : LightSwitch " + value);
+        connectionManager.sendPostRequest("items/Multimediawand_HUE6_Toggle", value);
     }
 
 }
