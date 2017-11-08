@@ -28,6 +28,7 @@ import com.aldebaran.qi.helper.proxies.ALTracker;
 import com.vmichalak.sonoscontroller.SonosDevice;
 import com.vmichalak.sonoscontroller.SonosDiscovery;
 import com.vmichalak.sonoscontroller.exception.SonosControllerException;
+import de.lmoedl.interfaces.MQTTSubscriberCallbackInterface;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -39,11 +40,11 @@ import java.util.logging.Logger;
  *
  * @author lothar
  */
-public class BasicBehaviour {
+public class BasicBehaviour implements MQTTSubscriberCallbackInterface {
 
     private Session session;
     private Application application;
-    
+
     private ALMemory memory;
     private ALBasicAwareness.AsyncALBasicAwareness awareness;
     private ALMotion motion;
@@ -56,22 +57,21 @@ public class BasicBehaviour {
     private ALTracker tracker;
     private ALAnimationPlayer animationPlayer;
     private ALNavigation navigation;
-    
+
     private ConnectionManager connectionManager;
 
     private String currentState;
-    
+
     private float x = 0f;
     private float y = 0f;
     private float teta = 0f;
-    
+
     private long targetReachedId = 0;
     private long humanDetectedId = 0;
     private long humanDetectedDemoId = 0;
     private long speechRecognitionId = 0;
-    
+
     private String topic;
-    
 
     public BasicBehaviour(Application application) {
         this.session = application.session();
@@ -93,7 +93,7 @@ public class BasicBehaviour {
             animationPlayer = new ALAnimationPlayer(session);
             connectionManager = new ConnectionManager();
             navigation = new ALNavigation(session);
-            
+
             config();
         } catch (Exception ex) {
             Logger.getLogger(BasicBehaviour.class.getName()).log(Level.SEVERE, null, ex);
@@ -105,10 +105,11 @@ public class BasicBehaviour {
         //stateMachine(Constants.Steps.STEP_SOUNDLOCALIZATION);
         //stateMachine(Constants.Steps.STEP_END);
         //stateMachine(Constants.Steps.STEP_COCHLOVIUS);
-        stateMachine(Constants.Steps.STEP_DIALOG);
+        //stateMachine(Constants.Steps.STEP_DIALOG);
+        stateMachine(Constants.Steps.STEP_MQTT);
     }
-    
-    private void config() throws CallError, InterruptedException, Exception{
+
+    private void config() throws CallError, InterruptedException, Exception {
         textToSpeech.setLanguage(Constants.LANGUAGE);
         motion.setExternalCollisionProtectionEnabled("All", true);
         motion.setWalkArmsEnabled(Boolean.TRUE, Boolean.TRUE);
@@ -116,7 +117,7 @@ public class BasicBehaviour {
         speechRecognition.setLanguage(Constants.LANGUAGE);
         speechRecognition.pause(false);
         motion.wakeUp();
-        
+
         memory.subscribeToEvent("RearTactilTouched", "onTouchEnd::(f)", this);
         memory.subscribeToEvent("SwitchLight", "onLightSwitch::(s)", this);
     }
@@ -141,9 +142,8 @@ public class BasicBehaviour {
                     awareness.startAwareness();
                     textToSpeech.say("Hallo");
                     break;
-                    
+
                 case Constants.Steps.STEP_MOVE_AROUND:
-                    
 
                     //List of words that the robot will recognize
                     ArrayList<String> words1 = new ArrayList<>();
@@ -160,54 +160,50 @@ public class BasicBehaviour {
                     speechRecognition.pause(false);
                     speechRecognition.subscribe(Constants.APP_NAME);
                     memory.subscribeToEvent("WordRecognized", "onWordRecognizedForMoving::(m)", this);
-                    
+
                     textToSpeech.say("Wo soll ich hingehen?");
                     break;
-                    
+
                 case Constants.Steps.STEP_FACERECOGNITION:
                     faceDetection.setRecognitionEnabled(true);
                     faceDetection.setTrackingEnabled(true);
                     faceDetection.subscribe(Constants.APP_NAME);
-                    
+
                     System.out.println("STEP_FACERECOGNITION");
                     memory.subscribeToEvent("FaceDetected", new EventCallback() {
-                @Override
-                public void onEvent(Object t) throws InterruptedException, CallError {
-                    System.out.println(t.toString());
-                    motion.stopMove();
-                    
-                }
-            });
+                        @Override
+                        public void onEvent(Object t) throws InterruptedException, CallError {
+                            System.out.println(t.toString());
+                            motion.stopMove();
+
+                        }
+                    });
                     motion.moveTo(0.0f, 0.0f, 1.4f);
                     break;
-                    
+
                 case Constants.Steps.STEP_SOUNDLOCALIZATION:
                     //motion.setStiffnesses("WholeBody", 1);
                     motion.stiffnessInterpolation("WholeBody", 1.0f, 0.0f);
                     awareness.pauseAwareness();
-                    
+
                     soundLocalization.setParameter("Sensibility", 0.7);
                     //soundLocalization.subscribe(Constants.APP_NAME);
-                    
+
                     //Zweiten Tracker einführen
-                    
                     tracker.setMode("Navigate");
                     //tracker.registerTarget("Sound", new ArrayList<>(Arrays.asList(0.7f, 0.0f)));
                     tracker.registerTarget("People", new ArrayList<>());
 
                     tracker.track("People");
                     //tracker.track("Sound");
-                    
+
                     targetReachedId = memory.subscribeToEvent("ALTracker/TargetDetected", "onTargetDetected::(m)", this);
 
-                    
 //                    if (tracker.getTargetPosition().size() > 0){
 //                      motion.moveTo(tracker.getTargetPosition().get(0), tracker.getTargetPosition().get(2), 0.0f);
 //
 //                    }
-                    
                     //awareness.resumeAwareness();
-                    
 //                    memory.subscribeToEvent("ALSoundLocalization/SoundLocated", new EventCallback() {
 //                @Override
 //                public void onEvent(Object t) throws InterruptedException, CallError {
@@ -219,22 +215,19 @@ public class BasicBehaviour {
 //                    }
 //                }
 //            });
-
                     break;
-                    
+
                 case Constants.Steps.STEP_COCHLOVIUS:
                     //demo();
                     //animatedSpeech.async().say("^start(animations/Stand/Waiting/MysticalPower_1) Es werde Licht! ^wait(animations/Stand/Waiting/MysticalPower_1)");
-                    
+
                     //animationPlayer.run("animations/Stand/Waiting/Binoculars_1");
                     animatedSpeech.say("Was kann ich für dich tun?");
-                    
-                    
+
                     ArrayList<String> words2 = new ArrayList<>();
                     words2.add("licht ein");
                     words2.add("licht aus");
                     words2.add("spiele musik");
-                    
 
                     speechRecognition.pause(true);
                     speechRecognition.setVocabulary(words2, Boolean.FALSE);
@@ -243,13 +236,11 @@ public class BasicBehaviour {
                     memory.subscribeToEvent("WordRecognized", "onWordRecognizedForMovingDemo::(m)", this);
                     //List<SonosDevice> devices = SonosDiscovery.discover();
                     //System.out.println(devices);
-                    
+
                     //SonosDevice sonos = new SonosDevice("192.168.0.30");
                     //sonos.playUri("x-rincon-mp3radio://http://listen.technobase.fm/tunein-mp3-pls", "Technobase.fm");
-                   
-                    
                     break;
-                    
+
                 case Constants.Steps.STEP_DIALOG:
                     dialog.setLanguage(Constants.LANGUAGE);
                     //System.out.println(getClass().getClassLoader().getResource("TestDialog.top").getPath());
@@ -257,14 +248,43 @@ public class BasicBehaviour {
                     dialog.subscribe(Constants.APP_NAME);
                     dialog.activateTopic(topic);
                     break;
-                    
-                    
+
+                case Constants.Steps.STEP_MQTT:
+                    MQTTConnectionManager mQTTConnectionManager = new MQTTConnectionManager(this);
+                    mQTTConnectionManager.publishToItem("Multimediawand_HUE1_Toggle", "ON");
+                    /*while (true){
+                        
+                        mQTTConnectionManager.publishToItem("Multimediawand_HUE1_Toggle", "ON");
+                        mQTTConnectionManager.publishToItem("Multimediawand_HUE6_Toggle", "ON");
+                        mQTTConnectionManager.publishToItem("Multimediawand_HUE1_Toggle", "OFF");
+                        mQTTConnectionManager.publishToItem("Multimediawand_HUE6_Toggle", "OFF");
+                        Thread.sleep(300);
+                        
+                        
+                        mQTTConnectionManager.publishToItem("Multimediawand_HUE2_Toggle", "ON"); 
+                        mQTTConnectionManager.publishToItem("Multimediawand_HUE5_Toggle", "ON");
+                        mQTTConnectionManager.publishToItem("Multimediawand_HUE2_Toggle", "OFF");
+                        mQTTConnectionManager.publishToItem("Multimediawand_HUE5_Toggle", "OFF");
+                        Thread.sleep(300);
+                        
+                        
+                        mQTTConnectionManager.publishToItem("Multimediawand_HUE3_Toggle", "ON");
+                        mQTTConnectionManager.publishToItem("Multimediawand_HUE4_Toggle", "ON");
+                        mQTTConnectionManager.publishToItem("Multimediawand_HUE3_Toggle", "OFF");
+                        mQTTConnectionManager.publishToItem("Multimediawand_HUE4_Toggle", "OFF");
+                        Thread.sleep(300); 
+                    }*/
+
+                    mQTTConnectionManager.subscribeToItem(Constants.MQTTTopics.Window.WINDOW_6);
+
+                    break;
+
                 case Constants.Steps.STEP_END:
                     memory.unsubscribeToEvent(speechRecognitionId);
                     speechRecognition.pause(true);
                     speechRecognition.stop(1);
                     speechRecognition.removeAllContext();
-                    
+
                     dialog.deactivateTopic(topic);
                     dialog.unloadTopic(topic);
                     dialog.unsubscribe(Constants.APP_NAME);
@@ -279,34 +299,30 @@ public class BasicBehaviour {
             Logger.getLogger(BasicBehaviour.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
-    public void onTargetDetected(Object object) throws InterruptedException, CallError, Exception{
+
+    public void onTargetDetected(Object object) throws InterruptedException, CallError, Exception {
         //System.out.println(object.toString());
-                    memory.unsubscribeToEvent(targetReachedId);
-                    System.out.println("TargetPosition: " + tracker.getTargetPosition().toString());
-                    //List<Float> values = tracker.getTargetPosition();
-                    try{
-                    if (tracker.getTargetPosition().size() > 1){
-                       motion.async().moveTo(tracker.getTargetPosition().get(0), tracker.getTargetPosition().get(1), tracker.getTargetPosition().get(2));
+        memory.unsubscribeToEvent(targetReachedId);
+        System.out.println("TargetPosition: " + tracker.getTargetPosition().toString());
+        //List<Float> values = tracker.getTargetPosition();
+        try {
+            if (tracker.getTargetPosition().size() > 1) {
+                motion.async().moveTo(tracker.getTargetPosition().get(0), tracker.getTargetPosition().get(1), tracker.getTargetPosition().get(2));
 
-                    }
-                    }catch(ArrayIndexOutOfBoundsException e){
-                        System.err.println(e.getLocalizedMessage());
-                    }
-       targetReachedId = memory.subscribeToEvent("ALTracker/TargetDetected", "onTargetDetected::(m)", this);
-
+            }
+        } catch (ArrayIndexOutOfBoundsException e) {
+            System.err.println(e.getLocalizedMessage());
+        }
+        targetReachedId = memory.subscribeToEvent("ALTracker/TargetDetected", "onTargetDetected::(m)", this);
 
     }
 
     public void onHumanTracked(Integer humanID) {
-System.out.println("onHumanTracked: " + humanID);
+        System.out.println("onHumanTracked: " + humanID);
         if (humanID >= 0) {
             System.out.println("onHumanTracked");
-            
+
             //stateMachine(Constants.Steps.STEP_MOVE_AROUND);
-            
-            
-            
             try {
                 awareness.stopAwareness();
                 memory.unsubscribeToEvent(humanDetectedId);
@@ -320,15 +336,14 @@ System.out.println("onHumanTracked: " + humanID);
             }
         }
     }
-    
+
     public void onTouchEnd(Float value) {
         System.out.println(Constants.APP_NAME + " : Touch " + value);
         if (value == 1.0) {
             stateMachine(Constants.Steps.STEP_END);
         }
     }
-    
-    
+
     public void onWordRecognizedForMoving(Object words) throws InterruptedException, CallError {
         //textToSpeech.say("Wort gefunden");
         speechRecognition.pause(true);
@@ -336,10 +351,8 @@ System.out.println("onHumanTracked: " + humanID);
 
         String word = ((List<String>) words).get(0);
         System.out.println("Word " + word);
-        
-        //textToSpeech.say(word);
-        
 
+        //textToSpeech.say(word);
         if (word.equals("next")) {
 //            x = 0;
 //            y = 0;
@@ -370,16 +383,18 @@ System.out.println("onHumanTracked: " + humanID);
                     teta = 0f;
                     break;
                 case "schneller":
-                    if (x > 0)
+                    if (x > 0) {
                         x += 0.2;
-                    else
+                    } else {
                         x -= 0.2;
+                    }
                     break;
                 case "langsamer":
-                    if (x < 0)
+                    if (x < 0) {
                         x += 0.2;
-                    else
+                    } else {
                         x -= 0.2;
+                    }
                     break;
                 default:
                     break;
@@ -392,30 +407,27 @@ System.out.println("onHumanTracked: " + humanID);
         }
 
     }
-    
-    public void demo() throws CallError, InterruptedException, Exception{
+
+    public void demo() throws CallError, InterruptedException, Exception {
         //stateMachine(Constants.Steps.STEP_STARUP);
         //humanDetectedDemoId = memory.subscribeToEvent("ALBasicAwareness/HumanTracked", "onHumanTrackedDemo::(i)", this);
-        
+
         String[] jointNames = new String[]{"LShoulderPitch", "LShoulderRoll", "LElbowYaw", "LElbowRoll"};
         double[] arm1 = {Math.toRadians(-40), Math.toRadians(25), Math.toRadians(0), Math.toRadians(-40)};
-                    
+
         //double[] arm2 = {-40, 25, 0, -40};
         System.out.println(arm1);
         motion.angleInterpolationWithSpeed(jointNames, arm1, 0.7f);
         //animationPlayer.run("animations/Stand/BodyTalk/BodyTalk_9");
-        
+
     }
-    
+
     public void onHumanTrackedDemo(Integer humanID) throws Exception {
         System.out.println("onHumanTracked: " + humanID);
         if (humanID >= 0) {
             System.out.println("onHumanTracked");
-            
+
             //stateMachine(Constants.Steps.STEP_MOVE_AROUND);
-            
-            
-            
             try {
                 awareness.pauseAwareness();
                 memory.unsubscribeToEvent(humanDetectedDemoId);
@@ -424,26 +436,23 @@ System.out.println("onHumanTracked: " + humanID);
                 animatedSpeech.say("Hallo i bims 1 dummer Roboter. ^startSound(Aldebaran/enu_ono_laugh_10)");
                 animatedSpeech.say("Ich bin so ein schlauer Hengst, ich kann dir sogar mit meinem Kopf folgen. Was sagst du dazu?");
                 awareness.resumeAwareness();
-                
-                
-                 ArrayList<String> words1 = new ArrayList<>();
-                    words1.add("vorwärts");
-                    words1.add("links");
-                    words1.add("rechts");
-                    words1.add("stopp");
-                    words1.add("schneller");
-                    words1.add("langsamer");
-                    words1.add("next");
 
-                    speechRecognition.pause(true);
-                    speechRecognition.setVocabulary(words1, Boolean.FALSE);
-                    speechRecognition.pause(false);
-                    speechRecognition.subscribe(Constants.APP_NAME);
-                    memory.subscribeToEvent("WordRecognized", "onWordRecognizedForMovingDemo::(m)", this);
-                
+                ArrayList<String> words1 = new ArrayList<>();
+                words1.add("vorwärts");
+                words1.add("links");
+                words1.add("rechts");
+                words1.add("stopp");
+                words1.add("schneller");
+                words1.add("langsamer");
+                words1.add("next");
+
+                speechRecognition.pause(true);
+                speechRecognition.setVocabulary(words1, Boolean.FALSE);
+                speechRecognition.pause(false);
+                speechRecognition.subscribe(Constants.APP_NAME);
+                memory.subscribeToEvent("WordRecognized", "onWordRecognizedForMovingDemo::(m)", this);
 
                 //humanDetectedDemoId = memory.subscribeToEvent("ALBasicAwareness/HumanTracked", "onHumanTrackedDemo::(i)", this);
-                
             } catch (CallError ex) {
                 Logger.getLogger(BasicBehaviour.class.getName()).log(Level.SEVERE, null, ex);
             } catch (InterruptedException ex) {
@@ -451,51 +460,79 @@ System.out.println("onHumanTracked: " + humanID);
             }
         }
     }
-    
+
     public void onWordRecognizedForMovingDemo(Object words) throws InterruptedException, CallError, IOException, SonosControllerException {
         speechRecognition.pause(true);
         awareness.pauseAwareness();
 
         String word = ((List<String>) words).get(0);
         System.out.println("Word " + word);
-        
-        
-        
-                    
-         switch(word){
-             case "licht ein":
+
+        switch (word) {
+            case "licht ein":
                 animatedSpeech.async().say("^start(animations/Stand/Waiting/MysticalPower_1) Es werde Licht! ^wait(animations/Stand/Waiting/MysticalPower_1)");
 
-                 connectionManager.sendPostRequest("items/Multimediawand_HUE6_Toggle", "ON");
-                 connectionManager.sendPostRequest("items/HMScheibentransparenz2_1_State", "OFF");
-                 restartSpeecheRecognition();
-                 break;
-                 
-             case "licht aus":
-                 connectionManager.sendPostRequest("items/Multimediawand_HUE6_Toggle", "OFF");
-                 connectionManager.sendPostRequest("items/HMScheibentransparenz2_1_State", "ON");
-                 restartSpeecheRecognition();
-                 break;
-                 
-             case "spiele musik":
-                 SonosDevice sonos = new SonosDevice("192.168.0.30");
-                 sonos.playUri("x-rincon-mp3radio://http://listen.technobase.fm/tunein-mp3-pls", "Technobase.fm");
-                 
-                 restartSpeecheRecognition();
-                 break;
-         }
-         
-         
+                connectionManager.sendPostRequest("items/Multimediawand_HUE6_Toggle", "ON");
+                connectionManager.sendPostRequest("items/HMScheibentransparenz2_1_State", "OFF");
+                restartSpeecheRecognition();
+                break;
+
+            case "licht aus":
+                connectionManager.sendPostRequest("items/Multimediawand_HUE6_Toggle", "OFF");
+                connectionManager.sendPostRequest("items/HMScheibentransparenz2_1_State", "ON");
+                restartSpeecheRecognition();
+                break;
+
+            case "spiele musik":
+                SonosDevice sonos = new SonosDevice("192.168.0.30");
+                sonos.playUri("x-rincon-mp3radio://http://listen.technobase.fm/tunein-mp3-pls", "Technobase.fm");
+
+                restartSpeecheRecognition();
+                break;
+        }
+
     }
-    
-    public void restartSpeecheRecognition() throws CallError, InterruptedException{
+
+    public void restartSpeecheRecognition() throws CallError, InterruptedException {
         animatedSpeech.say("Und was jetzt?");
         speechRecognition.pause(false);
     }
-    
+
     public void onLightSwitch(String value) {
         System.out.println(Constants.APP_NAME + " : LightSwitch " + value);
         connectionManager.sendPostRequest("items/Multimediawand_HUE6_Toggle", value);
+    }
+
+    @Override
+    public void onSubscription(String item, String value) {     
+        String itemDescription = item.split("\\/")[3];     
+        
+        switch (itemDescription) {
+            case Constants.MQTTTopics.Window.WINDOW_1:
+            case Constants.MQTTTopics.Window.WINDOW_2:
+            case Constants.MQTTTopics.Window.WINDOW_3:
+            case Constants.MQTTTopics.Window.WINDOW_4:
+            case Constants.MQTTTopics.Window.WINDOW_5:
+            case Constants.MQTTTopics.Window.WINDOW_6:
+            case Constants.MQTTTopics.Window.WINDOW_7:
+            case Constants.MQTTTopics.Window.WINDOW_8:
+            case Constants.MQTTTopics.Window.WINDOW_9:
+
+                try {
+                    if (value.equals("OPEN")) {
+                        animatedSpeech.say("Oh, ich sehe, ein Fenster ist geöffnet");
+                    } else if (value.equals("CLOSED")) {
+                        animatedSpeech.say("Sehr gut, das Fenster ist wieder geschlossen.");
+                    }
+                } catch (CallError ex) {
+                    Logger.getLogger(BasicBehaviour.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (InterruptedException ex) {
+                    Logger.getLogger(BasicBehaviour.class.getName()).log(Level.SEVERE, null, ex);
+                }
+
+                break;
+
+        }
     }
 
 }

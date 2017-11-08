@@ -10,15 +10,18 @@ package de.lmoedl;
  * @author lothar
  */
 public class Constants {
+
     public static final String APP_NAME = "Pepper_Concierge";
     public static final String LANGUAGE = "German";
-    
+
     class Start {
+
         public static final String ROBOT_URL = "pepper.local";
         public static final String ROBOT_PORT = "9559";
     }
-    
+
     class Steps {
+
         public static final String STEP_STARUP = "STEP_STARTUP";
         public static final String STEP_MOVE_AROUND = "STEP_MOVE_AROUND";
         public static final String STEP_END = "STEP_END";
@@ -26,17 +29,21 @@ public class Constants {
         public static final String STEP_SOUNDLOCALIZATION = "STEP_SOUNDLOCALIZATION";
         public static final String STEP_COCHLOVIUS = "STEP_COCHLOVIUS";
         public static final String STEP_DIALOG = "STEP_DIALOG";
+        public static final String STEP_MQTT = "STEP_MQTT";
     }
-    
+
     class BasicAwareness {
+
         class Stimulus {
+
             public static final String SOUND = "Sound";
             public static final String MOVEMENT = "Movement";
             public static final String PEOPLE = "People";
             public static final String TOUCH = "Touch";
         }
-        
+
         class EngagementMode {
+
             //(Default mode) when the robot is engaged with a user, it can be distracted by any stimulus, and engage with another person.
             public static final String UNENGAGED = "Unengaged";
             //as soon as the robot is engaged with a person, it stops listening to stimuli and stays engaged with the same person. If it loses the engaged person, it will listen to stimuli again and may engage with a different person.
@@ -44,8 +51,9 @@ public class Constants {
             //when the robot is engaged with a person, it keeps listening to the stimuli, and if it gets a stimulus, it will look in its direction, but it will always go back to the person it is engaged with. If it loses the person, it will listen to stimuli again and may engage with a different person.
             public static final String SEMI_ENGAGED = "SemiEngaged";
         }
-        
+
         class TrackingModes {
+
             //the tracking only uses the head
             public static final String HEAD = "Head";
             // the tracking uses the head and the rotation of the body
@@ -55,9 +63,51 @@ public class Constants {
             //the tracking uses the head and autonomously performs small moves such as approaching the tracked person, stepping backward, rotating, etc.
             public static final String MOVE_CONTEXTUALLY = "MoveContextually";
         }
-         
+
     }
-    
-    
-    
+
+    class MQTTTopics {
+
+        class Lights {
+
+            class TVRoom {
+
+                public static final String HUE_1 = "Multimediawand_HUE1_Toggle";
+                public static final String HUE_2 = "Multimediawand_HUE2_Toggle";
+                public static final String HUE_3 = "Multimediawand_HUE3_Toggle";
+                public static final String HUE_4 = "Multimediawand_HUE4_Toggle";
+                public static final String HUE_5 = "Multimediawand_HUE5_Toggle";
+                public static final String HUE_6 = "Multimediawand_HUE6_Toggle";
+            }
+
+            class Bathroom {
+
+                public static final String HUE_1 = "Bad_HUE1_Toggle";
+                public static final String HUE_2 = "Bad_HUE2_Toggle";
+                public static final String HUE_3 = "Bad_HUE3_Toggle";
+                public static final String HUE_4 = "Bad_HUE4_Toggle";
+                public static final String HUE_5 = "Bad_HUE5_Toggle";
+                public static final String HUE_6 = "Bad_HUE6_Toggle";
+            }
+
+            class Doors {
+
+                public static final String TVROOM_DOOR_1 = "HMScheibentransparenz1_1_State";
+                public static final String TVROOM_DOOR_2 = "HMScheibentransparenz2_1_State";
+            }
+        }
+
+        class Window {
+
+            public static final String WINDOW_1 = "HMFS1_1_State";
+            public static final String WINDOW_2 = "HMFS2_1_State";
+            public static final String WINDOW_3 = "HMFS3_1_State";
+            public static final String WINDOW_4 = "HMFS4_1_State";
+            public static final String WINDOW_5 = "HMFS5_1_State";
+            public static final String WINDOW_6 = "HMFS6_1_State";
+            public static final String WINDOW_7 = "HMFS7_1_State";
+            public static final String WINDOW_8 = "HMFS8_1_State";
+            public static final String WINDOW_9 = "HMFS9_1_State";
+        }
+    }
 }
