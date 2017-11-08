@@ -251,8 +251,8 @@ public class BasicBehaviour implements MQTTSubscriberCallbackInterface {
 
                 case Constants.Steps.STEP_MQTT:
                     MQTTConnectionManager mQTTConnectionManager = new MQTTConnectionManager(this);
-                    mQTTConnectionManager.publishToItem("Multimediawand_HUE1_Toggle", "ON");
-                    /*while (true){
+                    //mQTTConnectionManager.publishToItem("Multimediawand_HUE1_Toggle", "ON");
+                    while (true){
                         
                         mQTTConnectionManager.publishToItem("Multimediawand_HUE1_Toggle", "ON");
                         mQTTConnectionManager.publishToItem("Multimediawand_HUE6_Toggle", "ON");
@@ -273,11 +273,11 @@ public class BasicBehaviour implements MQTTSubscriberCallbackInterface {
                         mQTTConnectionManager.publishToItem("Multimediawand_HUE3_Toggle", "OFF");
                         mQTTConnectionManager.publishToItem("Multimediawand_HUE4_Toggle", "OFF");
                         Thread.sleep(300); 
-                    }*/
+                    }
 
-                    mQTTConnectionManager.subscribeToItem(Constants.MQTTTopics.Window.WINDOW_6);
+                    //mQTTConnectionManager.subscribeToItem(Constants.MQTTTopics.Window.WINDOW_6);
 
-                    break;
+                    //break;
 
                 case Constants.Steps.STEP_END:
                     memory.unsubscribeToEvent(speechRecognitionId);
