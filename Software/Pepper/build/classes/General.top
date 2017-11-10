@@ -1,0 +1,4 @@
+topic: ~general()
+language: ged
+
+proposal:  Zuerst ein paar allgemeine Informationen zum Labor. Eingerichtet wurde es mit dem Ziel Smart Home Komponenten im Kontext einer Wohnung zu erforschen. Dabei wird ein besonderes Augenmerk auf die Interaktion der Geräte untereinander und die Entwicklung weitere Use Cases sowie deren ausführliches testing gelegt. Es besteht die Möglichkeit Komponenten über das Netzwerk fern zu steuern und auch deren Status abzufragen. Auf einer Fläche von x mal x Metern sind hierzu vier Räume angelegt mit insgesamt weit über 100 Smart Home Geräten angefangen bei intelligenten Lampen bis hin zur Smart Waschmaschine. Weiter geht es nun in den ersten Raum, den TV-Raum. Bitte folgen Sie mir auffällig

@@ -6,6 +6,7 @@
 package de.lmoedl;
 
 import de.lmoedl.interfaces.MQTTSubscriberCallbackInterface;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.eclipse.paho.client.mqttv3.IMqttDeliveryToken;
@@ -79,9 +80,29 @@ public class MQTTConnectionManager implements MqttCallbackExtended{
         }
     }
     
+    public void subscribeToItems(List<String> items){
+        try {
+            for (String item : items) {
+                client.subscribe(topicSubscribeBase + item, qos);
+            }
+        } catch (MqttException ex) {
+            Logger.getLogger(MQTTConnectionManager.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
     public void unsubscribeOfItem(String item){
         try {
             client.unsubscribe(topicSubscribeBase + item);
+        } catch (MqttException ex) {
+            Logger.getLogger(MQTTConnectionManager.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
+    public void unsubscribeOfItems(List<String> items){
+        try {
+            for (String item : items) {
+                client.unsubscribe(topicSubscribeBase + item);
+            }
         } catch (MqttException ex) {
             Logger.getLogger(MQTTConnectionManager.class.getName()).log(Level.SEVERE, null, ex);
         }

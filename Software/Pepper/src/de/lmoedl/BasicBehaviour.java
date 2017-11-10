@@ -14,24 +14,18 @@ import com.aldebaran.qi.helper.proxies.ALAnimationPlayer;
 import com.aldebaran.qi.helper.proxies.ALBasicAwareness;
 import com.aldebaran.qi.helper.proxies.ALDialog;
 import com.aldebaran.qi.helper.proxies.ALFaceDetection;
-import com.aldebaran.qi.helper.proxies.ALLogger;
 import com.aldebaran.qi.helper.proxies.ALMemory;
 import com.aldebaran.qi.helper.proxies.ALMotion;
 import com.aldebaran.qi.helper.proxies.ALNavigation;
-import com.aldebaran.qi.helper.proxies.ALNotificationManager;
-import com.aldebaran.qi.helper.proxies.ALRobotPosture;
-import com.aldebaran.qi.helper.proxies.ALSoundDetection;
 import com.aldebaran.qi.helper.proxies.ALSoundLocalization;
 import com.aldebaran.qi.helper.proxies.ALSpeechRecognition;
 import com.aldebaran.qi.helper.proxies.ALTextToSpeech;
 import com.aldebaran.qi.helper.proxies.ALTracker;
 import com.vmichalak.sonoscontroller.SonosDevice;
-import com.vmichalak.sonoscontroller.SonosDiscovery;
 import com.vmichalak.sonoscontroller.exception.SonosControllerException;
 import de.lmoedl.interfaces.MQTTSubscriberCallbackInterface;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -59,6 +53,7 @@ public class BasicBehaviour implements MQTTSubscriberCallbackInterface {
     private ALNavigation navigation;
 
     private ConnectionManager connectionManager;
+    MQTTConnectionManager mQTTConnectionManager;
 
     private String currentState;
 
@@ -70,6 +65,9 @@ public class BasicBehaviour implements MQTTSubscriberCallbackInterface {
     private long humanDetectedId = 0;
     private long humanDetectedDemoId = 0;
     private long speechRecognitionId = 0;
+    private long eventSubscriptionIdStart = 0;
+
+    private boolean isDancing = true;
 
     private String topic;
 
@@ -92,6 +90,7 @@ public class BasicBehaviour implements MQTTSubscriberCallbackInterface {
             tracker = new ALTracker(session);
             animationPlayer = new ALAnimationPlayer(session);
             connectionManager = new ConnectionManager();
+            mQTTConnectionManager = new MQTTConnectionManager(this);
             navigation = new ALNavigation(session);
 
             config();
@@ -106,20 +105,123 @@ public class BasicBehaviour implements MQTTSubscriberCallbackInterface {
         //stateMachine(Constants.Steps.STEP_END);
         //stateMachine(Constants.Steps.STEP_COCHLOVIUS);
         //stateMachine(Constants.Steps.STEP_DIALOG);
-        stateMachine(Constants.Steps.STEP_MQTT);
+        //stateMachine(Constants.Steps.STEP_MQTT);
+    }
+
+    public void run() throws CallError, InterruptedException, Exception {
+        eventSubscriptionIdStart = memory.subscribeToEvent("RearTactilTouched", "onTouchHead::(f)", this);
+        while (isDancing) {
+            animationPlayer.run("animations/Stand/Waiting/AirGuitar_1");
+        }
+
     }
 
     private void config() throws CallError, InterruptedException, Exception {
         textToSpeech.setLanguage(Constants.LANGUAGE);
+        dialog.setLanguage(Constants.LANGUAGE);
         motion.setExternalCollisionProtectionEnabled("All", true);
         motion.setWalkArmsEnabled(Boolean.TRUE, Boolean.TRUE);
         speechRecognition.pause(true);
         speechRecognition.setLanguage(Constants.LANGUAGE);
         speechRecognition.pause(false);
-        motion.wakeUp();
 
+        motion.wakeUp();
         memory.subscribeToEvent("RearTactilTouched", "onTouchEnd::(f)", this);
+        startConcierge();
+
         memory.subscribeToEvent("SwitchLight", "onLightSwitch::(s)", this);
+        //memory.subscribeToEvent("RearTactilTouched", "onTouchEnd::(f)", this); 
+    }
+
+    public void onTouchHead(Float value) throws InterruptedException, CallError, IOException, SonosControllerException {
+        System.out.println(Constants.APP_NAME + " : Touch " + value);
+        if (value == 1.0) {
+            isDancing = false;
+            animationPlayer.reset();
+            memory.unsubscribeToEvent(eventSubscriptionIdStart);
+            startConcierge();
+        }
+    }
+
+    private void startConcierge() throws CallError, InterruptedException, IOException, SonosControllerException {
+        //Start of tour - Move from door to switch cabinet
+        loadTopicWithForceOutput("/home/nao/Willkommen.top");
+        motion.moveTo(0f, 0f, new Float(Math.toRadians(180)));
+        motion.moveTo(10f, 0f, 0f);
+        motion.moveTo(0f, 0f, new Float(Math.toRadians(180)));
+        loadTopicWithForceOutput("/home/nao/General.top");
+        motion.moveTo(0f, 0f, new Float(Math.toRadians(-90)));
+
+        //navigation.moveAlong("[\"Composed\", [\"Holonomic\", [\"Line\", [1.0, 0.0]], 0.0, 5.0], [\"Holonomic\", [\"Line\", [-1.0, 0.0]], 0.0, 10.0]]");
+        //navigation.moveAlong(trajectory);
+        
+        //Move from switch cabinet to TV room
+        motion.moveTo(10f, 0f, 0f);
+        motion.moveTo(0f, 0f, new Float(Math.toRadians(90)));
+        motion.moveTo(1f, 0f, new Float(Math.toRadians(-90)));
+        motion.moveTo(2f, 0f, 0f);
+        motion.moveTo(0f, 0f, new Float(Math.toRadians(180)));
+        
+        //Window open scene
+        mQTTConnectionManager.subscribeToItems(Constants.MQTTTopics.Window.WINDOWS);
+        String topic = loadTopic("/home/nao/TVRoom.top");
+        dialog.forceOutput();
+        //TODO: Testen Zeit in ms von >10sek
+        dialog.setDelay("onWindowOpend", -1);
+        dialog.forceOutput();
+        dialog.setDelay("onWindowClosed", -1);
+        dialog.forceOutput();
+        
+        //Gaming scene
+        //Menschenerkennung einfügen
+        
+        dialog.setDelay("onFaceRecognizedDistance", -1);
+        runGamingScene();
+        dialog.forceOutput();
+        unloadTopic(topic);
+        
+        //Move from TV room to working room
+        motion.moveTo(2.5f, 0f, 0f);
+        motion.moveTo(0f, 0f, new Float(Math.toRadians(-90)));
+        motion.moveTo(2.5f, 0f, 0f);
+        motion.moveTo(0f, 0f, new Float(Math.toRadians(-90)));
+        motion.moveTo(2.0f, 0f, 0f);
+        
+        //Hier Arbeitszimmer einfügen
+        
+        float rFootFront = (float) memory.getData("Device/SubDeviceList/RFoot/FSR/FrontRight/Sensor/Value");
+        System.out.println(rFootFront);
+        
+        
+
+    }
+
+    private void loadTopicWithForceOutput(String topicPath) throws CallError, InterruptedException {
+        String topic = dialog.loadTopic(topicPath);
+        dialog.activateTopic(topic);
+        dialog.subscribe(Constants.APP_NAME);
+        dialog.forceOutput();
+
+        dialog.unsubscribe(Constants.APP_NAME);
+        dialog.deactivateTopic(topic);
+        dialog.unloadTopic(topic);
+    }
+    
+    private String loadTopic(String topicPath) throws CallError, InterruptedException{
+        String topic = dialog.loadTopic(topicPath);
+        dialog.activateTopic(topic);
+        dialog.subscribe(Constants.APP_NAME);
+        return topic;
+    }
+    private void unloadTopic(String topic) throws CallError, InterruptedException{
+        dialog.unsubscribe(Constants.APP_NAME);
+        dialog.deactivateTopic(topic);
+        dialog.unloadTopic(topic);
+    }
+    
+    private void runGamingScene() throws IOException, SonosControllerException{
+        SonosDevice sonos = new SonosDevice("192.168.0.30");
+        sonos.playUri("x-rincon-mp3radio://http://listen.technobase.fm/tunein-mp3-pls", "Technobase.fm");
     }
 
     private void stateMachine(String step) {
@@ -130,16 +232,9 @@ public class BasicBehaviour implements MQTTSubscriberCallbackInterface {
                     motion.wakeUp();
 
                     //Configure the awareness of the robot
-                    awareness.setEngagementMode(Constants.BasicAwareness.EngagementMode.SEMI_ENGAGED);
-                    awareness.setTrackingMode(Constants.BasicAwareness.TrackingModes.MOVE_CONTEXTUALLY);
-                    awareness.setStimulusDetectionEnabled(Constants.BasicAwareness.Stimulus.SOUND, true);
-                    awareness.setStimulusDetectionEnabled(Constants.BasicAwareness.Stimulus.MOVEMENT, true);
-                    awareness.setStimulusDetectionEnabled(Constants.BasicAwareness.Stimulus.PEOPLE, true);
-                    awareness.setStimulusDetectionEnabled(Constants.BasicAwareness.Stimulus.TOUCH, true);
-
                     //humanDetectedId = 
                     memory.subscribeToEvent("ALBasicAwareness/HumanTracked", "onHumanTracked::(i)", this);
-                    awareness.startAwareness();
+
                     textToSpeech.say("Hallo");
                     break;
 
@@ -250,40 +345,69 @@ public class BasicBehaviour implements MQTTSubscriberCallbackInterface {
                     break;
 
                 case Constants.Steps.STEP_MQTT:
-                    MQTTConnectionManager mQTTConnectionManager = new MQTTConnectionManager(this);
+                    
                     //mQTTConnectionManager.publishToItem("Multimediawand_HUE1_Toggle", "ON");
-                    while (true){
-                        
+                    while (true) {
+
                         mQTTConnectionManager.publishToItem("Multimediawand_HUE1_Toggle", "ON");
                         mQTTConnectionManager.publishToItem("Multimediawand_HUE6_Toggle", "ON");
                         mQTTConnectionManager.publishToItem("Multimediawand_HUE1_Toggle", "OFF");
                         mQTTConnectionManager.publishToItem("Multimediawand_HUE6_Toggle", "OFF");
                         Thread.sleep(300);
-                        
-                        
-                        mQTTConnectionManager.publishToItem("Multimediawand_HUE2_Toggle", "ON"); 
+
+                        mQTTConnectionManager.publishToItem("Multimediawand_HUE2_Toggle", "ON");
                         mQTTConnectionManager.publishToItem("Multimediawand_HUE5_Toggle", "ON");
                         mQTTConnectionManager.publishToItem("Multimediawand_HUE2_Toggle", "OFF");
                         mQTTConnectionManager.publishToItem("Multimediawand_HUE5_Toggle", "OFF");
                         Thread.sleep(300);
-                        
-                        
+
                         mQTTConnectionManager.publishToItem("Multimediawand_HUE3_Toggle", "ON");
                         mQTTConnectionManager.publishToItem("Multimediawand_HUE4_Toggle", "ON");
                         mQTTConnectionManager.publishToItem("Multimediawand_HUE3_Toggle", "OFF");
                         mQTTConnectionManager.publishToItem("Multimediawand_HUE4_Toggle", "OFF");
-                        Thread.sleep(300); 
+                        Thread.sleep(300);
                     }
 
-                    //mQTTConnectionManager.subscribeToItem(Constants.MQTTTopics.Window.WINDOW_6);
+                //mQTTConnectionManager.subscribeToItem(Constants.MQTTTopics.Window.WINDOW_6);
+                //break;
+                case Constants.Steps.STEP_TRAJECTORY:
+                    Object[] trajectory = new Object[3];
+                    trajectory[0] = "Composed";
+                    Object[] holonomic1 = new Object[4];
+                    holonomic1[0] = "Holonomic";
 
-                    //break;
+                    Object[] line1 = new Object[2];
+                    line1[0] = "Line";
+                    line1[1] = new float[]{1.0f, 0.0f};
+
+                    holonomic1[1] = line1;
+                    holonomic1[2] = 0.0f;
+                    holonomic1[3] = 5.0f;
+
+                    trajectory[1] = holonomic1;
+
+                    Object[] holonomic2 = new Object[4];
+                    holonomic1[0] = "Holonomic";
+
+                    Object[] line2 = new Object[2];
+                    line1[0] = "Line";
+                    line1[1] = new float[]{-1.0f, 0.0f};
+
+                    holonomic1[1] = line2;
+                    holonomic1[2] = 0.0f;
+                    holonomic1[3] = 10.0f;
+
+                    trajectory[1] = holonomic1;
+                    trajectory[2] = holonomic2;
+                    
+                    navigation.moveAlong(trajectory);
+                    break;
 
                 case Constants.Steps.STEP_END:
-                    memory.unsubscribeToEvent(speechRecognitionId);
-                    speechRecognition.pause(true);
-                    speechRecognition.stop(1);
-                    speechRecognition.removeAllContext();
+                    //memory.unsubscribeToEvent(speechRecognitionId);
+                    //speechRecognition.pause(true);
+                    //speechRecognition.unsubscribe(Constants.APP_NAME);
+                    //speechRecognition.removeAllContext();
 
                     dialog.deactivateTopic(topic);
                     dialog.unloadTopic(topic);
@@ -291,8 +415,8 @@ public class BasicBehaviour implements MQTTSubscriberCallbackInterface {
                     dialog.resetAll();
                     //speechRecognition.stop(0);
                     //speechRecognition.exit();
-                    motion.rest();
-                    application.stop();
+                    //motion.rest();
+                    //application.stop();
                     break;
             }
         } catch (Exception ex) {
@@ -504,9 +628,9 @@ public class BasicBehaviour implements MQTTSubscriberCallbackInterface {
     }
 
     @Override
-    public void onSubscription(String item, String value) {     
-        String itemDescription = item.split("\\/")[3];     
-        
+    public void onSubscription(String item, String value) {
+        String itemDescription = item.split("\\/")[3];
+
         switch (itemDescription) {
             case Constants.MQTTTopics.Window.WINDOW_1:
             case Constants.MQTTTopics.Window.WINDOW_2:
@@ -520,9 +644,14 @@ public class BasicBehaviour implements MQTTSubscriberCallbackInterface {
 
                 try {
                     if (value.equals("OPEN")) {
-                        animatedSpeech.say("Oh, ich sehe, ein Fenster ist geöffnet");
+                        System.out.println("onSubscription: " + itemDescription + " " + value);
+                        memory.raiseEvent("onWindowOpend", itemDescription);
+                        //animatedSpeech.say("Oh, ich sehe, ein Fenster ist geöffnet");
                     } else if (value.equals("CLOSED")) {
-                        animatedSpeech.say("Sehr gut, das Fenster ist wieder geschlossen.");
+                        //animatedSpeech.say("Sehr gut, das Fenster ist wieder geschlossen.");
+                        System.out.println("onSubscription: " + itemDescription + " " + value);
+                        memory.raiseEvent("onWindowClosed", itemDescription);
+                        mQTTConnectionManager.unsubscribeOfItems(Constants.MQTTTopics.Window.WINDOWS);
                     }
                 } catch (CallError ex) {
                     Logger.getLogger(BasicBehaviour.class.getName()).log(Level.SEVERE, null, ex);

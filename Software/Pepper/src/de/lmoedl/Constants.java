@@ -5,6 +5,10 @@
  */
 package de.lmoedl;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 /**
  *
  * @author lothar
@@ -14,13 +18,13 @@ public class Constants {
     public static final String APP_NAME = "Pepper_Concierge";
     public static final String LANGUAGE = "German";
 
-    class Start {
+    public static class Start {
 
         public static final String ROBOT_URL = "pepper.local";
         public static final String ROBOT_PORT = "9559";
     }
 
-    class Steps {
+    public static class Steps {
 
         public static final String STEP_STARUP = "STEP_STARTUP";
         public static final String STEP_MOVE_AROUND = "STEP_MOVE_AROUND";
@@ -30,11 +34,12 @@ public class Constants {
         public static final String STEP_COCHLOVIUS = "STEP_COCHLOVIUS";
         public static final String STEP_DIALOG = "STEP_DIALOG";
         public static final String STEP_MQTT = "STEP_MQTT";
+        public static final String STEP_TRAJECTORY = "STEP_TRAJECTORY";
     }
 
-    class BasicAwareness {
+    public static class BasicAwareness {
 
-        class Stimulus {
+        public static class Stimulus {
 
             public static final String SOUND = "Sound";
             public static final String MOVEMENT = "Movement";
@@ -42,7 +47,7 @@ public class Constants {
             public static final String TOUCH = "Touch";
         }
 
-        class EngagementMode {
+        public static class EngagementMode {
 
             //(Default mode) when the robot is engaged with a user, it can be distracted by any stimulus, and engage with another person.
             public static final String UNENGAGED = "Unengaged";
@@ -52,7 +57,7 @@ public class Constants {
             public static final String SEMI_ENGAGED = "SemiEngaged";
         }
 
-        class TrackingModes {
+        public static class TrackingModes {
 
             //the tracking only uses the head
             public static final String HEAD = "Head";
@@ -66,11 +71,11 @@ public class Constants {
 
     }
 
-    class MQTTTopics {
+    public static class MQTTTopics {
 
-        class Lights {
+        public static class Lights {
 
-            class TVRoom {
+            public static class TVRoom {
 
                 public static final String HUE_1 = "Multimediawand_HUE1_Toggle";
                 public static final String HUE_2 = "Multimediawand_HUE2_Toggle";
@@ -80,7 +85,7 @@ public class Constants {
                 public static final String HUE_6 = "Multimediawand_HUE6_Toggle";
             }
 
-            class Bathroom {
+            public static class Bathroom {
 
                 public static final String HUE_1 = "Bad_HUE1_Toggle";
                 public static final String HUE_2 = "Bad_HUE2_Toggle";
@@ -90,14 +95,14 @@ public class Constants {
                 public static final String HUE_6 = "Bad_HUE6_Toggle";
             }
 
-            class Doors {
+            public static class Doors {
 
                 public static final String TVROOM_DOOR_1 = "HMScheibentransparenz1_1_State";
                 public static final String TVROOM_DOOR_2 = "HMScheibentransparenz2_1_State";
             }
         }
 
-        class Window {
+        public static class Window {
 
             public static final String WINDOW_1 = "HMFS1_1_State";
             public static final String WINDOW_2 = "HMFS2_1_State";
@@ -108,6 +113,8 @@ public class Constants {
             public static final String WINDOW_7 = "HMFS7_1_State";
             public static final String WINDOW_8 = "HMFS8_1_State";
             public static final String WINDOW_9 = "HMFS9_1_State";
+            
+            public static final List<String> WINDOWS = new ArrayList<String>(Arrays.asList(WINDOW_1, WINDOW_2, WINDOW_3, WINDOW_4, WINDOW_5, WINDOW_6, WINDOW_7, WINDOW_8, WINDOW_9));
         }
     }
 }
