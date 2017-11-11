@@ -1,0 +1,7 @@
+topic: ~bathroom()
+language: ged
+
+proposal: ^pCall(ALMemory.raiseEvent("SubscribeMQTTTopic", "NAInnenraumsensorBad_Temperature")) ^pCall(ALMemory.raiseEvent("SubscribeMQTTTopic", "NAInnenraumsensorBad_CO2")) Das ist das Badezimmer. Leider kein stilles örtchen wie wahrscheinlich bei euch zu Hause, aber trotzdem ein toller Raum. Ja, ihr seht richtig, hier ist keine Toilette, aber als Elektro-Roboter brauche ich auch keinen Ölwechsel ^run(animations/Stand/Emotions/Positive/Laugh_1). Hier gibt es aber eine Menge anderer toller Geräte, die über das Netzwerk überwacht und gesteuert werden können, wie eine Waschmaschine und einen Trockner. Die Temperatur hier im Raum beträgt ^sCall(ALMemory.getData("NAInnenraumsensorBad_Temperature")) Grad. Der CO 2 Wert beträgt ^sCall(ALMemory.getData("NAInnenraumsensorBad_CO2")) ppm ^pCall(ALMemory.raiseEvent("UnsubscribeMQTTTopic", "NAInnenraumsensorBad_Temperature")) ^pCall(ALMemory.raiseEvent("UnsubscribeMQTTTopic", "NAInnenraumsensorBad_CO2")). Jetzt gehen wir auch schon in den letzten Raum, die Küche. Bitte macht den Weg für mich frei und folgt mir. 
+
+
+

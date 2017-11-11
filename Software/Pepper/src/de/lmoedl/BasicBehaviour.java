@@ -53,7 +53,9 @@ public class BasicBehaviour implements MQTTSubscriberCallbackInterface {
     private ALNavigation navigation;
 
     private ConnectionManager connectionManager;
-    MQTTConnectionManager mQTTConnectionManager;
+    private MQTTConnectionManager mQTTConnectionManager;
+    private String mqttItemDescription = "";
+    private String mqttValue = "";
 
     private String currentState;
 
@@ -131,6 +133,9 @@ public class BasicBehaviour implements MQTTSubscriberCallbackInterface {
 
         memory.subscribeToEvent("SwitchLight", "onLightSwitch::(s)", this);
         //memory.subscribeToEvent("RearTactilTouched", "onTouchEnd::(f)", this); 
+        memory.subscribeToEvent("SubscribeMQTTTopic", "onSubscribeMQTTTopic::(s)", this);
+        memory.subscribeToEvent("UnsubscribeMQTTTopic", "onUnsubscribeMQTTTopic::(s)", this);
+        memory.subscribeToEvent("PublishMQTTMessage", "onPublishMQTTMessage::(t,m)", this);
     }
 
     public void onTouchHead(Float value) throws InterruptedException, CallError, IOException, SonosControllerException {
@@ -154,14 +159,13 @@ public class BasicBehaviour implements MQTTSubscriberCallbackInterface {
 
         //navigation.moveAlong("[\"Composed\", [\"Holonomic\", [\"Line\", [1.0, 0.0]], 0.0, 5.0], [\"Holonomic\", [\"Line\", [-1.0, 0.0]], 0.0, 10.0]]");
         //navigation.moveAlong(trajectory);
-        
         //Move from switch cabinet to TV room
         motion.moveTo(10f, 0f, 0f);
         motion.moveTo(0f, 0f, new Float(Math.toRadians(90)));
         motion.moveTo(1f, 0f, new Float(Math.toRadians(-90)));
         motion.moveTo(2f, 0f, 0f);
         motion.moveTo(0f, 0f, new Float(Math.toRadians(180)));
-        
+
         //Window open scene
         mQTTConnectionManager.subscribeToItems(Constants.MQTTTopics.Window.WINDOWS);
         String topic = loadTopic("/home/nao/TVRoom.top");
@@ -171,28 +175,49 @@ public class BasicBehaviour implements MQTTSubscriberCallbackInterface {
         dialog.forceOutput();
         dialog.setDelay("onWindowClosed", -1);
         dialog.forceOutput();
-        
+
         //Gaming scene
         //Menschenerkennung einfügen
-        
         dialog.setDelay("onFaceRecognizedDistance", -1);
         runGamingScene();
         dialog.forceOutput();
         unloadTopic(topic);
-        
+
         //Move from TV room to working room
         motion.moveTo(2.5f, 0f, 0f);
         motion.moveTo(0f, 0f, new Float(Math.toRadians(-90)));
         motion.moveTo(2.5f, 0f, 0f);
         motion.moveTo(0f, 0f, new Float(Math.toRadians(-90)));
         motion.moveTo(2.0f, 0f, 0f);
-        
-        //Hier Arbeitszimmer einfügen
-        
+        motion.moveTo(0f, 0f, new Float(Math.toRadians(180)));
+        loadTopicWithForceOutput("WorkingRoom.top");
+
+        //Check if in front of bathroom
         float rFootFront = (float) memory.getData("Device/SubDeviceList/RFoot/FSR/FrontRight/Sensor/Value");
         System.out.println(rFootFront);
-        
-        
+
+        //Bathroom
+        motion.moveTo(6f, 0f, 0f);
+        motion.moveTo(0f, 0f, new Float(Math.toRadians(90)));
+        motion.moveTo(-1f, 0f, 0f);
+        loadTopicWithForceOutput("Bathroom.top");
+
+        //Kitchen
+        motion.moveTo(1f, 0f, 0f);
+        motion.moveTo(0f, 0f, new Float(Math.toRadians(-90)));
+        motion.moveTo(3f, 0f, 0f);
+        motion.moveTo(0f, 0f, new Float(Math.toRadians(90)));
+        motion.moveTo(-1f, 0f, 0f);
+        loadTopicWithForceOutput("Kitchen.top");
+
+        motion.moveTo(1f, 0f, 0f);
+        motion.moveTo(0f, 0f, new Float(Math.toRadians(-90)));
+        motion.moveTo(8f, 0f, 0f);
+        motion.moveTo(0f, 0f, new Float(Math.toRadians(180)));
+        loadTopicWithForceOutput("Goodby.top");
+
+        SonosDevice sonos = new SonosDevice("192.168.0.30");
+        sonos.playUri("x-rincon-mp3radio://http://listen.technobase.fm/tunein-mp3-pls", "Technobase.fm");
 
     }
 
@@ -206,22 +231,65 @@ public class BasicBehaviour implements MQTTSubscriberCallbackInterface {
         dialog.deactivateTopic(topic);
         dialog.unloadTopic(topic);
     }
-    
-    private String loadTopic(String topicPath) throws CallError, InterruptedException{
+
+    private String loadTopic(String topicPath) throws CallError, InterruptedException {
         String topic = dialog.loadTopic(topicPath);
         dialog.activateTopic(topic);
         dialog.subscribe(Constants.APP_NAME);
         return topic;
     }
-    private void unloadTopic(String topic) throws CallError, InterruptedException{
+
+    private void unloadTopic(String topic) throws CallError, InterruptedException {
         dialog.unsubscribe(Constants.APP_NAME);
         dialog.deactivateTopic(topic);
         dialog.unloadTopic(topic);
     }
-    
-    private void runGamingScene() throws IOException, SonosControllerException{
+
+    private void runGamingScene() throws IOException, SonosControllerException, InterruptedException {
         SonosDevice sonos = new SonosDevice("192.168.0.30");
         sonos.playUri("x-rincon-mp3radio://http://listen.technobase.fm/tunein-mp3-pls", "Technobase.fm");
+        int i = 0;
+        
+        mQTTConnectionManager.publishToItem("HMScheibentransparenz1_1_State", "OFF");
+        mQTTConnectionManager.publishToItem("HMScheibentransparenz2_1_State", "OFF");
+        
+        while (i < 10) {
+
+            mQTTConnectionManager.publishToItem("Multimediawand_HUE1_Toggle", "ON");
+            mQTTConnectionManager.publishToItem("Multimediawand_HUE6_Toggle", "ON");
+            mQTTConnectionManager.publishToItem("Multimediawand_HUE1_Toggle", "OFF");
+            mQTTConnectionManager.publishToItem("Multimediawand_HUE6_Toggle", "OFF");
+            Thread.sleep(300);
+
+            mQTTConnectionManager.publishToItem("Multimediawand_HUE2_Toggle", "ON");
+            mQTTConnectionManager.publishToItem("Multimediawand_HUE5_Toggle", "ON");
+            mQTTConnectionManager.publishToItem("Multimediawand_HUE2_Toggle", "OFF");
+            mQTTConnectionManager.publishToItem("Multimediawand_HUE5_Toggle", "OFF");
+            Thread.sleep(300);
+
+            mQTTConnectionManager.publishToItem("Multimediawand_HUE3_Toggle", "ON");
+            mQTTConnectionManager.publishToItem("Multimediawand_HUE4_Toggle", "ON");
+            mQTTConnectionManager.publishToItem("Multimediawand_HUE3_Toggle", "OFF");
+            mQTTConnectionManager.publishToItem("Multimediawand_HUE4_Toggle", "OFF");
+            Thread.sleep(300);
+
+            i++;
+        }
+        mQTTConnectionManager.publishToItem("HMScheibentransparenz1_1_State", "ON");
+        mQTTConnectionManager.publishToItem("HMScheibentransparenz2_1_State", "ON");
+
+    }
+
+    public void onSubscribeMQTTTopic(String topic) {
+        mQTTConnectionManager.subscribeToItem(topic);
+    }
+
+    public void onUnsubscribeMQTTTopic(String topic) {
+        mQTTConnectionManager.unsubscribeOfItem(topic);
+    }
+
+    public void onPublishMQTTMessage(String topic, String payload) {
+        mQTTConnectionManager.publishToItem(topic, payload);
     }
 
     private void stateMachine(String step) {
@@ -345,7 +413,7 @@ public class BasicBehaviour implements MQTTSubscriberCallbackInterface {
                     break;
 
                 case Constants.Steps.STEP_MQTT:
-                    
+
                     //mQTTConnectionManager.publishToItem("Multimediawand_HUE1_Toggle", "ON");
                     while (true) {
 
@@ -399,7 +467,7 @@ public class BasicBehaviour implements MQTTSubscriberCallbackInterface {
 
                     trajectory[1] = holonomic1;
                     trajectory[2] = holonomic2;
-                    
+
                     navigation.moveAlong(trajectory);
                     break;
 
@@ -630,6 +698,17 @@ public class BasicBehaviour implements MQTTSubscriberCallbackInterface {
     @Override
     public void onSubscription(String item, String value) {
         String itemDescription = item.split("\\/")[3];
+
+        this.mqttItemDescription = itemDescription;
+        this.mqttValue = value;
+
+        try {
+            memory.insertData(itemDescription, value);
+        } catch (CallError ex) {
+            Logger.getLogger(BasicBehaviour.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (InterruptedException ex) {
+            Logger.getLogger(BasicBehaviour.class.getName()).log(Level.SEVERE, null, ex);
+        }
 
         switch (itemDescription) {
             case Constants.MQTTTopics.Window.WINDOW_1:
