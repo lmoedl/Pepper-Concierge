@@ -7,6 +7,7 @@ package de.lmoedl;
 
 import com.aldebaran.qi.Application;
 import com.aldebaran.qi.CallError;
+import com.aldebaran.qi.Future;
 import com.aldebaran.qi.Session;
 import com.aldebaran.qi.helper.EventCallback;
 import com.aldebaran.qi.helper.proxies.ALAnimatedSpeech;
@@ -108,6 +109,7 @@ public class BasicBehaviour implements MQTTSubscriberCallbackInterface {
         //stateMachine(Constants.Steps.STEP_COCHLOVIUS);
         //stateMachine(Constants.Steps.STEP_DIALOG);
         //stateMachine(Constants.Steps.STEP_MQTT);
+        //stateMachine(Constants.Steps.STEP_TRAJECTORY);
     }
 
     public void run() throws CallError, InterruptedException, Exception {
@@ -129,13 +131,14 @@ public class BasicBehaviour implements MQTTSubscriberCallbackInterface {
 
         motion.wakeUp();
         memory.subscribeToEvent("RearTactilTouched", "onTouchEnd::(f)", this);
-        startConcierge();
+        
 
         memory.subscribeToEvent("SwitchLight", "onLightSwitch::(s)", this);
         //memory.subscribeToEvent("RearTactilTouched", "onTouchEnd::(f)", this); 
         memory.subscribeToEvent("SubscribeMQTTTopic", "onSubscribeMQTTTopic::(s)", this);
         memory.subscribeToEvent("UnsubscribeMQTTTopic", "onUnsubscribeMQTTTopic::(s)", this);
-        memory.subscribeToEvent("PublishMQTTMessage", "onPublishMQTTMessage::(t,m)", this);
+        memory.subscribeToEvent("PublishMQTTMessage", "onPublishMQTTMessage::(s)(m)", this);
+        startConcierge();
     }
 
     public void onTouchHead(Float value) throws InterruptedException, CallError, IOException, SonosControllerException {
@@ -149,33 +152,42 @@ public class BasicBehaviour implements MQTTSubscriberCallbackInterface {
     }
 
     private void startConcierge() throws CallError, InterruptedException, IOException, SonosControllerException {
+        Future<Boolean> success;
         //Start of tour - Move from door to switch cabinet
-        loadTopicWithForceOutput("/home/nao/Willkommen.top");
+        loadTopicWithForceOutput("/home/nao/SwitchCabinet.top");
         motion.moveTo(0f, 0f, new Float(Math.toRadians(180)));
-        motion.moveTo(10f, 0f, 0f);
-        motion.moveTo(0f, 0f, new Float(Math.toRadians(180)));
+        success = motion.call("moveTo", 10f, 0f, 0f);
+        
+        System.out.println("success: " + " get: " + success.get() + " isCancelled: " + success.isCancelled() + " isDone: " + success.isDone() + " isValid: " + success.isValid());
+        //Wird bei false übersprungen
+        success = motion.call("moveTo", 0f, 0f, new Float(Math.toRadians(180)));
+        //Kopf hoch
         loadTopicWithForceOutput("/home/nao/General.top");
-        motion.moveTo(0f, 0f, new Float(Math.toRadians(-90)));
+        success = motion.call("moveTo", 0f, 0f, new Float(Math.toRadians(-90)));
 
         //navigation.moveAlong("[\"Composed\", [\"Holonomic\", [\"Line\", [1.0, 0.0]], 0.0, 5.0], [\"Holonomic\", [\"Line\", [-1.0, 0.0]], 0.0, 10.0]]");
         //navigation.moveAlong(trajectory);
         //Move from switch cabinet to TV room
-        motion.moveTo(10f, 0f, 0f);
-        motion.moveTo(0f, 0f, new Float(Math.toRadians(90)));
-        motion.moveTo(1f, 0f, new Float(Math.toRadians(-90)));
-        motion.moveTo(2f, 0f, 0f);
-        motion.moveTo(0f, 0f, new Float(Math.toRadians(180)));
+        success =  motion.call("moveTo", 10f, 0f, 0f);
+        System.out.println("success: " + success.get());
+        success = motion.call("moveTo", 10f, 0f, 0f);
+        success = motion.call("moveTo", 0f, 0f, new Float(Math.toRadians(90)));
+        success = motion.call("moveTo", 1f, 0f, new Float(Math.toRadians(-90)));
+        success = motion.call("moveTo", 2f, 0f, 0f);
+        success = motion.call("moveTo", 0f, 0f, new Float(Math.toRadians(180)));
 
         //Window open scene
         mQTTConnectionManager.subscribeToItems(Constants.MQTTTopics.Window.WINDOWS);
         String topic = loadTopic("/home/nao/TVRoom.top");
         dialog.forceOutput();
         //TODO: Testen Zeit in ms von >10sek
-        dialog.setDelay("onWindowOpend", -1);
+        //check Event
+        dialog.setDelay("WindowOpend", 5000);
         dialog.forceOutput();
-        dialog.setDelay("onWindowClosed", -1);
+        dialog.setDelay("WindowClosed", -1);
         dialog.forceOutput();
-
+        
+        mQTTConnectionManager.unsubscribeOfItems(Constants.MQTTTopics.Window.WINDOWS);
         //Gaming scene
         //Menschenerkennung einfügen
         dialog.setDelay("onFaceRecognizedDistance", -1);
@@ -184,12 +196,13 @@ public class BasicBehaviour implements MQTTSubscriberCallbackInterface {
         unloadTopic(topic);
 
         //Move from TV room to working room
-        motion.moveTo(2.5f, 0f, 0f);
-        motion.moveTo(0f, 0f, new Float(Math.toRadians(-90)));
-        motion.moveTo(2.5f, 0f, 0f);
-        motion.moveTo(0f, 0f, new Float(Math.toRadians(-90)));
-        motion.moveTo(2.0f, 0f, 0f);
-        motion.moveTo(0f, 0f, new Float(Math.toRadians(180)));
+        success = motion.call("moveTo", 2.5f, 0f, 0f);
+        success = motion.call("moveTo", 0f, 0f, new Float(Math.toRadians(-90)));
+        success = motion.call("moveTo", 2.5f, 0f, 0f);
+        success = motion.call("moveTo", 0f, 0f, new Float(Math.toRadians(-90)));
+        success = motion.call("moveTo", 2.0f, 0f, 0f);
+        success = motion.call("moveTo", 0f, 0f, new Float(Math.toRadians(180)));
+        //check workingroom.top Incorrect file WorkingRoom.top
         loadTopicWithForceOutput("WorkingRoom.top");
 
         //Check if in front of bathroom
@@ -197,23 +210,23 @@ public class BasicBehaviour implements MQTTSubscriberCallbackInterface {
         System.out.println(rFootFront);
 
         //Bathroom
-        motion.moveTo(6f, 0f, 0f);
-        motion.moveTo(0f, 0f, new Float(Math.toRadians(90)));
-        motion.moveTo(-1f, 0f, 0f);
+        success = motion.call("moveTo", 6f, 0f, 0f);
+        success = motion.call("moveTo", 0f, 0f, new Float(Math.toRadians(90)));
+        success = motion.call("moveTo", -1f, 0f, 0f);
         loadTopicWithForceOutput("Bathroom.top");
 
         //Kitchen
-        motion.moveTo(1f, 0f, 0f);
-        motion.moveTo(0f, 0f, new Float(Math.toRadians(-90)));
-        motion.moveTo(3f, 0f, 0f);
-        motion.moveTo(0f, 0f, new Float(Math.toRadians(90)));
-        motion.moveTo(-1f, 0f, 0f);
+        success = motion.call("moveTo", 1f, 0f, 0f);
+        success = motion.call("moveTo", 0f, 0f, new Float(Math.toRadians(-90)));
+        success = motion.call("moveTo", 3f, 0f, 0f);
+        success = motion.call("moveTo", 0f, 0f, new Float(Math.toRadians(90)));
+        success = motion.call("moveTo", -1f, 0f, 0f);
         loadTopicWithForceOutput("Kitchen.top");
 
-        motion.moveTo(1f, 0f, 0f);
-        motion.moveTo(0f, 0f, new Float(Math.toRadians(-90)));
-        motion.moveTo(8f, 0f, 0f);
-        motion.moveTo(0f, 0f, new Float(Math.toRadians(180)));
+        success = motion.call("moveTo", 1f, 0f, 0f);
+        success = motion.call("moveTo", 0f, 0f, new Float(Math.toRadians(-90)));
+        success = motion.call("moveTo", 8f, 0f, 0f);
+        success = motion.call("moveTo", 0f, 0f, new Float(Math.toRadians(180)));
         loadTopicWithForceOutput("Goodby.top");
 
         SonosDevice sonos = new SonosDevice("192.168.0.30");
@@ -277,6 +290,7 @@ public class BasicBehaviour implements MQTTSubscriberCallbackInterface {
         }
         mQTTConnectionManager.publishToItem("HMScheibentransparenz1_1_State", "ON");
         mQTTConnectionManager.publishToItem("HMScheibentransparenz2_1_State", "ON");
+        sonos.pause();
 
     }
 
@@ -290,6 +304,10 @@ public class BasicBehaviour implements MQTTSubscriberCallbackInterface {
 
     public void onPublishMQTTMessage(String topic, String payload) {
         mQTTConnectionManager.publishToItem(topic, payload);
+    }
+    
+    public void checkDestination(){
+        
     }
 
     private void stateMachine(String step) {
@@ -407,9 +425,11 @@ public class BasicBehaviour implements MQTTSubscriberCallbackInterface {
                 case Constants.Steps.STEP_DIALOG:
                     dialog.setLanguage(Constants.LANGUAGE);
                     //System.out.println(getClass().getClassLoader().getResource("TestDialog.top").getPath());
-                    topic = dialog.loadTopic("/home/nao/TestDialog.top");
-                    dialog.subscribe(Constants.APP_NAME);
+                    topic = dialog.loadTopic("/home/nao/SwitchCabinet.top");
                     dialog.activateTopic(topic);
+                    dialog.subscribe(Constants.APP_NAME);
+                    dialog.forceOutput();
+                    System.out.println("Subscribe dialog");
                     break;
 
                 case Constants.Steps.STEP_MQTT:
@@ -439,36 +459,46 @@ public class BasicBehaviour implements MQTTSubscriberCallbackInterface {
                 //mQTTConnectionManager.subscribeToItem(Constants.MQTTTopics.Window.WINDOW_6);
                 //break;
                 case Constants.Steps.STEP_TRAJECTORY:
-                    Object[] trajectory = new Object[3];
-                    trajectory[0] = "Composed";
-                    Object[] holonomic1 = new Object[4];
-                    holonomic1[0] = "Holonomic";
+//                    Object[] trajectory = new Object[3];
+//                    trajectory[0] = "Composed";
+//                    Object[] holonomic1 = new Object[4];
+//                    holonomic1[0] = "Holonomic";
+//
+//                    Object[] line1 = new Object[2];
+//                    line1[0] = "Line";
+//                    line1[1] = new float[]{1.0f, 0.0f};
+//
+//                    holonomic1[1] = line1;
+//                    holonomic1[2] = 0.0f;
+//                    holonomic1[3] = 5.0f;
+//
+//                    trajectory[1] = holonomic1;
+//
+//                    Object[] holonomic2 = new Object[4];
+//                    holonomic1[0] = "Holonomic";
+//
+//                    Object[] line2 = new Object[2];
+//                    line1[0] = "Line";
+//                    line1[1] = new float[]{-1.0f, 0.0f};
+//
+//                    holonomic1[1] = line2;
+//                    holonomic1[2] = 0.0f;
+//                    holonomic1[3] = 10.0f;
+//
+//                    trajectory[1] = holonomic1;
+//                    trajectory[2] = holonomic2;
+//                    
+                    Object obj[] = new Object[2];
+                    obj[0] = "Line";
+                    obj[1] = new float[]{1.0f, 0.0f};
+//                    
+//
+//                    navigation.moveAlong(trajectory);
+                    navigation.moveAlong(obj);
+                    
+                      //navigation.moveAlong("[\"Composed\", [\"Holonomic\", [\"Line\", [1.0, 0.0]], 0.0, 5.0], [\"Holonomic\", [\"Line\", [-1.0, 0.0]], 0.0, 10.0]]");
 
-                    Object[] line1 = new Object[2];
-                    line1[0] = "Line";
-                    line1[1] = new float[]{1.0f, 0.0f};
-
-                    holonomic1[1] = line1;
-                    holonomic1[2] = 0.0f;
-                    holonomic1[3] = 5.0f;
-
-                    trajectory[1] = holonomic1;
-
-                    Object[] holonomic2 = new Object[4];
-                    holonomic1[0] = "Holonomic";
-
-                    Object[] line2 = new Object[2];
-                    line1[0] = "Line";
-                    line1[1] = new float[]{-1.0f, 0.0f};
-
-                    holonomic1[1] = line2;
-                    holonomic1[2] = 0.0f;
-                    holonomic1[3] = 10.0f;
-
-                    trajectory[1] = holonomic1;
-                    trajectory[2] = holonomic2;
-
-                    navigation.moveAlong(trajectory);
+                    
                     break;
 
                 case Constants.Steps.STEP_END:
@@ -477,14 +507,16 @@ public class BasicBehaviour implements MQTTSubscriberCallbackInterface {
                     //speechRecognition.unsubscribe(Constants.APP_NAME);
                     //speechRecognition.removeAllContext();
 
+                    
+                    
+                    dialog.unsubscribe(Constants.APP_NAME);
                     dialog.deactivateTopic(topic);
                     dialog.unloadTopic(topic);
-                    dialog.unsubscribe(Constants.APP_NAME);
                     dialog.resetAll();
                     //speechRecognition.stop(0);
                     //speechRecognition.exit();
                     //motion.rest();
-                    //application.stop();
+                    application.stop();
                     break;
             }
         } catch (Exception ex) {
@@ -724,12 +756,12 @@ public class BasicBehaviour implements MQTTSubscriberCallbackInterface {
                 try {
                     if (value.equals("OPEN")) {
                         System.out.println("onSubscription: " + itemDescription + " " + value);
-                        memory.raiseEvent("onWindowOpend", itemDescription);
+                        memory.raiseEvent("WindowOpend", itemDescription);
                         //animatedSpeech.say("Oh, ich sehe, ein Fenster ist geöffnet");
                     } else if (value.equals("CLOSED")) {
                         //animatedSpeech.say("Sehr gut, das Fenster ist wieder geschlossen.");
                         System.out.println("onSubscription: " + itemDescription + " " + value);
-                        memory.raiseEvent("onWindowClosed", itemDescription);
+                        memory.raiseEvent("WindowClosed", itemDescription);
                         mQTTConnectionManager.unsubscribeOfItems(Constants.MQTTTopics.Window.WINDOWS);
                     }
                 } catch (CallError ex) {

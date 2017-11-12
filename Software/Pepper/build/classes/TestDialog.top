@@ -13,7 +13,7 @@ include: mylexicon_ged.top
 #u:(~hello) ~hello
 
 
-u:([e:FrontTactilTouched e:MiddleTactilTouched e:RearTactilTouched]) Ouch, hör auf mich anzufassen!
+#u:([e:FrontTactilTouched e:MiddleTactilTouched e:RearTactilTouched]) Ouch, hör auf mich anzufassen!
 
 u:(Wie heißt du) Ich heiße $Dialog/RobotName, aber da wir Freunde sind, darfst du mich auch Peppi nennen.
 
