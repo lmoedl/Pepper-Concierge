@@ -40,7 +40,7 @@ public class BasicBehaviour {
 
     private Session session;
     private Application application;
-    
+
     private ALMemory memory;
     private ALBasicAwareness.AsyncALBasicAwareness awareness;
     private ALMotion motion;
@@ -55,16 +55,15 @@ public class BasicBehaviour {
     private ALNavigation navigation;
 
     private String currentState;
-    
+
     private float x = 0f;
     private float y = 0f;
     private float teta = 0f;
-    
+
     private long targetReachedId = 0;
     private long humanDetectedId = 0;
     private long humanDetectedDemoId = 0;
     private long speechRecognitionId = 0;
-    
 
     public BasicBehaviour(Application application) {
         this.session = application.session();
@@ -85,16 +84,17 @@ public class BasicBehaviour {
             tracker = new ALTracker(session);
             animationPlayer = new ALAnimationPlayer(session);
             navigation = new ALNavigation(session);
-            
+
             config();
         } catch (Exception ex) {
             Logger.getLogger(BasicBehaviour.class.getName()).log(Level.SEVERE, null, ex);
         }
 
         stateMachine(Constants.Steps.STEP_STARUP);
+        //stateMachine(Constants.Steps.STEP_SOUNDLOCALIZATION);
     }
-    
-    private void config() throws CallError, InterruptedException, Exception{
+
+    private void config() throws CallError, InterruptedException, Exception {
         textToSpeech.setLanguage(Constants.LANGUAGE);
         motion.setExternalCollisionProtectionEnabled("All", true);
         motion.setWalkArmsEnabled(Boolean.TRUE, Boolean.TRUE);
@@ -124,16 +124,31 @@ public class BasicBehaviour {
 
                     memory.subscribeToEvent("RearTactilTouched", "onTouchEnd::(f)", this);
                     break;
-                    
-                    
-                
-                    
+
                 case Constants.Steps.STEP_DEMO:
                     demo();
-                                      
+
                     break;
-                    
-                    
+
+                case Constants.Steps.STEP_SOUNDLOCALIZATION:
+                    motion.stiffnessInterpolation("WholeBody", 1.0f, 0.0f);
+                    awareness.pauseAwareness();
+
+                    soundLocalization.setParameter("Sensibility", 0.7);
+                    //soundLocalization.subscribe(Constants.APP_NAME);
+
+                    //Zweiten Tracker einführen
+                    tracker.setMode("Navigate");
+                    //tracker.registerTarget("Sound", new ArrayList<>(Arrays.asList(0.7f, 0.0f)));
+                    tracker.registerTarget("People", new ArrayList<>());
+
+                    tracker.track("People");
+                    //tracker.track("Sound");
+
+                    targetReachedId = memory.subscribeToEvent("ALTracker/TargetDetected", "onTargetDetected::(m)", this);
+
+                    break;
+
                 case Constants.Steps.STEP_END:
                     awareness.stopAwareness();
                     memory.unsubscribeToEvent(speechRecognitionId);
@@ -148,7 +163,7 @@ public class BasicBehaviour {
             Logger.getLogger(BasicBehaviour.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
+
     public void onTouchEnd(Float value) {
         System.out.println(Constants.APP_NAME + " : Touch " + value);
         if (value == 1.0) {
@@ -156,22 +171,17 @@ public class BasicBehaviour {
             stateMachine(Constants.Steps.STEP_DEMO);
         }
     }
-    
-    
-    
-    public void demo() throws CallError, InterruptedException, Exception{
+
+    public void demo() throws CallError, InterruptedException, Exception {
         //stateMachine(Constants.Steps.STEP_STARUP);
         humanDetectedDemoId = memory.subscribeToEvent("ALBasicAwareness/HumanTracked", "onHumanTrackedDemo::(i)", this);
-            
-        
+
         //String[] jointNames = new String[]{"LShoulderPitch", "LShoulderRoll", "LElbowYaw", "LElbowRoll"};
         //double[] arm1 = {Math.toRadians(-40), Math.toRadians(25), Math.toRadians(0), Math.toRadians(-40)};
-                    
         //double[] arm2 = {-40, 25, 0, -40};
         //System.out.println(arm1);
-
     }
-    
+
     public void onHumanTrackedDemo(Integer humanID) throws Exception {
         System.out.println("onHumanTracked: " + humanID);
         if (humanID >= 0) {
@@ -184,24 +194,21 @@ public class BasicBehaviour {
                 //textToSpeech.say("Mensch gefunden");
                 animatedSpeech.say("Hallo i bims 1 dummer Roboter. ^start(animations/Stand/Emotions/Positive/Laugh_1) ^wait(animations/Stand/Emotions/Positive/Laugh_1)");
                 animatedSpeech.say("Was kann ich für dich tun?");
-                
-                
-                 ArrayList<String> words1 = new ArrayList<>();
-                    words1.add("wo bist du");
-                    words1.add("tanzen");
-                    words1.add("laufen");
-                    words1.add("ende");
-   
 
-                    speechRecognition.pause(true);
-                    speechRecognition.setVocabulary(words1, Boolean.FALSE);
-                    speechRecognition.pause(false);
-                    speechRecognition.subscribe(Constants.APP_NAME);
-                    speechRecognitionId = memory.subscribeToEvent("WordRecognized", "onWordRecognizedForMovingDemo::(m)", this);
-                
+                ArrayList<String> words1 = new ArrayList<>();
+                words1.add("wo bist du");
+                words1.add("tanzen");
+                words1.add("laufen");
+                words1.add("mach dich autonom");
+                words1.add("ende");
+
+                speechRecognition.pause(true);
+                speechRecognition.setVocabulary(words1, Boolean.FALSE);
+                speechRecognition.pause(false);
+                speechRecognition.subscribe(Constants.APP_NAME);
+                speechRecognitionId = memory.subscribeToEvent("WordRecognized", "onWordRecognizedForMovingDemo::(m)", this);
 
                 //humanDetectedDemoId = memory.subscribeToEvent("ALBasicAwareness/HumanTracked", "onHumanTrackedDemo::(i)", this);
-                
             } catch (CallError ex) {
                 Logger.getLogger(BasicBehaviour.class.getName()).log(Level.SEVERE, null, ex);
             } catch (InterruptedException ex) {
@@ -209,7 +216,6 @@ public class BasicBehaviour {
             }
         }
     }
-    
 
     public void onWordRecognizedForMovingDemo(Object words) throws InterruptedException, CallError {
 
@@ -219,48 +225,67 @@ public class BasicBehaviour {
         String word = ((List<String>) words).get(0);
         System.out.println("Word " + word);
 
-            switch(word){
-                case "wo bist du":
-                    animatedSpeech.say("^start(animations/Stand/Gestures/Hey_1) Hallöchen i bims hier ^wait(animations/Stand/Gestures/Hey_1)");
-                    restartSpeechRecognition();
-                    break;
-                    
-                case "tanzen":
-                    animationPlayer.run("animations/Stand/Waiting/AirGuitar_1");
-                    //animationPlayer.run("animations/Stand/Waiting/FunnyDancer_1");
-                    //animationPlayer.run("animations/Stand/Gestures/Wings_1");
-                    //animationPlayer.run("dialog_impossible_moves/animations/CrossArms");
-                    restartSpeechRecognition();
-                    break;
-                    
-                case "laufen":
-                    //ALAutonomousLife autonomousLife = new ALAutonomousLife(session);
-                    //TODO: Autonomous Life enable
-                    
-                    //Backup
-                    motion.moveTo(0f, 0f, new Float(Math.toRadians(180)));
-                    navigation.navigateTo(8f, 0f);
-                    motion.moveTo(0f, 0f, new Float(Math.toRadians(180)));
-                    
-                    restartSpeechRecognition();
-                    break;
+        switch (word) {
+            case "wo bist du":
+                animatedSpeech.say("^start(animations/Stand/Gestures/Hey_1) Hallöchen i bims hier ^wait(animations/Stand/Gestures/Hey_1)");
+                restartSpeechRecognition();
+                break;
+
+            case "tanzen":
+                animationPlayer.run("animations/Stand/Waiting/AirGuitar_1");
+                //animationPlayer.run("animations/Stand/Waiting/FunnyDancer_1");
+                //animationPlayer.run("animations/Stand/Gestures/Wings_1");
+                //animationPlayer.run("dialog_impossible_moves/animations/CrossArms");
+                restartSpeechRecognition();
+                break;
+
+            case "laufen":
+                //ALAutonomousLife autonomousLife = new ALAutonomousLife(session);
+                //TODO: Autonomous Life enable
+
+                //Backup
+                motion.moveTo(0f, 0f, new Float(Math.toRadians(180)));
+                motion.moveTo(10f, 0f, 0f);
+                motion.moveTo(0f, 0f, new Float(Math.toRadians(180)));
+
+                restartSpeechRecognition();
+                break;
                 
-                case "ende":
-                    stateMachine(Constants.Steps.STEP_END);
-                    break;
-                    
-                    default: 
-                        restartSpeechRecognition();
-                
+            case "mach dich autonom":
+                stateMachine(Constants.Steps.STEP_SOUNDLOCALIZATION);
+                break;
+
+            case "ende":
+                stateMachine(Constants.Steps.STEP_END);
+                break;
+
+            default:
+                restartSpeechRecognition();
+
         }
 
-         
-
     }
-    
-    public void restartSpeechRecognition() throws CallError, InterruptedException{
-         animatedSpeech.say("Und was jetzt?");
-         speechRecognition.pause(false);
+
+    public void restartSpeechRecognition() throws CallError, InterruptedException {
+        animatedSpeech.say("Und was jetzt?");
+        speechRecognition.pause(false);
+    }
+
+    public void onTargetDetected(Object object) throws InterruptedException, CallError, Exception {
+        //System.out.println(object.toString());
+        memory.unsubscribeToEvent(targetReachedId);
+        System.out.println("TargetPosition: " + tracker.getTargetPosition().toString());
+        //List<Float> values = tracker.getTargetPosition();
+        try {
+            if (tracker.getTargetPosition().size() > 1) {
+                motion.async().moveTo(tracker.getTargetPosition().get(0), tracker.getTargetPosition().get(1), tracker.getTargetPosition().get(2));
+
+            }
+        } catch (ArrayIndexOutOfBoundsException e) {
+            System.err.println(e.getLocalizedMessage());
+        }
+        targetReachedId = memory.subscribeToEvent("ALTracker/TargetDetected", "onTargetDetected::(m)", this);
+
     }
 
 }
