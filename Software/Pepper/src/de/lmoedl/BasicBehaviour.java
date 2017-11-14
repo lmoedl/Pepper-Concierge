@@ -18,6 +18,7 @@ import com.aldebaran.qi.helper.proxies.ALFaceDetection;
 import com.aldebaran.qi.helper.proxies.ALMemory;
 import com.aldebaran.qi.helper.proxies.ALMotion;
 import com.aldebaran.qi.helper.proxies.ALNavigation;
+import com.aldebaran.qi.helper.proxies.ALSonar;
 import com.aldebaran.qi.helper.proxies.ALSoundLocalization;
 import com.aldebaran.qi.helper.proxies.ALSpeechRecognition;
 import com.aldebaran.qi.helper.proxies.ALTextToSpeech;
@@ -52,6 +53,7 @@ public class BasicBehaviour implements MQTTSubscriberCallbackInterface {
     private ALTracker tracker;
     private ALAnimationPlayer animationPlayer;
     private ALNavigation navigation;
+    private ALSonar sonar;
 
     private ConnectionManager connectionManager;
     private MQTTConnectionManager mQTTConnectionManager;
@@ -95,6 +97,7 @@ public class BasicBehaviour implements MQTTSubscriberCallbackInterface {
             connectionManager = new ConnectionManager();
             mQTTConnectionManager = new MQTTConnectionManager(this);
             navigation = new ALNavigation(session);
+            sonar = new ALSonar(session);
 
             config();
         } catch (Exception ex) {
@@ -128,6 +131,8 @@ public class BasicBehaviour implements MQTTSubscriberCallbackInterface {
         speechRecognition.pause(true);
         speechRecognition.setLanguage(Constants.LANGUAGE);
         speechRecognition.pause(false);
+        
+        sonar.subscribe(Constants.APP_NAME);
 
         motion.wakeUp();
         memory.subscribeToEvent("RearTactilTouched", "onTouchEnd::(f)", this);
@@ -155,10 +160,14 @@ public class BasicBehaviour implements MQTTSubscriberCallbackInterface {
         Future<Boolean> success;
         //Start of tour - Move from door to switch cabinet
         loadTopicWithForceOutput("/home/nao/SwitchCabinet.top");
-        motion.moveTo(0f, 0f, new Float(Math.toRadians(180)));
+        success = motion.call("moveTo", 0f, 0f, new Float(Math.toRadians(180)));
         success = motion.call("moveTo", 10f, 0f, 0f);
+        if (success.get()) {
+            success = motion.call("moveTo", 5f, 0f, 0f);
+            pauseProgramm();
+        }
         
-        System.out.println("success: " + " get: " + success.get() + " isCancelled: " + success.isCancelled() + " isDone: " + success.isDone() + " isValid: " + success.isValid());
+
         //Wird bei false übersprungen
         success = motion.call("moveTo", 0f, 0f, new Float(Math.toRadians(180)));
         //Kopf hoch
@@ -169,12 +178,15 @@ public class BasicBehaviour implements MQTTSubscriberCallbackInterface {
         //navigation.moveAlong(trajectory);
         //Move from switch cabinet to TV room
         success =  motion.call("moveTo", 10f, 0f, 0f);
+        success = navigation.call("navigateTo", 3f, 0f);
         System.out.println("success: " + success.get());
-        success = motion.call("moveTo", 10f, 0f, 0f);
+        success = motion.call("moveTo", 0f, 0f, new Float(Math.toRadians(180)));
+        
+        /*success = motion.call("moveTo", 2f, 0f, 0f);
         success = motion.call("moveTo", 0f, 0f, new Float(Math.toRadians(90)));
         success = motion.call("moveTo", 1f, 0f, new Float(Math.toRadians(-90)));
         success = motion.call("moveTo", 2f, 0f, 0f);
-        success = motion.call("moveTo", 0f, 0f, new Float(Math.toRadians(180)));
+        success = motion.call("moveTo", 0f, 0f, new Float(Math.toRadians(180)));*/
 
         //Window open scene
         mQTTConnectionManager.subscribeToItems(Constants.MQTTTopics.Window.WINDOWS);
@@ -306,8 +318,136 @@ public class BasicBehaviour implements MQTTSubscriberCallbackInterface {
         mQTTConnectionManager.publishToItem(topic, payload);
     }
     
-    public void checkDestination(){
+    private float calcDistanceToWalk(float parameter){
+        if(parameter > 0.3){
+            return parameter;
+        }
+        return 0f;
+    }
+    
+    //public void checkDestination() throws Exception{
+    public void checkDestination(boolean success, List<Float> oldPosition, List<Float> newPosition, float[] shouldGo) throws CallError, InterruptedException, Exception{
+        //check Sonar values
         
+        if(success){
+            return;
+        }
+        
+        pauseProgramm();
+        
+        memory.subscribeToEvent("ALMotion/MoveFailed", new EventCallback() {
+            @Override
+            public void onEvent(Object t) throws InterruptedException, CallError {
+                System.out.println("movefailed: " + t.toString());
+                //System.out.println(t.getClass());
+                //ArrayList<Object> obj = (ArrayList<Object>) t;
+                //for (Object object : obj) {
+                //    System.out.println(object);
+                //}
+                
+            }
+        });
+        
+        /*List<Float> oldValues = motion.getRobotPosition(false);
+        System.out.println("old position: " + oldValues);
+        Future<Boolean> success = motion.call("moveTo", 10.0f, 0f, 0f);
+        System.out.println("success: " + success.get());
+        List<Float> newValues = motion.getRobotPosition(false);
+        System.out.println("position: " + newValues); 
+        
+        float diffX = Math.abs(oldValues.get(0) - newValues.get(0));
+        float diffY = Math.abs(oldValues.get(1) - newValues.get(1));
+        float diffZ = Math.abs(oldValues.get(2) - newValues.get(2));
+        
+        System.out.println("diffX: " + diffX);
+        System.out.println("diffY: " + diffY);
+        System.out.println("diffZ: " + diffZ);
+        
+        
+        //Thread.sleep(5000);
+        
+        
+              
+        float [] sGo = new float[]{10f, 0f, 0f};
+        
+        if ((sGo[0] - diffX) > 0.3 ||(sGo[1] - diffY) > 0.3 || (sGo[2] - diffZ) > 0.3 ) {
+            float x = calcDistanceToWalk(sGo[0] - diffX);
+            float y = calcDistanceToWalk(sGo[1] - diffY);
+            float z = calcDistanceToWalk(sGo[2] - diffZ);
+            
+            System.out.println("corrigationVector: " + x + " " + y + " " + z);
+            
+            motion.moveTo(x, y, z);
+        }*/
+        
+        float diffX = Math.abs(oldPosition.get(0) - newPosition.get(0));
+        float diffY = Math.abs(oldPosition.get(1) - newPosition.get(1));
+        float diffZ = Math.abs(oldPosition.get(2) - newPosition.get(2));
+        
+        if ((shouldGo[0] - diffX) > 0.3 ||(shouldGo[1] - diffY) > 0.3 || (shouldGo[2] - diffZ) > 0.3 ) {
+            float x = calcDistanceToWalk(shouldGo[0] - diffX);
+            float y = calcDistanceToWalk(shouldGo[1] - diffY);
+            float z = calcDistanceToWalk(shouldGo[2] - diffZ);
+            System.out.println("corrigationVector: " + x + " " + y + " " + z);
+
+            motion.moveTo(x, y, z);
+        }
+        
+        
+        
+        
+        
+        //System.out.println("diff: x: " + (oldValues.get(0) - newValues.get(0)) + " y: " + (oldValues.get(1) - newValues.get(1)) + " z: " + (oldValues.get(2) - newValues.get(2)));
+        
+        
+        
+        
+        memory.subscribeToEvent("SonarLeftDetected", new EventCallback() {
+            @Override
+            public void onEvent(Object t) throws InterruptedException, CallError {
+                System.out.println("SonarLeftDetected: " + t.toString());
+            }
+        });
+        
+        memory.subscribeToEvent("SonarRightDetected", new EventCallback() {
+            @Override
+            public void onEvent(Object t) throws InterruptedException, CallError {
+                System.out.println("SonarRightDetected: " + t.toString());
+            }
+        });
+        
+        memory.subscribeToEvent("SonarLeftNothingDetected", new EventCallback() {
+            @Override
+            public void onEvent(Object t) throws InterruptedException, CallError {
+                System.out.println("SonarLeftNothingDetected: " + t.toString());
+            }
+        });
+        
+        memory.subscribeToEvent("SonarRightNothingDetected", new EventCallback() {
+            @Override
+            public void onEvent(Object t) throws InterruptedException, CallError {
+                System.out.println("SonarRightNothingDetected: " + t.toString());
+            }
+        });
+        
+        
+        
+        //System.out.println(memory.getData("Device/SubDeviceList/US/Left/Sensor/Value"));
+        
+        
+        //Thread.sleep(2000);
+        
+        //sonar.unsubscribe(Constants.APP_NAME);
+        
+    }
+    
+    private void pauseProgramm(){
+        pauseProgramm(3000L);
+    }
+    
+    private void pauseProgramm(long pauseTime){
+        long start = System.currentTimeMillis();
+        while(System.currentTimeMillis() - start < pauseTime){}
     }
 
     private void stateMachine(String step) {
@@ -488,16 +628,18 @@ public class BasicBehaviour implements MQTTSubscriberCallbackInterface {
 //                    trajectory[1] = holonomic1;
 //                    trajectory[2] = holonomic2;
 //                    
-                    Object obj[] = new Object[2];
-                    obj[0] = "Line";
-                    obj[1] = new float[]{1.0f, 0.0f};
+                    //Object obj[] = new Object[2];
+                    //obj[0] = "Line";
+                    //obj[1] = new float[]{1.0f, 0.0f};
 //                    
 //
 //                    navigation.moveAlong(trajectory);
-                    navigation.moveAlong(obj);
+                    //navigation.moveAlong(obj);
                     
                       //navigation.moveAlong("[\"Composed\", [\"Holonomic\", [\"Line\", [1.0, 0.0]], 0.0, 5.0], [\"Holonomic\", [\"Line\", [-1.0, 0.0]], 0.0, 10.0]]");
 
+                    
+                    //checkDestination();
                     
                     break;
 
