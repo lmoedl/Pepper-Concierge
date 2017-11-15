@@ -5,10 +5,12 @@
  */
 package de.lmoedl;
 
+import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
@@ -17,6 +19,8 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 /**
  *
@@ -59,6 +63,53 @@ public class ConnectionManager {
         }
         
     }
+    
+        public String[] getRequest(String path, String key){
+        try {
+            URL url = new URL(basicUrl + "items/" + path);
+            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+            connection.setRequestProperty("Content-Type", "text/plain");
+            connection.setRequestMethod("GET");
+            connection.connect();
+           
+            
+            InputStream inputStream = connection.getInputStream();
+            System.out.println(connection.getResponseCode());
+            BufferedReader in = new BufferedReader(new InputStreamReader(
+                                    inputStream));
+            
+            String result = "";
+            String inputLine;
+            while ((inputLine = in.readLine()) != null) {
+                //System.out.println(inputLine);
+                result = result + inputLine;
+            }
+            
+            inputStream.close();
+            connection.disconnect();
+            
+            return parseRequest(result, key, path);
+        } catch (MalformedURLException ex) {
+            Logger.getLogger(ConnectionManager.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            Logger.getLogger(ConnectionManager.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        return null;
+        
+    }
+        
+        private String[] parseRequest(String json, String key, String path){
+        try {
+            JSONObject object = new JSONObject(json);
+            String value = object.getString(key);
+            return new String[]{path, value};
+        } catch (JSONException ex) {
+            Logger.getLogger(ConnectionManager.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return null;
+            
+        }
 
     public String getBasicUrl() {
         return basicUrl;

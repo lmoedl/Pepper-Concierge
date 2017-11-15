@@ -33,6 +33,7 @@ u:(In welcher Position bist du) Meine Position ist ^call(ALRobotPosture.getPostu
     c1:(crouch) my position is crouch.
 
 u:(~hallo) ~hallo
+u:(ende) ok ich schalte die sprachsteuerung aus ^pCall(ALMemory.raiseEvent("SpeechRecognitionOff", "OFF"))
 
 #u:(über tiere reden) Hast du einen Hund oder eine Katze?
 #    u1:(Hund) Ist es ein großer Hund?

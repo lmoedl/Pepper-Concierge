@@ -1,4 +1,6 @@
 topic: ~welcome()
 language: ged
 
-proposal: Herzlich Willkommen im Smart Home Labor der Hochschule Furtwangen. Mein Name ist $Dialog/RobotName . Ich stehe euch für eine Führung zur freien Verfügung. Bitte folgt mir!
+u:(xxx) Herzlich Willkommen im Smart Home Labor der Hochschule Furtwangen.
+proposal: Mein Name ist $Dialog/RobotName . Ich stehe euch für eine Führung zur freien Verfügung. Bitte folgt mir!
+
