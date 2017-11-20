@@ -72,10 +72,12 @@ public class BasicBehaviour implements MQTTSubscriberCallbackInterface {
     private long speechRecognitionId = 0;
     private long eventSubscriptionIdStart = 0;
     private long windowOpendID = 0;
+    private long windowClosedID = 0;
 
     private boolean isDancing = true;
 
     private String topic;
+    
 
     public BasicBehaviour(Application application) {
         this.session = application.session();
@@ -111,7 +113,7 @@ public class BasicBehaviour implements MQTTSubscriberCallbackInterface {
         //stateMachine(Constants.Steps.STEP_SOUNDLOCALIZATION);
         //stateMachine(Constants.Steps.STEP_END);
         //stateMachine(Constants.Steps.STEP_COCHLOVIUS);
-        //stateMachine(Constants.Steps.STEP_DIALOG);
+        stateMachine(Constants.Steps.STEP_DIALOG);
         //stateMachine(Constants.Steps.STEP_MQTT);
         //stateMachine(Constants.Steps.STEP_TRAJECTORY);
     }
@@ -145,13 +147,13 @@ public class BasicBehaviour implements MQTTSubscriberCallbackInterface {
         memory.subscribeToEvent("UnsubscribeMQTTTopic", "onUnsubscribeMQTTTopic::(s)", this);
         memory.subscribeToEvent("PublishMQTTMessage", "onPublishMQTTMessage::(s)(m)", this);
         windowOpendID = memory.subscribeToEvent("WindowOpend", "onWindowOpend::(s)", this);
-        memory.subscribeToEvent("WindowClosed", "onWindowClosed::(s)", this);
+        windowClosedID = memory.subscribeToEvent("WindowClosed", "onWindowClosed::(s)", this);
         memory.subscribeToEvent("SpeechRecognitionOff", "onSpeechRecognitionOff::(s)", this);
-        startConcierge();
+        //startConcierge();
         
         //Window open scene
         /*mQTTConnectionManager.subscribeToItem(Constants.MQTTTopics.Window.WINDOW_4);
-        topic = loadTopic("/home/nao/TVRoom.top");
+        loadTopic("/home/nao/TVRoom.top");
         dialog.forceInput("xxx");
         dialog.forceOutput();*/
 
@@ -174,7 +176,7 @@ public class BasicBehaviour implements MQTTSubscriberCallbackInterface {
         loadTopic("/home/nao/SwitchCabinet.top");
         dialog.forceInput("xxx");
         dialog.forceOutput();
-        unloadTopic(topic);
+        unloadTopic(this.topic);
         //loadTopicWithForceOutput("/home/nao/SwitchCabinet.top");
         success = (boolean) motion.call("moveTo", 0f, 0f, new Float(Math.toRadians(180))).get();
         //success = motion.call("moveTo", 0f, 0f, new Float(Math.toRadians(180)));
@@ -206,7 +208,7 @@ public class BasicBehaviour implements MQTTSubscriberCallbackInterface {
         //navigation.moveAlong(trajectory);
         //Move from switch cabinet to TV room
         success =  (boolean) motion.call("moveTo", 10f, 0f, 0f).get();
-        success = (boolean) motion.call("moveTo", 3f, 1f).get();
+        success = (boolean) motion.call("moveTo", 3f, 1f, 0f).get();
         System.out.println("success: " + success);
         success = (boolean) motion.call("moveTo", 0f, 0f, new Float(Math.toRadians(180))).get();
         
@@ -218,7 +220,7 @@ public class BasicBehaviour implements MQTTSubscriberCallbackInterface {
 
         //Window open scene
         mQTTConnectionManager.subscribeToItems(Constants.MQTTTopics.Window.WINDOWS);
-        String topic = loadTopic("/home/nao/TVRoom.top");
+        loadTopic("/home/nao/TVRoom.top");
         //dialog.forceInput("xxx");
         dialog.forceOutput();
         //TODO: Testen Zeit in ms von >10sek
@@ -227,8 +229,8 @@ public class BasicBehaviour implements MQTTSubscriberCallbackInterface {
     }
 
     private void loadTopicWithForceOutput(String topicPath) throws CallError, InterruptedException {
-        topic = dialog.loadTopic(topicPath);
-        dialog.activateTopic(topic);
+        this.topic = dialog.loadTopic(topicPath);
+        dialog.activateTopic(this.topic);
         dialog.subscribe(Constants.APP_NAME);
         //dialog.forceInput("xxx");
         dialog.forceOutput();
@@ -238,21 +240,29 @@ public class BasicBehaviour implements MQTTSubscriberCallbackInterface {
         dialog.unloadTopic(topic);
     }
 
-    private String loadTopic(String topicPath) throws CallError, InterruptedException {
-        topic = dialog.loadTopic(topicPath);
-        dialog.activateTopic(topic);
+    private void loadTopic(String topicPath) throws CallError, InterruptedException {
+        this.topic = dialog.loadTopic(topicPath);
+        dialog.activateTopic(this.topic);
         dialog.subscribe(Constants.APP_NAME);
-        return topic;
+        //return topic;
     }
 
-    private void unloadTopic(String topic) throws CallError, InterruptedException {
-        dialog.unsubscribe(Constants.APP_NAME);
-        dialog.deactivateTopic(this.topic);
-        dialog.unloadTopic(this.topic);
+    private void unloadTopic(String topic) {
+        try {
+            dialog.unsubscribe(Constants.APP_NAME);
+            dialog.deactivateTopic(this.topic);
+            dialog.unloadTopic(this.topic);
+        } catch (CallError ex) {
+            Logger.getLogger(BasicBehaviour.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (InterruptedException ex) {
+            Logger.getLogger(BasicBehaviour.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     private void runGamingScene() throws IOException, SonosControllerException, InterruptedException {
         SonosDevice sonos = new SonosDevice("192.168.0.30");
+        
+        //sonos.setVolume(40);
         sonos.playUri("x-rincon-mp3radio://http://listen.technobase.fm/tunein-mp3-pls", "Technobase.fm");
         int i = 0;
         
@@ -312,7 +322,7 @@ public class BasicBehaviour implements MQTTSubscriberCallbackInterface {
     
     public void onWindowClosed(String item) throws CallError, InterruptedException, IOException, SonosControllerException{
         System.out.println("onWindowClosed: " + item);
-        
+        memory.unsubscribeToEvent(windowClosedID);
         //dialog.forceInput("xxx");
         dialog.forceOutput();
         
@@ -334,12 +344,12 @@ public class BasicBehaviour implements MQTTSubscriberCallbackInterface {
         //dialog.forceInput("xxx");
         dialog.forceOutput();
         System.out.println("Topic to unsubscribe");   
-        unloadTopic(topic);
+        unloadTopic(this.topic);
 
         //Move from TV room to working room
         success = (boolean) motion.call("moveTo", 2.5f, 0f, 0f).get();
         success = (boolean) motion.call("moveTo", 0f, 0f, new Float(Math.toRadians(-90))).get();
-        success = (boolean) motion.call("moveTo", 2.5f, 0f, 0f).get();
+        success = (boolean) motion.call("moveTo", 2.8f, 0f, 0f).get();
         success = (boolean) motion.call("moveTo", 0f, 0f, new Float(Math.toRadians(-90))).get();
         success = (boolean) motion.call("moveTo", 2.0f, 0f, 0f).get();
         success = (boolean) motion.call("moveTo", 0f, 0f, new Float(Math.toRadians(180))).get();
@@ -625,7 +635,7 @@ public class BasicBehaviour implements MQTTSubscriberCallbackInterface {
                 case Constants.Steps.STEP_DIALOG:
                     dialog.setLanguage(Constants.LANGUAGE);
                     //System.out.println(getClass().getClassLoader().getResource("TestDialog.top").getPath());
-                    topic = dialog.loadTopic("/home/nao/TVRoom.top");
+                    topic = dialog.loadTopic("/home/nao/WorkingRoom.top");
                     dialog.activateTopic(topic);
                     dialog.subscribe(Constants.APP_NAME);
                     //dialog.forceInput("xxx");
@@ -697,8 +707,7 @@ public class BasicBehaviour implements MQTTSubscriberCallbackInterface {
 //                    navigation.moveAlong(trajectory);
                     //navigation.moveAlong(obj);
                     
-                      //navigation.moveAlong("[\"Composed\", [\"Holonomic\", [\"Line\", [1.0, 0.0]], 0.0, 5.0], [\"Holonomic\", [\"Line\", [-1.0, 0.0]], 0.0, 10.0]]");
-
+                    //Arraylist<Object>
                     
                     //checkDestination();
                     

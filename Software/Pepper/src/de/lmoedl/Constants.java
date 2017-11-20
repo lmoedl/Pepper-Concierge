@@ -116,5 +116,9 @@ public class Constants {
             
             public static final List<String> WINDOWS = new ArrayList<String>(Arrays.asList(WINDOW_1, WINDOW_2, WINDOW_3, WINDOW_4, WINDOW_5, WINDOW_6, WINDOW_7, WINDOW_8, WINDOW_9));
         }
+        
+        public static class Shutter {
+            //public static final String 
+        }
     }
 }
