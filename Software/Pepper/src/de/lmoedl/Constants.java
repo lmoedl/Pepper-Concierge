@@ -83,6 +83,13 @@ public class Constants {
                 public static final String HUE_4 = "Multimediawand_HUE4_Toggle";
                 public static final String HUE_5 = "Multimediawand_HUE5_Toggle";
                 public static final String HUE_6 = "Multimediawand_HUE6_Toggle";
+                
+                public static final String HUE_1_COLOR = "Multimediawand_HUE1_Color";
+                public static final String HUE_2_COLOR = "Multimediawand_HUE2_Color";
+                public static final String HUE_3_COLOR = "Multimediawand_HUE3_Color";
+                public static final String HUE_4_COLOR = "Multimediawand_HUE4_Color";
+                public static final String HUE_5_COLOR = "Multimediawand_HUE5_Color";
+                public static final String HUE_6_COLOR = "Multimediawand_HUE6_Color";
             }
 
             public static class Bathroom {
@@ -93,6 +100,13 @@ public class Constants {
                 public static final String HUE_4 = "Bad_HUE4_Toggle";
                 public static final String HUE_5 = "Bad_HUE5_Toggle";
                 public static final String HUE_6 = "Bad_HUE6_Toggle";
+                
+                public static final String HUE_1_COLOR = "Bad_HUE1_Color";
+                public static final String HUE_2_COLOR = "Bad_HUE2_Color";
+                public static final String HUE_3_COLOR = "Bad_HUE3_Color";
+                public static final String HUE_4_COLOR = "Bad_HUE4_Color";
+                public static final String HUE_5_COLOR = "Bad_HUE5_Color";
+                public static final String HUE_6_COLOR = "Bad_HUE6_Color";
             }
 
             public static class Doors {
@@ -118,7 +132,28 @@ public class Constants {
         }
         
         public static class Shutter {
-            //public static final String 
+            public static final String MAIN_SHUTTER_1 = "SomfyHauptrollo_1_SomfyDeviceControl";
+            public static final String MAIN_SHUTTER_2 = "SomfyHauptrollo_2_SomfyDeviceControl";
+            public static final String MAIN_SHUTTER_3 = "SomfyHauptrollo_3_SomfyDeviceControl";
+            public static final String INDOOR_SHUTTER_1 = "SomfyInnenjalousie_1_SomfyDeviceControl";
+            public static final String INDOOR_SHUTTER_2 = "SomfyInnenjalousie_2_SomfyDeviceControl";
+            public static final String INDOOR_SHUTTER_3 = "SomfyInnenjalousie_3_SomfyDeviceControl";
+            public static final String INDOOR_SHUTTER_4 = "SomfyInnenjalousie_4_SomfyDeviceControl";
         }
+        
+        public static class Kitchen {
+            public static final String RANGE_HOOD_LIGHT = "MieleHood_Switch";
+            public static final String RANGE_HOOD_STATE = "MieleHood_Status";
+            public static final String RANGE_HOOD_STOP = "MieleHood_Stop";
+            public static final String RANGE_HOOD_STEP = "MieleHood_VentilationPower";
+            
+            public static final String REFRIGERATOR_COOLING_STATE = "MieleFridgeFreezer_FridgeStatus";
+            public static final String REFRIGERATOR_TEMPERATURE = "MieleFridgeFreezer_CurrentTemperatureFridge";
+            public static final String REFRIGERATOR_STATE = "MieleFridgeFreezer_Status";
+            public static final String REFRIGERATOR_SUPERCOOL = "MieleFridgeFreezer_SuperCool";
+            public static final String REFRIGERATOR_SUPERFREEZE = "MieleFridgeFreezer_SuperFreeze";
+            public static final String REFRIGERATOR_SWITCH = "MieleFridgeFreezer_Switch";
+        }
+        
     }
 }

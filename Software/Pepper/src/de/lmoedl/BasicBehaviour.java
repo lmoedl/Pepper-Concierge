@@ -28,6 +28,7 @@ import com.vmichalak.sonoscontroller.exception.SonosControllerException;
 import de.lmoedl.interfaces.MQTTSubscriberCallbackInterface;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -113,7 +114,7 @@ public class BasicBehaviour implements MQTTSubscriberCallbackInterface {
         //stateMachine(Constants.Steps.STEP_SOUNDLOCALIZATION);
         //stateMachine(Constants.Steps.STEP_END);
         //stateMachine(Constants.Steps.STEP_COCHLOVIUS);
-        stateMachine(Constants.Steps.STEP_DIALOG);
+        //stateMachine(Constants.Steps.STEP_DIALOG);
         //stateMachine(Constants.Steps.STEP_MQTT);
         //stateMachine(Constants.Steps.STEP_TRAJECTORY);
     }
@@ -149,13 +150,16 @@ public class BasicBehaviour implements MQTTSubscriberCallbackInterface {
         windowOpendID = memory.subscribeToEvent("WindowOpend", "onWindowOpend::(s)", this);
         windowClosedID = memory.subscribeToEvent("WindowClosed", "onWindowClosed::(s)", this);
         memory.subscribeToEvent("SpeechRecognitionOff", "onSpeechRecognitionOff::(s)", this);
-        //startConcierge();
+        startConcierge();
         
         //Window open scene
         /*mQTTConnectionManager.subscribeToItem(Constants.MQTTTopics.Window.WINDOW_4);
         loadTopic("/home/nao/TVRoom.top");
         dialog.forceInput("xxx");
         dialog.forceOutput();*/
+        
+        //Testen
+        //memory.raiseEvent("PublishMQTTMessage", new ArrayList<>(Arrays.asList(Constants.MQTTTopics.Kitchen.RANGE_HOOD_LIGHT, "ON")));
 
     }
 
@@ -240,11 +244,15 @@ public class BasicBehaviour implements MQTTSubscriberCallbackInterface {
         dialog.unloadTopic(topic);
     }
 
-    private void loadTopic(String topicPath) throws CallError, InterruptedException {
-        this.topic = dialog.loadTopic(topicPath);
-        dialog.activateTopic(this.topic);
-        dialog.subscribe(Constants.APP_NAME);
-        //return topic;
+    private void loadTopic(String topicPath) {
+        try {
+            this.topic = dialog.loadTopic(topicPath);
+            dialog.activateTopic(this.topic);
+            dialog.subscribe(Constants.APP_NAME);
+            //return topic;
+        } catch (CallError | InterruptedException ex) {
+            Logger.getLogger(BasicBehaviour.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     private void unloadTopic(String topic) {
@@ -252,9 +260,7 @@ public class BasicBehaviour implements MQTTSubscriberCallbackInterface {
             dialog.unsubscribe(Constants.APP_NAME);
             dialog.deactivateTopic(this.topic);
             dialog.unloadTopic(this.topic);
-        } catch (CallError ex) {
-            Logger.getLogger(BasicBehaviour.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (InterruptedException ex) {
+        } catch (CallError | InterruptedException ex) {
             Logger.getLogger(BasicBehaviour.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
@@ -311,6 +317,7 @@ public class BasicBehaviour implements MQTTSubscriberCallbackInterface {
     }
 
     public void onPublishMQTTMessage(String topic, String payload) {
+        System.out.println("topic: " + topic + " payload: " + payload);
         mQTTConnectionManager.publishToItem(topic, payload);
     }
     
@@ -518,6 +525,28 @@ public class BasicBehaviour implements MQTTSubscriberCallbackInterface {
     private void pauseProgramm(long pauseTime){
         long start = System.currentTimeMillis();
         while(System.currentTimeMillis() - start < pauseTime){}
+    }
+    
+    private void lightShow() throws IOException, SonosControllerException{
+        SonosDevice sonos = new SonosDevice("192.168.0.30");
+        
+        //sonos.setVolume(40);
+        sonos.playUri("x-rincon-mp3radio://http://listen.technobase.fm/tunein-mp3-pls", "Technobase.fm");
+        int i = 0;
+        
+        mQTTConnectionManager.publishToItem(Constants.MQTTTopics.Lights.TVRoom.HUE_1, "ON");
+        mQTTConnectionManager.publishToItem(Constants.MQTTTopics.Lights.TVRoom.HUE_2, "ON");
+        mQTTConnectionManager.publishToItem(Constants.MQTTTopics.Lights.TVRoom.HUE_3, "ON");
+        mQTTConnectionManager.publishToItem(Constants.MQTTTopics.Lights.TVRoom.HUE_4, "ON");
+        mQTTConnectionManager.publishToItem(Constants.MQTTTopics.Lights.TVRoom.HUE_5, "ON");
+        mQTTConnectionManager.publishToItem(Constants.MQTTTopics.Lights.TVRoom.HUE_6, "ON");
+
+        mQTTConnectionManager.publishToItem(Constants.MQTTTopics.Lights.TVRoom.HUE_1, "OFF");
+        mQTTConnectionManager.publishToItem(Constants.MQTTTopics.Lights.TVRoom.HUE_2, "OFF");
+        mQTTConnectionManager.publishToItem(Constants.MQTTTopics.Lights.TVRoom.HUE_3, "OFF");
+        mQTTConnectionManager.publishToItem(Constants.MQTTTopics.Lights.TVRoom.HUE_4, "OFF");
+        mQTTConnectionManager.publishToItem(Constants.MQTTTopics.Lights.TVRoom.HUE_5, "OFF");
+        mQTTConnectionManager.publishToItem(Constants.MQTTTopics.Lights.TVRoom.HUE_6, "OFF");
     }
 
     private void stateMachine(String step) {

@@ -8,7 +8,7 @@
 
 
 import Foundation
-import HeliumLogger
+//import HeliumLogger
 import LoggerAPI
 
 public typealias Command = String
