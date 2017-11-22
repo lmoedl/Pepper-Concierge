@@ -8,6 +8,8 @@ package de.lmoedl;
 import com.aldebaran.qi.Application;
 import com.aldebaran.qi.Session;
 import com.aldebaran.qi.helper.proxies.ALMemory;
+import com.vmichalak.sonoscontroller.exception.SonosControllerException;
+import java.io.IOException;
 import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -17,64 +19,70 @@ import java.util.logging.Logger;
  * @author lothar
  */
 public class ConciergeController {
-    
+
     private Session session;
     private Application application;
-    private ALMemory memory;
+    private BasicBehaviour basicBehaviour;
 
     public ConciergeController(Application application) {
         this.session = application.session();
         this.application = application;
-        
+
         setup();
     }
-    
+
     private void setup() {
-        try {
-            memory = new ALMemory(session);
-        } catch (Exception ex) {
-            Logger.getLogger(ConciergeController.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        basicBehaviour = new BasicBehaviour(application);
+        basicBehaviour.start();
     }
-    
-    public void menu(){
+
+    public void menu() {
         Scanner scanner = new Scanner(System.in);
-        
-        while (true){
-            int val = -1;
-            printMenue();
+
+        while (true) {
             try {
-                val = scanner.nextInt();
-            }catch (Exception e){
-                System.err.println("Gib eine Zahl ein du Penner");
-            } 
-            switch(val){
-                case 1:
-                    
-                break;
-                case 2:
-                    
-                break;
-                case 3:
-                    
-                break;
-                case 4:
-                    
-                break;
-                case 5:
-                    
-                break;
-                case 6:
-                    
-                break;
-                case 7:
-                    
-                break;
+                int val = -1;
+                printMenue();
+                try {
+                    val = scanner.nextInt();
+                } catch (Exception e) {
+                    System.err.println("Gib eine Zahl ein du Penner");
+                }
+                switch (val) {
+                    case 1:
+                        basicBehaviour.setIsFullConcierge(true);
+                        basicBehaviour.startConcierge();
+                        break;
+                    case 2:
+                        basicBehaviour.startConcierge();
+                        break;
+                    case 3:
+                        basicBehaviour.tvRoom();
+                        break;
+                    case 4:
+                        basicBehaviour.workingRoom();
+                        break;
+                    case 5:
+                        basicBehaviour.bathRoom();
+                        break;
+                    case 6:
+                        basicBehaviour.kitchen();
+                        break;
+                    case 7:
+                        basicBehaviour.goodby();
+                        break;
+                }
+            } catch (InterruptedException ex) {
+                Logger.getLogger(ConciergeController.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (IOException | SonosControllerException ex) {
+                Logger.getLogger(ConciergeController.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (Exception ex) {
+                Logger.getLogger(ConciergeController.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
     }
-    
-    private void printMenue(){
+
+    private void printMenue() {
         System.out.println("Bitte eine Zahl für die entsprechende Funktion eingeben");
         System.out.println("-------------------------------------------------------");
         System.out.println("1) Komplette Tour starten");
@@ -85,6 +93,5 @@ public class ConciergeController {
         System.out.println("6) Küche starten");
         System.out.println("7) Verabschiedung starten");
     }
-    
-    
+
 }

@@ -36,7 +36,7 @@ public class ConnectionManager {
     public ConnectionManager() {
     }
     
-    public void sendPostRequest(String path, String data){
+    public void openHabPostRequest(String path, String data){
         try {
             URL url = new URL(basicUrl + path);
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
@@ -64,7 +64,23 @@ public class ConnectionManager {
         
     }
     
-        public String[] getRequest(String path, String key){
+    public void getRequest(String urlPath){
+        try {
+            URL url = new URL(urlPath);
+            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+            connection.setRequestProperty("Content-Type", "text/plain");
+            connection.setRequestMethod("GET");
+            connection.connect();
+            
+            
+            InputStream inputStream = connection.getInputStream();
+            System.out.println(connection.getResponseCode());
+        } catch (IOException ex) {
+            Logger.getLogger(ConnectionManager.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
+        public String[] openHabGetRequest(String path, String key){
         try {
             URL url = new URL(basicUrl + "items/" + path);
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
@@ -117,9 +133,5 @@ public class ConnectionManager {
 
     public void setBasicUrl(String basicUrl) {
         this.basicUrl = basicUrl;
-    }
-    
-    public static void switchOn(){
-        new ConnectionManager().sendPostRequest("items/Multimediawand_HUE6_Toggle", "ON");
     }
 }

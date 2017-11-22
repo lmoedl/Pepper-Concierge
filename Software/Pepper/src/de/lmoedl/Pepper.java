@@ -25,7 +25,7 @@ public class Pepper {
         String robotUrl = "tcp://" + Constants.Start.ROBOT_URL + ":" + Constants.Start.ROBOT_PORT;
         Application application = new Application(args, robotUrl);
         application.start();
-        Session session = application.session();
+        //Session session = application.session();
         
         BasicBehaviour basicBehaviour = new BasicBehaviour(application);
         basicBehaviour.start();

@@ -5,17 +5,12 @@ u:(xxx) Test
 
 proposal: Hier befinden wir uns nun im Fernsehzimmer. Puh... Ist euch auch so warm wie mir? ^start(dialog_move_head/animations/LookLeft) ^start(dialog_move_arms/animations/UpLArm) ^start(dialog_move_arms/animations/StretchLArm) Ich komme leider nicht an das Fenster heran. Könnte einer mir bitte helfen und ein Fenster öffnen?
 
-u:(yyy) wow
-
 proposal: ^run(animations/Stand/Waiting/MysticalPower_1) Ist das nicht wundervoll? Durch das Öffnen der Fenster werden automatisch hier im Raum die Lampen aktiviert. Sobald das Fenster wieder geschlossen wird, geht das Licht wieder aus. Könnten einer das Fenster bitte wieder schließen? 
-
-u:(yyy) wow
 
 proposal: Sehr gut, das Fenster ist wieder geschlossen. Jetzt möchte ich aber noch in Ruhe eine Runde Col of Djuti spielen. Bitte verlasst doch solange den Raum und macht die Türen zu.
 
-u:(yyy) wow
-
-proposal: Aaahhh... das war geil! Macht etwas Platz für mich, jetzt geht es weiter in das Arbeitszimmer.
+proposal: Aaahhh... das war geil! ^pCall(ALMemory.raiseEvent("PublishMQTTMessage", "HMScheibentransparenz1_1_State", "OFF")) Zum Schutz der Privatsfähre kann man auch die Scheiben undurchsichtig machen.
+proposal: Jetzt sind wir aber fertig hier. Macht etwas Platz für mich, jetzt geht es weiter in das Arbeitszimmer.
 
 
 

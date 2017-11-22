@@ -30,6 +30,9 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Random;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -41,6 +44,8 @@ public class BasicBehaviour implements MQTTSubscriberCallbackInterface {
 
     private Session session;
     private Application application;
+    //for testing true, else false
+    private boolean isFullConcierge = true;
 
     private ALMemory memory;
     private ALBasicAwareness.AsyncALBasicAwareness awareness;
@@ -58,8 +63,6 @@ public class BasicBehaviour implements MQTTSubscriberCallbackInterface {
 
     private ConnectionManager connectionManager;
     private MQTTConnectionManager mQTTConnectionManager;
-    private String mqttItemDescription = "";
-    private String mqttValue = "";
 
     private String currentState;
 
@@ -76,9 +79,9 @@ public class BasicBehaviour implements MQTTSubscriberCallbackInterface {
     private long windowClosedID = 0;
 
     private boolean isDancing = true;
+    private boolean isPlaying = true;
 
     private String topic;
-    
 
     public BasicBehaviour(Application application) {
         this.session = application.session();
@@ -135,35 +138,31 @@ public class BasicBehaviour implements MQTTSubscriberCallbackInterface {
         speechRecognition.pause(true);
         speechRecognition.setLanguage(Constants.LANGUAGE);
         speechRecognition.pause(false);
-        
-        //sonar.subscribe(Constants.APP_NAME);
 
+        //sonar.subscribe(Constants.APP_NAME);
         motion.wakeUp();
         memory.subscribeToEvent("RearTactilTouched", "onTouchEnd::(f)", this);
-        
 
         memory.subscribeToEvent("SwitchLight", "onLightSwitch::(s)", this);
         //memory.subscribeToEvent("RearTactilTouched", "onTouchEnd::(f)", this); 
         memory.subscribeToEvent("SubscribeMQTTTopic", "onSubscribeMQTTTopic::(s)", this);
         memory.subscribeToEvent("UnsubscribeMQTTTopic", "onUnsubscribeMQTTTopic::(s)", this);
         memory.subscribeToEvent("PublishMQTTMessage", "onPublishMQTTMessage::(s)(m)", this);
-        windowOpendID = memory.subscribeToEvent("WindowOpend", "onWindowOpend::(s)", this);
-        windowClosedID = memory.subscribeToEvent("WindowClosed", "onWindowClosed::(s)", this);
+        /*windowOpendID = memory.subscribeToEvent("WindowOpend", "onWindowOpend::(s)", this);
+        windowClosedID = memory.subscribeToEvent("WindowClosed", "onWindowClosed::(s)", this);*/
         memory.subscribeToEvent("SpeechRecognitionOff", "onSpeechRecognitionOff::(s)", this);
         startConcierge();
-        
+
         //Window open scene
         /*mQTTConnectionManager.subscribeToItem(Constants.MQTTTopics.Window.WINDOW_4);
         loadTopic("/home/nao/TVRoom.top");
         dialog.forceInput("xxx");
         dialog.forceOutput();*/
-        
         //Testen
         //memory.raiseEvent("PublishMQTTMessage", new ArrayList<>(Arrays.asList(Constants.MQTTTopics.Kitchen.RANGE_HOOD_LIGHT, "ON")));
-
     }
 
-    public void onTouchHead(Float value) throws InterruptedException, CallError, IOException, SonosControllerException {
+    public void onTouchHead(Float value) throws InterruptedException, CallError, IOException, SonosControllerException, Exception {
         System.out.println(Constants.APP_NAME + " : Touch " + value);
         if (value == 1.0) {
             isDancing = false;
@@ -173,11 +172,11 @@ public class BasicBehaviour implements MQTTSubscriberCallbackInterface {
         }
     }
 
-    private void startConcierge() throws CallError, InterruptedException, IOException, SonosControllerException {
+    public void startConcierge() throws CallError, InterruptedException, IOException, SonosControllerException, Exception {
         //Future<Boolean> success = null;
         boolean success;
         //Start of tour - Move from door to switch cabinet
-        loadTopic("/home/nao/SwitchCabinet.top");
+        loadTopic("/home/nao/Welcome.top");
         dialog.forceInput("xxx");
         dialog.forceOutput();
         unloadTopic(this.topic);
@@ -194,16 +193,14 @@ public class BasicBehaviour implements MQTTSubscriberCallbackInterface {
         /*while (success == null) {
             pauseProgramm(1);  
         }*/
-        
+
         //success = null;
-        
         /*if (success.get()) {
             success = motion.call("moveTo", 5f, 0f, 0f);
             pauseProgramm();
         }*/
-        
-
         success = (boolean) motion.call("moveTo", 0f, 0f, new Float(Math.toRadians(180))).get();
+
         //Kopf hoch
         loadTopicWithForceOutput("/home/nao/General.top");
         success = (boolean) motion.call("moveTo", 0f, 0f, new Float(Math.toRadians(-90))).get();
@@ -211,32 +208,32 @@ public class BasicBehaviour implements MQTTSubscriberCallbackInterface {
         //navigation.moveAlong("[\"Composed\", [\"Holonomic\", [\"Line\", [1.0, 0.0]], 0.0, 5.0], [\"Holonomic\", [\"Line\", [-1.0, 0.0]], 0.0, 10.0]]");
         //navigation.moveAlong(trajectory);
         //Move from switch cabinet to TV room
-        success =  (boolean) motion.call("moveTo", 10f, 0f, 0f).get();
+        success = (boolean) motion.call("moveTo", 10f, 0f, 0f).get();
         success = (boolean) motion.call("moveTo", 3f, 1f, 0f).get();
         System.out.println("success: " + success);
         success = (boolean) motion.call("moveTo", 0f, 0f, new Float(Math.toRadians(180))).get();
-        
-        /*success = motion.call("moveTo", 2f, 0f, 0f);
-        success = motion.call("moveTo", 0f, 0f, new Float(Math.toRadians(90)));
-        success = motion.call("moveTo", 1f, 0f, new Float(Math.toRadians(-90)));
-        success = motion.call("moveTo", 2f, 0f, 0f);
-        success = motion.call("moveTo", 0f, 0f, new Float(Math.toRadians(180)));*/
 
+        if (isFullConcierge) {
+            tvRoom();
+        }
+
+    }
+
+    public void tvRoom() throws Exception {
+        boolean success;
         //Window open scene
+        windowOpendID = memory.subscribeToEvent("WindowOpend", "onWindowOpend::(s)", this);
+        windowClosedID = memory.subscribeToEvent("WindowClosed", "onWindowClosed::(s)", this);
         mQTTConnectionManager.subscribeToItems(Constants.MQTTTopics.Window.WINDOWS);
         loadTopic("/home/nao/TVRoom.top");
         //dialog.forceInput("xxx");
         dialog.forceOutput();
-        //TODO: Testen Zeit in ms von >10sek
-        //check Event        
-
     }
 
     private void loadTopicWithForceOutput(String topicPath) throws CallError, InterruptedException {
         this.topic = dialog.loadTopic(topicPath);
         dialog.activateTopic(this.topic);
         dialog.subscribe(Constants.APP_NAME);
-        //dialog.forceInput("xxx");
         dialog.forceOutput();
 
         dialog.unsubscribe(Constants.APP_NAME);
@@ -249,7 +246,6 @@ public class BasicBehaviour implements MQTTSubscriberCallbackInterface {
             this.topic = dialog.loadTopic(topicPath);
             dialog.activateTopic(this.topic);
             dialog.subscribe(Constants.APP_NAME);
-            //return topic;
         } catch (CallError | InterruptedException ex) {
             Logger.getLogger(BasicBehaviour.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -267,14 +263,16 @@ public class BasicBehaviour implements MQTTSubscriberCallbackInterface {
 
     private void runGamingScene() throws IOException, SonosControllerException, InterruptedException {
         SonosDevice sonos = new SonosDevice("192.168.0.30");
-        
-        //sonos.setVolume(40);
+
+        sonos.setVolume(40);
         sonos.playUri("x-rincon-mp3radio://http://listen.technobase.fm/tunein-mp3-pls", "Technobase.fm");
+        //sonos.playUri("x-file-cifs://141.28.60.245/Medialib/Audio/Pepper/<title>.mp3", null);
+        //connectionManager.getRequest("http://192.168.0.xxx?title.mp4");
         int i = 0;
-        
+
         mQTTConnectionManager.publishToItem("HMScheibentransparenz1_1_State", "OFF");
         mQTTConnectionManager.publishToItem("HMScheibentransparenz2_1_State", "OFF");
-        
+
         while (i < 10) {
 
             mQTTConnectionManager.publishToItem("Multimediawand_HUE1_Toggle", "ON");
@@ -305,8 +303,8 @@ public class BasicBehaviour implements MQTTSubscriberCallbackInterface {
 
     public void onSubscribeMQTTTopic(String topic) throws CallError, InterruptedException {
         //mQTTConnectionManager.subscribeToItem(topic);
-        String[] res =  connectionManager.getRequest(topic, "state");
-        if (res != null){
+        String[] res = connectionManager.openHabGetRequest(topic, "state");
+        if (res != null) {
             memory.insertData(res[0], res[1]);
         }
     }
@@ -320,37 +318,38 @@ public class BasicBehaviour implements MQTTSubscriberCallbackInterface {
         System.out.println("topic: " + topic + " payload: " + payload);
         mQTTConnectionManager.publishToItem(topic, payload);
     }
-    
-    public void onWindowOpend(String item) throws CallError, InterruptedException{
+
+    public void onWindowOpend(String item) throws CallError, InterruptedException {
         //dialog.forceInput("xxx");
         dialog.forceOutput();
         memory.unsubscribeToEvent(windowOpendID);
     }
-    
-    public void onWindowClosed(String item) throws CallError, InterruptedException, IOException, SonosControllerException{
+
+    public void onWindowClosed(String item) throws CallError, InterruptedException, IOException, SonosControllerException {
         System.out.println("onWindowClosed: " + item);
         memory.unsubscribeToEvent(windowClosedID);
         //dialog.forceInput("xxx");
         dialog.forceOutput();
-        
-        resumeConcierge();
+
+        resumeTvRoom();
     }
-    
-    public void onSpeechRecognitionOff(String state){
+
+    public void onSpeechRecognitionOff(String state) {
         stateMachine(Constants.Steps.STEP_END);
     }
-    
-    private void resumeConcierge() throws CallError, InterruptedException, IOException, SonosControllerException{
+
+    private void resumeTvRoom() throws CallError, InterruptedException, IOException, SonosControllerException {
         boolean success;
 
-        mQTTConnectionManager.unsubscribeOfItem(Constants.MQTTTopics.Window.WINDOW_4);
+        mQTTConnectionManager.unsubscribeOfItems(Constants.MQTTTopics.Window.WINDOWS);
         //Gaming scene
         //Menschenerkennung einfügen
         //dialog.setDelay("onFaceRecognizedDistance", -1);
         runGamingScene();
         //dialog.forceInput("xxx");
         dialog.forceOutput();
-        System.out.println("Topic to unsubscribe");   
+        dialog.forceOutput();
+        System.out.println("Topic to unsubscribe");
         unloadTopic(this.topic);
 
         //Move from TV room to working room
@@ -360,6 +359,14 @@ public class BasicBehaviour implements MQTTSubscriberCallbackInterface {
         success = (boolean) motion.call("moveTo", 0f, 0f, new Float(Math.toRadians(-90))).get();
         success = (boolean) motion.call("moveTo", 2.0f, 0f, 0f).get();
         success = (boolean) motion.call("moveTo", 0f, 0f, new Float(Math.toRadians(180))).get();
+
+        if (isFullConcierge) {
+            workingRoom();
+        }
+    }
+
+    public void workingRoom() throws CallError, InterruptedException, IOException, SonosControllerException {
+        boolean success;
         //check workingroom.top Incorrect file WorkingRoom.top
         System.out.println("Workingroom");
         loadTopicWithForceOutput("WorkingRoom.top");
@@ -367,11 +374,17 @@ public class BasicBehaviour implements MQTTSubscriberCallbackInterface {
         //Check if in front of bathroom
         //float rFootFront = (float) memory.getData("Device/SubDeviceList/RFoot/FSR/FrontRight/Sensor/Value");
         //System.out.println(rFootFront);
-
-        //Bathroom
         success = (boolean) motion.call("moveTo", 6f, 0f, 0f).get();
         success = (boolean) motion.call("moveTo", 0f, 0f, new Float(Math.toRadians(90))).get();
         success = (boolean) motion.call("moveTo", -1f, 0f, 0f).get();
+
+        if (isFullConcierge) {
+            bathRoom();
+        }
+    }
+
+    public void bathRoom() throws CallError, InterruptedException, IOException, SonosControllerException {
+        boolean success;
         System.out.println("Bathroom");
         loadTopicWithForceOutput("Bathroom.top");
 
@@ -381,6 +394,14 @@ public class BasicBehaviour implements MQTTSubscriberCallbackInterface {
         success = (boolean) motion.call("moveTo", 3f, 0f, 0f).get();
         success = (boolean) motion.call("moveTo", 0f, 0f, new Float(Math.toRadians(90))).get();
         success = (boolean) motion.call("moveTo", -1f, 0f, 0f).get();
+
+        if (isFullConcierge) {
+            kitchen();
+        }
+    }
+
+    public void kitchen() throws CallError, InterruptedException, IOException, SonosControllerException {
+        boolean success;
         System.out.println("Kitchen");
         loadTopicWithForceOutput("Kitchen.top");
 
@@ -388,30 +409,41 @@ public class BasicBehaviour implements MQTTSubscriberCallbackInterface {
         success = (boolean) motion.call("moveTo", 0f, 0f, new Float(Math.toRadians(-90))).get();
         success = (boolean) motion.call("moveTo", 8f, 0f, 0f).get();
         success = (boolean) motion.call("moveTo", 0f, 0f, new Float(Math.toRadians(180))).get();
+
+        if (isFullConcierge) {
+            goodby();
+        }
+    }
+
+    public void goodby() throws CallError, InterruptedException, IOException, SonosControllerException {
         System.out.println("ByeBye");
-        loadTopicWithForceOutput("Goodby.top");
+        loadTopic("Goodby.top");
+        dialog.forceOutput();
+        lightShow();
+        dialog.forceOutput();
+        unloadTopic(this.topic);
 
         SonosDevice sonos = new SonosDevice("192.168.0.30");
         sonos.playUri("x-rincon-mp3radio://http://listen.technobase.fm/tunein-mp3-pls", "Technobase.fm");
     }
-    
-    private float calcDistanceToWalk(float parameter){
-        if(parameter > 0.3){
+
+    private float calcDistanceToWalk(float parameter) {
+        if (parameter > 0.3) {
             return parameter;
         }
         return 0f;
     }
-    
+
     //public void checkDestination() throws Exception{
-    public void checkDestination(boolean success, List<Float> oldPosition, List<Float> newPosition, float[] shouldGo) throws CallError, InterruptedException, Exception{
+    public void checkDestination(boolean success, List<Float> oldPosition, List<Float> newPosition, float[] shouldGo) throws CallError, InterruptedException, Exception {
         //check Sonar values
-        
-        if(success){
+
+        if (success) {
             return;
         }
-        
+
         pauseProgramm();
-        
+
         memory.subscribeToEvent("ALMotion/MoveFailed", new EventCallback() {
             @Override
             public void onEvent(Object t) throws InterruptedException, CallError {
@@ -421,10 +453,10 @@ public class BasicBehaviour implements MQTTSubscriberCallbackInterface {
                 //for (Object object : obj) {
                 //    System.out.println(object);
                 //}
-                
+
             }
         });
-        
+
         /*List<Float> oldValues = motion.getRobotPosition(false);
         System.out.println("old position: " + oldValues);
         Future<Boolean> success = motion.call("moveTo", 10.0f, 0f, 0f);
@@ -456,12 +488,11 @@ public class BasicBehaviour implements MQTTSubscriberCallbackInterface {
             
             motion.moveTo(x, y, z);
         }*/
-        
         float diffX = Math.abs(oldPosition.get(0) - newPosition.get(0));
         float diffY = Math.abs(oldPosition.get(1) - newPosition.get(1));
         float diffZ = Math.abs(oldPosition.get(2) - newPosition.get(2));
-        
-        if ((shouldGo[0] - diffX) > 0.3 ||(shouldGo[1] - diffY) > 0.3 || (shouldGo[2] - diffZ) > 0.3 ) {
+
+        if ((shouldGo[0] - diffX) > 0.3 || (shouldGo[1] - diffY) > 0.3 || (shouldGo[2] - diffZ) > 0.3) {
             float x = calcDistanceToWalk(shouldGo[0] - diffX);
             float y = calcDistanceToWalk(shouldGo[1] - diffY);
             float z = calcDistanceToWalk(shouldGo[2] - diffZ);
@@ -469,84 +500,220 @@ public class BasicBehaviour implements MQTTSubscriberCallbackInterface {
 
             motion.moveTo(x, y, z);
         }
-        
-        
-        
-        
-        
+
         //System.out.println("diff: x: " + (oldValues.get(0) - newValues.get(0)) + " y: " + (oldValues.get(1) - newValues.get(1)) + " z: " + (oldValues.get(2) - newValues.get(2)));
-        
-        
-        
-        
-        memory.subscribeToEvent("SonarLeftDetected", new EventCallback() {
-            @Override
-            public void onEvent(Object t) throws InterruptedException, CallError {
-                System.out.println("SonarLeftDetected: " + t.toString());
-            }
-        });
-        
-        memory.subscribeToEvent("SonarRightDetected", new EventCallback() {
-            @Override
-            public void onEvent(Object t) throws InterruptedException, CallError {
-                System.out.println("SonarRightDetected: " + t.toString());
-            }
-        });
-        
-        memory.subscribeToEvent("SonarLeftNothingDetected", new EventCallback() {
-            @Override
-            public void onEvent(Object t) throws InterruptedException, CallError {
-                System.out.println("SonarLeftNothingDetected: " + t.toString());
-            }
-        });
-        
-        memory.subscribeToEvent("SonarRightNothingDetected", new EventCallback() {
-            @Override
-            public void onEvent(Object t) throws InterruptedException, CallError {
-                System.out.println("SonarRightNothingDetected: " + t.toString());
-            }
-        });
-        
-        
-        
-        //System.out.println(memory.getData("Device/SubDeviceList/US/Left/Sensor/Value"));
-        
-        
-        //Thread.sleep(2000);
-        
-        //sonar.unsubscribe(Constants.APP_NAME);
-        
     }
-    
-    private void pauseProgramm(){
+
+    public void sonar() {
+        try {
+            System.out.println(memory.getData("Device/SubDeviceList/US/Left/Sensor/Value"));
+
+            memory.subscribeToEvent("SonarLeftDetected", new EventCallback() {
+                @Override
+                public void onEvent(Object t) throws InterruptedException, CallError {
+                    System.out.println("SonarLeftDetected: " + t.toString());
+                }
+            });
+
+            memory.subscribeToEvent("SonarRightDetected", new EventCallback() {
+                @Override
+                public void onEvent(Object t) throws InterruptedException, CallError {
+                    System.out.println("SonarRightDetected: " + t.toString());
+                }
+            });
+
+            memory.subscribeToEvent("SonarLeftNothingDetected", new EventCallback() {
+                @Override
+                public void onEvent(Object t) throws InterruptedException, CallError {
+                    System.out.println("SonarLeftNothingDetected: " + t.toString());
+                }
+            });
+
+            memory.subscribeToEvent("SonarRightNothingDetected", new EventCallback() {
+                @Override
+                public void onEvent(Object t) throws InterruptedException, CallError {
+                    System.out.println("SonarRightNothingDetected: " + t.toString());
+                }
+            });
+
+            sonar.unsubscribe(Constants.APP_NAME);
+        } catch (Exception ex) {
+            Logger.getLogger(BasicBehaviour.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    private void pauseProgramm() {
         pauseProgramm(3000L);
     }
-    
-    private void pauseProgramm(long pauseTime){
-        long start = System.currentTimeMillis();
-        while(System.currentTimeMillis() - start < pauseTime){}
-    }
-    
-    private void lightShow() throws IOException, SonosControllerException{
-        SonosDevice sonos = new SonosDevice("192.168.0.30");
-        
-        //sonos.setVolume(40);
-        sonos.playUri("x-rincon-mp3radio://http://listen.technobase.fm/tunein-mp3-pls", "Technobase.fm");
-        int i = 0;
-        
-        mQTTConnectionManager.publishToItem(Constants.MQTTTopics.Lights.TVRoom.HUE_1, "ON");
-        mQTTConnectionManager.publishToItem(Constants.MQTTTopics.Lights.TVRoom.HUE_2, "ON");
-        mQTTConnectionManager.publishToItem(Constants.MQTTTopics.Lights.TVRoom.HUE_3, "ON");
-        mQTTConnectionManager.publishToItem(Constants.MQTTTopics.Lights.TVRoom.HUE_4, "ON");
-        mQTTConnectionManager.publishToItem(Constants.MQTTTopics.Lights.TVRoom.HUE_5, "ON");
-        mQTTConnectionManager.publishToItem(Constants.MQTTTopics.Lights.TVRoom.HUE_6, "ON");
 
-        mQTTConnectionManager.publishToItem(Constants.MQTTTopics.Lights.TVRoom.HUE_1, "OFF");
-        mQTTConnectionManager.publishToItem(Constants.MQTTTopics.Lights.TVRoom.HUE_2, "OFF");
-        mQTTConnectionManager.publishToItem(Constants.MQTTTopics.Lights.TVRoom.HUE_3, "OFF");
-        mQTTConnectionManager.publishToItem(Constants.MQTTTopics.Lights.TVRoom.HUE_4, "OFF");
-        mQTTConnectionManager.publishToItem(Constants.MQTTTopics.Lights.TVRoom.HUE_5, "OFF");
-        mQTTConnectionManager.publishToItem(Constants.MQTTTopics.Lights.TVRoom.HUE_6, "OFF");
+    private void pauseProgramm(long pauseTime) {
+        long start = System.currentTimeMillis();
+        while (System.currentTimeMillis() - start < pauseTime) {
+        }
+    }
+
+    private void lightShow() {
+        try {
+            mQTTConnectionManager.publishToItem(Constants.MQTTTopics.Shutter.MAIN_SHUTTER_1, "DOWN");
+            mQTTConnectionManager.publishToItem(Constants.MQTTTopics.Shutter.MAIN_SHUTTER_2, "DOWN");
+            mQTTConnectionManager.publishToItem(Constants.MQTTTopics.Shutter.MAIN_SHUTTER_3, "DOWN");
+            Thread.sleep(6000);
+
+            SonosDevice sonos = new SonosDevice("192.168.0.30");
+            sonos.setVolume(70);
+            sonos.setBass(7);
+            sonos.playUri("x-file-cifs://141.28.60.245/Medialib/Audio/Pepper/NEFFEX-Unstoppable.mp3", null);
+
+            mQTTConnectionManager.publishToItem(Constants.MQTTTopics.Lights.TVRoom.HUE_1_COLOR, "10,100,100");
+            mQTTConnectionManager.publishToItem(Constants.MQTTTopics.Lights.TVRoom.HUE_2_COLOR, "90,100,100");
+            mQTTConnectionManager.publishToItem(Constants.MQTTTopics.Lights.TVRoom.HUE_3_COLOR, "100,100,100");
+            mQTTConnectionManager.publishToItem(Constants.MQTTTopics.Lights.TVRoom.HUE_4_COLOR, "50,100,100");
+            mQTTConnectionManager.publishToItem(Constants.MQTTTopics.Lights.TVRoom.HUE_5_COLOR, "20,100,100");
+            mQTTConnectionManager.publishToItem(Constants.MQTTTopics.Lights.TVRoom.HUE_6_COLOR, "30,100,100");
+            mQTTConnectionManager.publishToItem(Constants.MQTTTopics.Lights.TVRoom.HUE_1, "OFF");
+            mQTTConnectionManager.publishToItem(Constants.MQTTTopics.Lights.TVRoom.HUE_2, "OFF");
+            mQTTConnectionManager.publishToItem(Constants.MQTTTopics.Lights.TVRoom.HUE_3, "OFF");
+            mQTTConnectionManager.publishToItem(Constants.MQTTTopics.Lights.TVRoom.HUE_4, "OFF");
+            mQTTConnectionManager.publishToItem(Constants.MQTTTopics.Lights.TVRoom.HUE_5, "OFF");
+            mQTTConnectionManager.publishToItem(Constants.MQTTTopics.Lights.TVRoom.HUE_6, "OFF");
+            Thread.sleep(5000);
+            mQTTConnectionManager.publishToItem(Constants.MQTTTopics.Lights.TVRoom.HUE_6_COLOR, "30,100,100");
+            mQTTConnectionManager.publishToItem(Constants.MQTTTopics.Lights.TVRoom.HUE_5_COLOR, "20,100,100");
+            mQTTConnectionManager.publishToItem(Constants.MQTTTopics.Lights.TVRoom.HUE_4_COLOR, "50,100,100");
+            mQTTConnectionManager.publishToItem(Constants.MQTTTopics.Lights.TVRoom.HUE_3_COLOR, "100,100,100");
+            mQTTConnectionManager.publishToItem(Constants.MQTTTopics.Lights.TVRoom.HUE_2_COLOR, "90,100,100");
+            mQTTConnectionManager.publishToItem(Constants.MQTTTopics.Lights.TVRoom.HUE_1_COLOR, "10,100,100");
+            mQTTConnectionManager.publishToItem(Constants.MQTTTopics.Lights.TVRoom.HUE_6, "OFF");
+            mQTTConnectionManager.publishToItem(Constants.MQTTTopics.Lights.TVRoom.HUE_5, "OFF");
+            mQTTConnectionManager.publishToItem(Constants.MQTTTopics.Lights.TVRoom.HUE_4, "OFF");
+            mQTTConnectionManager.publishToItem(Constants.MQTTTopics.Lights.TVRoom.HUE_3, "OFF");
+            mQTTConnectionManager.publishToItem(Constants.MQTTTopics.Lights.TVRoom.HUE_2, "OFF");
+            mQTTConnectionManager.publishToItem(Constants.MQTTTopics.Lights.TVRoom.HUE_1, "OFF");
+            Thread.sleep(5000);
+            mQTTConnectionManager.publishToItem(Constants.MQTTTopics.Lights.TVRoom.HUE_1_COLOR, "10,100,100");
+            mQTTConnectionManager.publishToItem(Constants.MQTTTopics.Lights.TVRoom.HUE_2_COLOR, "90,100,100");
+            mQTTConnectionManager.publishToItem(Constants.MQTTTopics.Lights.TVRoom.HUE_3_COLOR, "100,100,100");
+            mQTTConnectionManager.publishToItem(Constants.MQTTTopics.Lights.TVRoom.HUE_4_COLOR, "50,100,100");
+            mQTTConnectionManager.publishToItem(Constants.MQTTTopics.Lights.TVRoom.HUE_5_COLOR, "20,100,100");
+            mQTTConnectionManager.publishToItem(Constants.MQTTTopics.Lights.TVRoom.HUE_6_COLOR, "30,100,100");
+            mQTTConnectionManager.publishToItem(Constants.MQTTTopics.Lights.TVRoom.HUE_1, "OFF");
+            mQTTConnectionManager.publishToItem(Constants.MQTTTopics.Lights.TVRoom.HUE_2, "OFF");
+            mQTTConnectionManager.publishToItem(Constants.MQTTTopics.Lights.TVRoom.HUE_3, "OFF");
+            mQTTConnectionManager.publishToItem(Constants.MQTTTopics.Lights.TVRoom.HUE_4, "OFF");
+            mQTTConnectionManager.publishToItem(Constants.MQTTTopics.Lights.TVRoom.HUE_5, "OFF");
+            mQTTConnectionManager.publishToItem(Constants.MQTTTopics.Lights.TVRoom.HUE_6, "OFF");
+            Thread.sleep(4000);
+
+            Random random = new Random();
+            int rand = random.nextInt(300);
+
+            int maxLight = 300;
+            int sleep = 30;
+
+            new Timer().schedule(new TimerTask() {
+                @Override
+                public void run() {
+                    isPlaying = false;
+                }
+            }, 23000);
+
+            while (isPlaying) {
+                mQTTConnectionManager.publishToItem(Constants.MQTTTopics.Lights.TVRoom.HUE_1_COLOR, rand + ",100,100");
+                Thread.sleep(sleep);
+                mQTTConnectionManager.publishToItem(Constants.MQTTTopics.Lights.TVRoom.HUE_2, "OFF");
+                Thread.sleep(sleep);
+                rand = random.nextInt(maxLight);
+                mQTTConnectionManager.publishToItem(Constants.MQTTTopics.Lights.TVRoom.HUE_4_COLOR, rand + ",100,100");
+                Thread.sleep(sleep);
+                mQTTConnectionManager.publishToItem(Constants.MQTTTopics.Lights.Doors.TVROOM_DOOR_1, "ON");
+                Thread.sleep(sleep);
+                rand = random.nextInt(maxLight);
+                mQTTConnectionManager.publishToItem(Constants.MQTTTopics.Lights.Bathroom.HUE_2_COLOR, rand + ",100,100");
+                Thread.sleep(sleep);
+                mQTTConnectionManager.publishToItem(Constants.MQTTTopics.Lights.Bathroom.HUE_1, "OFF");
+                Thread.sleep(sleep);
+                mQTTConnectionManager.publishToItem(Constants.MQTTTopics.Kitchen.RANGE_HOOD_LIGHT, "ON");
+                Thread.sleep(sleep);
+                mQTTConnectionManager.publishToItem(Constants.MQTTTopics.Lights.TVRoom.HUE_1, "OFF");
+                Thread.sleep(sleep);
+                rand = random.nextInt(maxLight);
+                mQTTConnectionManager.publishToItem(Constants.MQTTTopics.Lights.Bathroom.HUE_6_COLOR, rand + ",100,100");
+                Thread.sleep(sleep);
+                rand = random.nextInt(maxLight);
+                mQTTConnectionManager.publishToItem(Constants.MQTTTopics.Lights.TVRoom.HUE_5_COLOR, rand + ",100,100");
+                Thread.sleep(sleep);
+                mQTTConnectionManager.publishToItem(Constants.MQTTTopics.Lights.TVRoom.HUE_4, "OFF");
+                Thread.sleep(sleep);
+                rand = random.nextInt(maxLight);
+                mQTTConnectionManager.publishToItem(Constants.MQTTTopics.Lights.TVRoom.HUE_3_COLOR, rand + ",100,100");
+                Thread.sleep(sleep);
+                mQTTConnectionManager.publishToItem(Constants.MQTTTopics.Lights.TVRoom.HUE_5, "OFF");
+                Thread.sleep(sleep);
+                mQTTConnectionManager.publishToItem(Constants.MQTTTopics.Lights.Doors.TVROOM_DOOR_2, "ON");
+                Thread.sleep(sleep);
+                rand = random.nextInt(maxLight);
+                mQTTConnectionManager.publishToItem(Constants.MQTTTopics.Lights.Bathroom.HUE_4_COLOR, rand + ",100,100");
+                Thread.sleep(sleep);
+                mQTTConnectionManager.publishToItem(Constants.MQTTTopics.Lights.Bathroom.HUE_6, "OFF");
+                Thread.sleep(sleep);
+                mQTTConnectionManager.publishToItem(Constants.MQTTTopics.Lights.Doors.TVROOM_DOOR_1, "OFF");
+                Thread.sleep(sleep);
+                mQTTConnectionManager.publishToItem(Constants.MQTTTopics.Kitchen.RANGE_HOOD_LIGHT, "OFF");
+                Thread.sleep(sleep);
+                rand = random.nextInt(maxLight);
+                mQTTConnectionManager.publishToItem(Constants.MQTTTopics.Lights.Bathroom.HUE_5_COLOR, rand + ",100,100");
+                Thread.sleep(sleep);
+                mQTTConnectionManager.publishToItem(Constants.MQTTTopics.Lights.TVRoom.HUE_5, "OFF");
+                Thread.sleep(sleep);
+                rand = random.nextInt(maxLight);
+                mQTTConnectionManager.publishToItem(Constants.MQTTTopics.Lights.TVRoom.HUE_2_COLOR, rand + ",100,100");
+                Thread.sleep(sleep);
+                mQTTConnectionManager.publishToItem(Constants.MQTTTopics.Lights.Bathroom.HUE_2, "OFF");
+                Thread.sleep(sleep);
+                rand = random.nextInt(maxLight);
+                mQTTConnectionManager.publishToItem(Constants.MQTTTopics.Lights.Bathroom.HUE_1_COLOR, rand + ",100,100");
+                Thread.sleep(sleep);
+                mQTTConnectionManager.publishToItem(Constants.MQTTTopics.Lights.TVRoom.HUE_3, "OFF");
+                Thread.sleep(sleep);
+                rand = random.nextInt(maxLight);
+                mQTTConnectionManager.publishToItem(Constants.MQTTTopics.Lights.Bathroom.HUE_5_COLOR, rand + ",100,100");
+                Thread.sleep(sleep);
+                mQTTConnectionManager.publishToItem(Constants.MQTTTopics.Lights.Doors.TVROOM_DOOR_2, "OFF");
+                Thread.sleep(sleep);
+                mQTTConnectionManager.publishToItem(Constants.MQTTTopics.Lights.TVRoom.HUE_5, "OFF");
+                Thread.sleep(sleep);
+                rand = random.nextInt(maxLight);
+                mQTTConnectionManager.publishToItem(Constants.MQTTTopics.Lights.TVRoom.HUE_6_COLOR, rand + ",100,100");
+                Thread.sleep(sleep);
+                mQTTConnectionManager.publishToItem(Constants.MQTTTopics.Lights.Bathroom.HUE_4, "OFF");
+                Thread.sleep(sleep);
+                rand = random.nextInt(maxLight);
+                mQTTConnectionManager.publishToItem(Constants.MQTTTopics.Lights.Bathroom.HUE_3_COLOR, rand + ",100,100");
+            }
+
+            mQTTConnectionManager.publishToItem(Constants.MQTTTopics.Lights.TVRoom.HUE_1, "OFF");
+            mQTTConnectionManager.publishToItem(Constants.MQTTTopics.Lights.TVRoom.HUE_2, "OFF");
+            mQTTConnectionManager.publishToItem(Constants.MQTTTopics.Lights.TVRoom.HUE_3, "OFF");
+            mQTTConnectionManager.publishToItem(Constants.MQTTTopics.Lights.TVRoom.HUE_4, "OFF");
+            mQTTConnectionManager.publishToItem(Constants.MQTTTopics.Lights.TVRoom.HUE_5, "OFF");
+            mQTTConnectionManager.publishToItem(Constants.MQTTTopics.Lights.TVRoom.HUE_6, "OFF");
+            mQTTConnectionManager.publishToItem(Constants.MQTTTopics.Lights.Bathroom.HUE_1, "OFF");
+            mQTTConnectionManager.publishToItem(Constants.MQTTTopics.Lights.Bathroom.HUE_2, "OFF");
+            mQTTConnectionManager.publishToItem(Constants.MQTTTopics.Lights.Bathroom.HUE_3, "OFF");
+            mQTTConnectionManager.publishToItem(Constants.MQTTTopics.Lights.Bathroom.HUE_4, "OFF");
+            mQTTConnectionManager.publishToItem(Constants.MQTTTopics.Lights.Bathroom.HUE_5, "OFF");
+            mQTTConnectionManager.publishToItem(Constants.MQTTTopics.Lights.Bathroom.HUE_6, "OFF");
+            mQTTConnectionManager.publishToItem(Constants.MQTTTopics.Lights.Doors.TVROOM_DOOR_1, "ON");
+            mQTTConnectionManager.publishToItem(Constants.MQTTTopics.Lights.Doors.TVROOM_DOOR_2, "ON");
+            mQTTConnectionManager.publishToItem(Constants.MQTTTopics.Kitchen.RANGE_HOOD_LIGHT, "OFF");
+
+            mQTTConnectionManager.publishToItem(Constants.MQTTTopics.Shutter.MAIN_SHUTTER_1, "UP");
+            mQTTConnectionManager.publishToItem(Constants.MQTTTopics.Shutter.MAIN_SHUTTER_2, "UP");
+            mQTTConnectionManager.publishToItem(Constants.MQTTTopics.Shutter.MAIN_SHUTTER_3, "UP");
+        } catch (InterruptedException | IOException | SonosControllerException ex) {
+            Logger.getLogger(BasicBehaviour.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
     }
 
     private void stateMachine(String step) {
@@ -735,11 +902,9 @@ public class BasicBehaviour implements MQTTSubscriberCallbackInterface {
 //
 //                    navigation.moveAlong(trajectory);
                     //navigation.moveAlong(obj);
-                    
+
                     //Arraylist<Object>
-                    
                     //checkDestination();
-                    
                     break;
 
                 case Constants.Steps.STEP_END:
@@ -748,8 +913,6 @@ public class BasicBehaviour implements MQTTSubscriberCallbackInterface {
                     //speechRecognition.unsubscribe(Constants.APP_NAME);
                     //speechRecognition.removeAllContext();
 
-                    
-                    
                     dialog.unsubscribe(Constants.APP_NAME);
                     dialog.deactivateTopic(topic);
                     dialog.unloadTopic(topic);
@@ -937,14 +1100,14 @@ public class BasicBehaviour implements MQTTSubscriberCallbackInterface {
             case "licht ein":
                 animatedSpeech.async().say("^start(animations/Stand/Waiting/MysticalPower_1) Es werde Licht! ^wait(animations/Stand/Waiting/MysticalPower_1)");
 
-                connectionManager.sendPostRequest("items/Multimediawand_HUE6_Toggle", "ON");
-                connectionManager.sendPostRequest("items/HMScheibentransparenz2_1_State", "OFF");
+                connectionManager.openHabPostRequest("items/Multimediawand_HUE6_Toggle", "ON");
+                connectionManager.openHabPostRequest("items/HMScheibentransparenz2_1_State", "OFF");
                 restartSpeecheRecognition();
                 break;
 
             case "licht aus":
-                connectionManager.sendPostRequest("items/Multimediawand_HUE6_Toggle", "OFF");
-                connectionManager.sendPostRequest("items/HMScheibentransparenz2_1_State", "ON");
+                connectionManager.openHabPostRequest("items/Multimediawand_HUE6_Toggle", "OFF");
+                connectionManager.openHabPostRequest("items/HMScheibentransparenz2_1_State", "ON");
                 restartSpeecheRecognition();
                 break;
 
@@ -965,7 +1128,7 @@ public class BasicBehaviour implements MQTTSubscriberCallbackInterface {
 
     public void onLightSwitch(String value) {
         System.out.println(Constants.APP_NAME + " : LightSwitch " + value);
-        connectionManager.sendPostRequest("items/Multimediawand_HUE6_Toggle", value);
+        connectionManager.openHabPostRequest("items/Multimediawand_HUE6_Toggle", value);
     }
 
     @Override
@@ -979,19 +1142,18 @@ public class BasicBehaviour implements MQTTSubscriberCallbackInterface {
         } catch (InterruptedException ex) {
             Logger.getLogger(BasicBehaviour.class.getName()).log(Level.SEVERE, null, ex);
         }*/
-        
         System.out.println("onSubscription: " + itemDescription);
 
         switch (itemDescription) {
-            /*case Constants.MQTTTopics.Window.WINDOW_1:
+            case Constants.MQTTTopics.Window.WINDOW_1:
             case Constants.MQTTTopics.Window.WINDOW_2:
-            case Constants.MQTTTopics.Window.WINDOW_3:*/
+            case Constants.MQTTTopics.Window.WINDOW_3:
             case Constants.MQTTTopics.Window.WINDOW_4:
-            /*case Constants.MQTTTopics.Window.WINDOW_5:
+            case Constants.MQTTTopics.Window.WINDOW_5:
             case Constants.MQTTTopics.Window.WINDOW_6:
             case Constants.MQTTTopics.Window.WINDOW_7:
             case Constants.MQTTTopics.Window.WINDOW_8:
-            case Constants.MQTTTopics.Window.WINDOW_9:*/
+            case Constants.MQTTTopics.Window.WINDOW_9:
 
                 try {
                     if (value.equals("OPEN")) {
@@ -1013,6 +1175,10 @@ public class BasicBehaviour implements MQTTSubscriberCallbackInterface {
                 break;
 
         }
+    }
+
+    public void setIsFullConcierge(boolean isFullConcierge) {
+        this.isFullConcierge = isFullConcierge;
     }
 
 }
