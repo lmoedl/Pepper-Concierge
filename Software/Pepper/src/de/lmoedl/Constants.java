@@ -20,7 +20,7 @@ public class Constants {
 
     public static class Start {
 
-        public static final String ROBOT_URL = "pepper.local";
+        public static final String ROBOT_URL = "192.168.0.22";
         public static final String ROBOT_PORT = "9559";
     }
 
