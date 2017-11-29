@@ -134,12 +134,12 @@ public class BasicBehaviour implements MQTTSubscriberCallbackInterface {
     }
 
     private void config() throws CallError, InterruptedException, Exception {
-        //textToSpeech.setLanguage(Constants.LANGUAGE);
-        //dialog.setLanguage(Constants.LANGUAGE);
+        textToSpeech.setLanguage(Constants.LANGUAGE);
+        dialog.setLanguage(Constants.LANGUAGE);
         motion.setExternalCollisionProtectionEnabled("All", true);
         motion.setWalkArmsEnabled(Boolean.TRUE, Boolean.TRUE);
         speechRecognition.pause(true);
-        //speechRecognition.setLanguage(Constants.LANGUAGE);
+        speechRecognition.setLanguage(Constants.LANGUAGE);
         speechRecognition.pause(false);
         
         tabletService.enableWifi();
@@ -159,7 +159,7 @@ public class BasicBehaviour implements MQTTSubscriberCallbackInterface {
         /*windowOpendID = memory.subscribeToEvent("WindowOpend", "onWindowOpend::(s)", this);
         windowClosedID = memory.subscribeToEvent("WindowClosed", "onWindowClosed::(s)", this);*/
         memory.subscribeToEvent("SpeechRecognitionOff", "onSpeechRecognitionOff::(s)", this);
-        startConcierge();
+        //startConcierge();
 
         memory.subscribeToEvent("ALMotion/MoveFailed", new EventCallback() {
             @Override
@@ -189,7 +189,7 @@ public class BasicBehaviour implements MQTTSubscriberCallbackInterface {
 
         //resumeTvRoom();
         //tvRoom();
-        //goodby();
+        goodby();
         //Window open scene
         /*mQTTConnectionManager.subscribeToItem(Constants.MQTTTopics.Window.WINDOW_4);
         loadTopic("/home/nao/TVRoom.top");
@@ -254,9 +254,9 @@ public class BasicBehaviour implements MQTTSubscriberCallbackInterface {
 
         success = (boolean) motion.call("moveTo", 0f, 0f, new Float(Math.toRadians(180))).get();
 
-        /*if (isFullConcierge) {
+        if (isFullConcierge) {
             tvRoom();
-        }*/
+        }
     }
 
     public void tvRoom() throws Exception {
@@ -265,8 +265,7 @@ public class BasicBehaviour implements MQTTSubscriberCallbackInterface {
         windowOpendID = memory.subscribeToEvent("WindowOpend", "onWindowOpend::(s)", this);
         windowClosedID = memory.subscribeToEvent("WindowClosed", "onWindowClosed::(s)", this);
         mQTTConnectionManager.subscribeToItems(Constants.MQTTTopics.Window.WINDOWS);
-        loadTopic("/home/nao/TVRoom.top");
-        //dialog.forceInput("xxx");
+        //loadTopic("/home/nao/TVRoom.top");
         dialog.forceOutput();
     }
 
@@ -306,7 +305,13 @@ public class BasicBehaviour implements MQTTSubscriberCallbackInterface {
     }
 
     private void runGamingScene() throws IOException, SonosControllerException, InterruptedException, CallError {
-        connectionManager.getRequest("http://192.168.0.65/video.php?path=videos/NFS.mp4");
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                connectionManager.getRequest("http://192.168.0.65/video.php?path=videos/NFS.mp4");
+            }
+        }).start();
+        
         animationPlayer.run("animations/Stand/Waiting/DriveCar_1");
         animationPlayer.run("animations/Stand/Waiting/DriveCar_1");
     }
@@ -356,12 +361,11 @@ public class BasicBehaviour implements MQTTSubscriberCallbackInterface {
         //mQTTConnectionManager.unsubscribeOfItems(Constants.MQTTTopics.Window.WINDOWS);
         //Gaming scene
         //Menschenerkennung einfügen
-        //dialog.setDelay("onFaceRecognizedDistance", -1);
-        runGamingScene();
-        dialog.forceOutput();
+        //runGamingScene();
+        /*dialog.forceOutput();
         dialog.forceOutput();
         System.out.println("Topic to unsubscribe");
-        unloadTopic();
+        unloadTopic();*/
         //\"Line\", [1.0, 0.0]
         /*ArrayList<Object> trajectory = new ArrayList<>();
         ArrayList<Object> line = new ArrayList<>();
@@ -414,16 +418,12 @@ public class BasicBehaviour implements MQTTSubscriberCallbackInterface {
     public void workingRoom() throws CallError, InterruptedException, IOException, SonosControllerException, Exception {
         boolean success;
         System.out.println("Workingroom");
-        loadTopicWithForceOutput("/home/nao/WorkingRoom.top");
+        //loadTopicWithForceOutput("/home/nao/WorkingRoom.top");
         List<Float> old = motion.getRobotPosition(false);
-        //Check if in front of bathroom
-        //float rFootFront = (float) memory.getData("Device/SubDeviceList/RFoot/FSR/FrontRight/Sensor/Value");
-        //System.out.println(rFootFront);
 
         success = (boolean) motion.call("moveTo", 2.7f, 0f, 0f).get();
         checkDestination(success, old, motion.getRobotPosition(false), new float[]{2.7f, 0f, 0f});
-        //success = navigation.navigateTo(3f, 0f);
-        //success = navigation.navigateTo(1f, 0f);
+
 
         success = navigation.navigateTo(0f, 0f, new Float(Math.toRadians(-90)));
         old = motion.getRobotPosition(false);
@@ -443,7 +443,7 @@ public class BasicBehaviour implements MQTTSubscriberCallbackInterface {
     public void bathRoom() throws CallError, InterruptedException, IOException, SonosControllerException, Exception {
         boolean success;
         System.out.println("Bathroom");
-        loadTopicWithForceOutput("/home/nao/Bathroom.top");
+        //loadTopicWithForceOutput("/home/nao/Bathroom.top");
 
         List<Float> old = motion.getRobotPosition(false);
 
@@ -453,8 +453,8 @@ public class BasicBehaviour implements MQTTSubscriberCallbackInterface {
         success = (boolean) motion.call("moveTo", 0f, 0f, new Float(Math.toRadians(-90))).get();
         old = motion.getRobotPosition(false);
         //success = navigation.navigateTo(3f, 0f);
-        success = (boolean) motion.call("moveTo", 3f, 0f, 0f).get();
-        checkDestination(success, old, motion.getRobotPosition(false), new float[]{3f, 0f, 0f});
+        success = (boolean) motion.call("moveTo", 2.8f, 0f, 0f).get();
+        checkDestination(success, old, motion.getRobotPosition(false), new float[]{2.8f, 0f, 0f});
         success = (boolean) motion.call("moveTo", 0f, 0f, new Float(Math.toRadians(-90))).get();
         old = motion.getRobotPosition(false);
         success = navigation.navigateTo(2f, 0f);
@@ -469,13 +469,13 @@ public class BasicBehaviour implements MQTTSubscriberCallbackInterface {
     public void kitchen() throws CallError, InterruptedException, IOException, SonosControllerException, Exception {
         boolean success;
         System.out.println("Kitchen");
-        loadTopicWithForceOutput("/home/nao/Kitchen.top");
+        //loadTopicWithForceOutput("/home/nao/Kitchen.top");
 
         success = (boolean) motion.call("moveTo", 1f, 0f, 0f).get();
         success = (boolean) motion.call("moveTo", 0f, 0f, new Float(Math.toRadians(-90))).get();
         List<Float> old = motion.getRobotPosition(false);
-        success = (boolean) motion.call("moveTo", 4f, 0f, 0f).get();
-        checkDestination(success, old, motion.getRobotPosition(false), new float[]{4f, 0f, 0f});
+        success = (boolean) motion.call("moveTo", 3f, 0f, 0f).get();
+        checkDestination(success, old, motion.getRobotPosition(false), new float[]{3f, 0f, 0f});
         success = (boolean) motion.call("moveTo", 0f, 0f, new Float(Math.toRadians(180))).get();
 
         if (isFullConcierge) {
@@ -497,11 +497,12 @@ public class BasicBehaviour implements MQTTSubscriberCallbackInterface {
         //System.out.println("isWebviewLoaded: " + isWebviewLoaded);
         System.out.println("ByeBye");
         //tabletService.hideWebview();
-        loadTopic("/home/nao/Goodby.top");
-        dialog.forceOutput();
-        lightShow();
-        dialog.forceOutput();
-        unloadTopic();
+        //loadTopic("/home/nao/Questions.top");
+        //loadTopic("/home/nao/Goodby.top");
+        //dialog.forceOutput();
+        //lightShow();
+        //dialog.forceOutput();
+        //unloadTopic();
 
         //SonosDevice sonos = new SonosDevice("192.168.0.30");
         //sonos.playUri("x-rincon-mp3radio://http://listen.technobase.fm/tunein-mp3-pls", "Technobase.fm");
@@ -922,7 +923,7 @@ public class BasicBehaviour implements MQTTSubscriberCallbackInterface {
                 case Constants.Steps.STEP_DIALOG:
                     dialog.setLanguage(Constants.LANGUAGE);
                     //System.out.println(getClass().getClassLoader().getResource("TestDialog.top").getPath());
-                    topic = dialog.loadTopic("/home/nao/Welcome.top");
+                    topic = dialog.loadTopic("/home/nao/Questions.top");
                     dialog.activateTopic(topic);
                     dialog.subscribe(Constants.APP_NAME);
                     dialog.forceInput("xxx");

@@ -49,6 +49,9 @@ public class ConciergeController {
                     System.err.println("Gib eine Zahl ein du Penner");
                 }
                 switch (val) {
+                    case 0:
+                        basicBehaviour.setIsFullConcierge(true);
+                        break;
                     case 1:
                         basicBehaviour.setIsFullConcierge(true);
                         basicBehaviour.startConcierge();
@@ -85,6 +88,7 @@ public class ConciergeController {
     private void printMenue() {
         System.out.println("Bitte eine Zahl für die entsprechende Funktion eingeben");
         System.out.println("-------------------------------------------------------");
+        System.out.println("0) Fortfolaufende Tour ab ... starten");
         System.out.println("1) Komplette Tour starten");
         System.out.println("2) Begrüßung und allgemeine Informationen starten");
         System.out.println("3) TV Raum starten");

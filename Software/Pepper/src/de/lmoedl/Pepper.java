@@ -26,7 +26,8 @@ public class Pepper {
         Application application = new Application(args, robotUrl);
         application.start();
         //Session session = application.session();
-        
+        /*ConciergeController conciergeController = new ConciergeController(application);
+        conciergeController.menu();*/
         BasicBehaviour basicBehaviour = new BasicBehaviour(application);
         basicBehaviour.start();
         

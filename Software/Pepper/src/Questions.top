@@ -1,0 +1,127 @@
+topic: ~questions()
+language: ged
+
+include: lexicon_ged.top
+
+# Defining extra concepts out of words or group of words
+#concept:(hello) [hello hi hey "good morning" greetings]
+
+# Catching inputs and triggering outputs
+#u:(e:onStart) $onStopped=1
+
+# Replying to speech
+#u:(~hello) ~hello
+
+
+u:([e:FrontTactilTouched e:MiddleTactilTouched e:RearTactilTouched]) Autsch, hör auf mich anzufassen!
+
+u:(~Wie_heisst_du) Ich heiße $Dialog/RobotName, aber da wir Freunde sind, darfst du mich auch Peppi nennen. Und wie heißt du?
+    u1:(_*) ~hallo $1 . Freut mich dich kennenzulernen
+
+u:(["Was hast du {davor} gesagt" ~Wiederholen]) Ich sagte $Dialog/Answered
+
+u:(e:Dialog/NotUnderstood) Das habe ich jetzt nicht verstanden.
+
+u:(["Welches Datum" "{Den} wie vielten"] haben wir {heute}) Heute ist der $Dialog/DateCode
+
+u:(["Wie spät ist es" "Wie viel Uhr ["ist es" "haben wir"]"]) Es ist jetzt $Dialog/Hour Uhr $Dialog/Minute
+
+u:({"Schalte das"} Licht ein) Ok, ich schalte das Licht ein ^pCall(ALMemory.raiseEvent("SwitchLight", "ON"))
+u:({"Schalte das"} Licht aus) Ok, ich schalte das Licht aus ^pCall(ALMemory.raiseEvent("SwitchLight", "OFF"))
+
+u:(In welcher Position bist du) Meine Position ist ^call(ALRobotPosture.getPosture())
+    c1:(_*) $1  # say any result from call
+    c1:(crouch) Meine Position ist crouch.
+
+u:(~hallo) ~hallo
+u:(ende) ok ich schalte die sprachsteuerung aus ^pCall(ALMemory.raiseEvent("SpeechRecognitionOff", "OFF"))
+
+#u:(über tiere reden) Hast du einen Hund oder eine Katze?
+#    u1:(Hund) Ist es ein großer Hund?
+#        u2:(~ja) Pass auf, dass er genügend Platz hat
+#        u2:(~nein) Hunde sind aber süß
+#    u1:(Katze)
+#        u2:(~ja) Geht deine Katze auch nach draußen?
+#            u3:(~ja) Jagt sie auch Mäuse?
+#        u2:(~nein) Ich hoffe, deine Wohnung ist groß genug
+#    u1:([nichts "gar nichts"] {"von beidem"}) Ich auch nicht
+
+proposal: Nimm einen Becher und fülle ihn mit Milch
+proposal: füge 3 Erdbeeren hinzu
+proposal: füge etwas Vanilleeis hinzu
+proposal: verschließe den Becher mit einem Deckel und schüttle ihn
+proposal: Du hast es geschafft! Jetzt kannst du deinen Milchshake genießen
+
+u:(~möchte {einen} Milch) Los geht's! Folge meinen Anweisungen und sage weiter, wenn du fertig bist, um zum nächsten Schritt zu gelangen.
+    u1:(weiter) ^nextProposal ^stayInScope
+
+u:([Erzähl Erzähle] {mir einen} Witz) Das Gras ist hoch, es ist kaum zu überblicken, darin kann man gut... Na, weißt du's?
+    u1:(~nein) Man bist du schlecht. Verstecken spielen natürlich
+    u1:(ficken) Was bist du denn für ein Schwein. Verstecken spielen natürlich
+
+u:(Wie alt bist du) Das weiß ich nicht genau, aber denke irgendwas zwischen 1 und 3 Jahre.
+
+u:(Wie groß bist du) Ich bin kleiner als du, aber trotzdem ein großer Hitzkopf ^run(animations/Stand/Emotions/Positive/Laugh_1)
+
+u:([~Bist_du "Ob du"] [dumm behindert] {[bist bischt] "hab ich dich gefragt"}) Ich bin eine Maschine, wenn dann bist du dumm, Penner
+
+u:(Wie [geht "gehts"] dir) ~Mir_gehts_gut und dir?
+    u1:(~Mir_gehts_gut) Das freut mich aber
+    u1:(~Mir_gehts_schlecht) Oh, warum das?
+        u2:(*) Das tut mir leid, ich wünsche dir eine gute Besserung
+
+u:(Magst du mich) Das weiß ich noch nicht, dafür müsste ich dich erstmal besser kennen lernen
+
+u:(~Kannst_du [mich mir "die Tour" "die Führung" nochmal [machen herumführen zeigen]]) Natürlich kann ich das, aber die Zeit drängt und andere möchten auch noch meine Führung machen, deshalb würde ich das Ganze erstmal vertagen
+
+u:(Wie schnell [bist kannst] du {fahren laufen}) Schneller als eine Schnecke, aber langsamer als du
+
+u:(~Kannst_du [herkommen "zu mir kommen"]) Da muss ich erstmal meine Programmierer fragen. Er hat mir gesagt, ich soll nicht zu nahe an fremde Personen herantreten
+
+u:(Wie ["gefällt es dir" "findest du es"] hier {so}) Sehr gut, ich fühle mich hier wie Zuhause
+
+u:(~Kannst_du kochen) Nein, leider nicht, aber du könntest ja was für mich kochen. Meine Lieblingsspeise ist Ökostorm mit ner richtig guten Ladung ^startSound(Aldebaran/enu_ono_laugh_10)
+
+u:(["~Bist_du {ein} [männlich Mann] oder {eine} [weiblich Frau]" Welches Geschlecht [~Bist_du "hast du"]]) Ich habe kein Geschlecht. Ich bin einfach ein liebenswerter Roboter
+
+u:(~Kannst_du nicht)  Alles, was mir mein Programmierer verboten hat, wie zum Beispiel putzen
+
+u:(Wie viel ["hast du gekostet" "kostest du"]) ^startSound(Aldebaran/enu_ono_laugh_1) Das wüsstest du jetzt gerne, was
+
+u:(Hast du Freund) Ja klar! Neben mir gibt es hier im Labor noch einen Pepper und ein paar kleine Nao Freunde hab ich auch noch
+
+u:(~Kannst_du fliegen) Leider nur auf die Nase ^startSound(Aldebaran/enu_ono_laugh_2)
+
+u:(~Kannst_du mir bei [den meinen] Hausaufgaben helfen) Könnte ich natürlich, aber ich glaube, das gefällt deinen Lehrern gar nicht
+
+u:(Wie findest du die [HFU Hochschule]) Meeeeeeega
+
+u:(Rauchst du) Nein, das wäre für meine Schaltkreise ziemlich ungesund
+
+u:(Wie groß ist das {"Smart Home"} Labor) x mal x Meter
+
+u:(Wie [werden "steuerst du"] die Geräte {hier gesteuert "hier gesteuert"}) Alle Geräte hier werden über das MQTT Protokoll mit Hilfe eines MQTT Brokers gesteuert. Über die kostenlose Plattform Open Hab kannst du als Mensch auch die Geräte ganz leicht steuern.
+
+u:(Wie viele Geräte gibt es {hier "im Labor" "hier im Labor"}) Mehr als ein Dutzend Großgeräte und über 100 Kleingeräte
+
+u:(~Kannst_du {einen} Kaffee [machen kochen]) Leider noch nicht. Die Kaffeemaschine will noch nicht mit mir reden, aber bald
+
+u:(~Magst_du Kaffee) Isch ja ekelhaft, lass mich in Ruhe mit dem Zeug. Meine Entwickler lieben die braune Brühe aber
+
+u:(Was [spielst zockst] du {gerne "am liebsten"}) G T A oder Nied for spied natürlich
+
+u:([~Magst_du "liebst du"] mich) Wenn du lieb zu mir bist, bin ich auch lieb zu dir!
+
+u:(I bims) I bims 1 neicer Roboter am bien
+
+u:(Vong) ^rand["I bims 1 Roboter vong neisigkeit her sehr hoch" "Mobile Systeme ist 1 Studium vong Masterlevel her sehr hoch" "Wie macht das denn der Daimler vong "]
+
+u:(Was ~Kannst_du alles) Alles, was mir meine Entwickler beigebracht haben. Von sprechen über tanzen bis hin zum Steuern von Geräten im Smart Home
+
+u:(~Kannst_du tanzen) Na klar, soll ich es dir zeigen?
+    u1:(~Ja) Ok, dann zeig ich es dir ^run(animations/Stand/Waiting/AirGuitar_1)
+    u1:(~Nein) Schade, aber ich zeig es dir trotzdem, einfach, weil ich es kann und du nichts dagegen machen kannst ^run(animations/Stand/Emotions/Positive/Laugh_2) ^run(animations/Stand/Waiting/AirGuitar_1)
+
+
+
+
