@@ -1,0 +1,69 @@
+body {
+  margin: 0px;
+  padding: 0px;
+}
+
+div.title{
+    height: 60px;
+}
+
+div.base{
+    /* http://qiita.com/tonosamart/items/e7dfea02772d7ce762cf */
+    width: 1700px;
+    height: 1010px; /* 1019 - margin 4px*/
+    margin: 4px;
+    margin-left: auto;
+    margin-right: auto;
+    position: relative;
+}
+
+.image {
+    max-height: 950px; /* max height - title size */
+    max-width: 100%;
+    border-radius: 20px;
+}
+
+div.footer{
+    position: absolute;
+    bottom: 0px;
+    height: 300px;
+    width: 100%;
+    background-color: whitesmoke;
+    border: 10px solid lightslategray;
+    border-radius: 50px 50px 0px 0px;
+}
+
+.answer {
+    height: 100%;
+    font-size: 10em;
+    font-weight: bold;
+    text-align: center;
+}
+
+.answer a {
+    display: block;
+    background-repeat:no-repeat;
+    background-position:center center;
+    width: 100%;
+    height: 100%;
+}
+
+.answer.yes {
+    border-radius: 40px 0px 0px 0px;
+    border-right: 3px solid lightslategray;
+    background-color: #31b0d5;
+}
+
+#yes {
+    background-image: url(../img/circle.png);
+}
+
+.answer.no {
+    border-radius: 0px 40px 0px 0px;
+    border-left: 3px solid lightslategray;
+    background-color: #c9302c;
+}
+
+#no {
+    background-image: url(../img/cross.png);
+}
