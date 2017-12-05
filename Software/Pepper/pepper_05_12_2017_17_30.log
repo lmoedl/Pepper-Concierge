@@ -1,0 +1,40 @@
+Dez 05, 2017 5:30:15 PM de.lmoedl.BasicBehaviour resumeTvRoom
+INFORMATION: resumeTvRoom
+Dez 05, 2017 5:30:22 PM de.lmoedl.BasicBehaviour resumeTvRoom
+INFORMATION: resumeTvRoom"navigateTo", 2f, 0f, 0f_true
+Dez 05, 2017 5:30:27 PM de.lmoedl.BasicBehaviour resumeTvRoom
+INFORMATION: resumeTvRoom_if(success)_"moveTo", 2.5f, 0f, 0f_false
+Dez 05, 2017 5:30:27 PM de.lmoedl.BasicBehaviour$1 onEvent
+SCHWERWIEGEND: movefailed: [Safety, 1, [1.779051, -0.7167399, 0.0]]
+Dez 05, 2017 5:30:28 PM de.lmoedl.BasicBehaviour$1 onEvent
+SCHWERWIEGEND: movefailed: [Internal stop, 0, java.lang.Void@41f53d2b]
+Dez 05, 2017 5:30:28 PM de.lmoedl.BasicBehaviour$1 onEvent
+SCHWERWIEGEND: movefailed: [Internal stop, 0, java.lang.Void@7c23f27f]
+Dez 05, 2017 5:30:29 PM de.lmoedl.BasicBehaviour resumeTvRoom
+INFORMATION: resumeTvRoom_"navigateTo", 2f, 0f, 0f_false
+Dez 05, 2017 5:30:29 PM de.lmoedl.BasicBehaviour checkDestination
+INFORMATION: corrigationVector: 1.9978403 0.0 0.0
+Dez 05, 2017 5:31:05 PM de.lmoedl.BasicBehaviour workingRoom
+INFORMATION: Workingroom
+Dez 05, 2017 5:31:12 PM de.lmoedl.BasicBehaviour$1 onEvent
+SCHWERWIEGEND: movefailed: [Safety, 1, [4.2709293, -1.157123, 0.0]]
+Dez 05, 2017 5:31:12 PM de.lmoedl.BasicBehaviour workingRoom
+INFORMATION: workingRoom_"moveTo", 2.7f, 0f, 0f_false
+Dez 05, 2017 5:31:12 PM de.lmoedl.BasicBehaviour checkDestination
+INFORMATION: corrigationVector: 0.9508512 0.0 0.0
+Dez 05, 2017 5:31:12 PM de.lmoedl.BasicBehaviour$1 onEvent
+SCHWERWIEGEND: movefailed: [Internal stop, 0, java.lang.Void@1d9d8800]
+Dez 05, 2017 5:31:17 PM de.lmoedl.BasicBehaviour checkDestination
+INFORMATION: corrigationVector: 0.8614743 0.0 0.0
+Dez 05, 2017 5:31:53 PM de.lmoedl.BasicBehaviour workingRoom
+INFORMATION: workingRoom_"navigateTo", 2.2f, 0f, 0f_true
+Dez 05, 2017 5:31:58 PM de.lmoedl.BasicBehaviour bathRoom
+INFORMATION: Bathroom
+Dez 05, 2017 5:32:03 PM de.lmoedl.BasicBehaviour bathRoom
+INFORMATION: bathroom_"moveTo", 1f, 0f, 0f_true
+Dez 05, 2017 5:32:40 PM de.lmoedl.BasicBehaviour bathRoom
+INFORMATION: bathroom_"navigateTo", 3f, 0f, 0f_true
+Dez 05, 2017 5:32:47 PM de.lmoedl.BasicBehaviour bathRoom
+INFORMATION: bathroom_"navigateTo", 2f, 0f, 0f_false
+Dez 05, 2017 5:32:47 PM de.lmoedl.BasicBehaviour checkDestination
+INFORMATION: corrigationVector: 1.9968657 0.0 0.0

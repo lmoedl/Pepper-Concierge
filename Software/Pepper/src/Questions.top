@@ -15,19 +15,21 @@ include: lexicon_ged.top
 
 u:([e:FrontTactilTouched e:MiddleTactilTouched e:RearTactilTouched]) Autsch, hör auf mich anzufassen!
 
-u:(~Wie_heisst_du) Ich heiße $Dialog/RobotName, aber da wir Freunde sind, darfst du mich auch Peppi nennen. Und wie heißt du?
+u:(~Wie_heisst_du) Ich heiße $Dialog/RobotName , aber da wir Freunde sind, darfst du mich auch Peppi nennen. Und wie heißt du?
     u1:(_*) ~hallo $1 . Freut mich dich kennenzulernen
+
+u:(Peppi) Hallo I bims hier.
 
 u:(["Was hast du {davor} gesagt" ~Wiederholen]) Ich sagte $Dialog/Answered
 
-u:(e:Dialog/NotUnderstood) Das habe ich jetzt nicht verstanden.
+u:(e:Dialog/NotUnderstood) ^rand["Das habe ich jetzt nicht verstanden." "Was laberscht du" ]
 
 u:(["Welches Datum" "{Den} wie vielten"] haben wir {heute}) Heute ist der $Dialog/DateCode
 
 u:(["Wie spät ist es" "Wie viel Uhr ["ist es" "haben wir"]"]) Es ist jetzt $Dialog/Hour Uhr $Dialog/Minute
 
-u:({"Schalte das"} Licht ein) Ok, ich schalte das Licht ein ^pCall(ALMemory.raiseEvent("SwitchLight", "ON"))
-u:({"Schalte das"} Licht aus) Ok, ich schalte das Licht aus ^pCall(ALMemory.raiseEvent("SwitchLight", "OFF"))
+u:({"[Schalte Schalt] das"} Licht ein) Ok, ich schalte das Licht ein ^pCall(ALMemory.raiseEvent("SwitchLight", "ON"))
+u:({"[Schalte Schalt] das"} Licht aus) Ok, ich schalte das Licht aus ^pCall(ALMemory.raiseEvent("SwitchLight", "OFF"))
 
 u:(In welcher Position bist du) Meine Position ist ^call(ALRobotPosture.getPosture())
     c1:(_*) $1  # say any result from call
@@ -63,7 +65,7 @@ u:(Wie alt bist du) Das weiß ich nicht genau, aber denke irgendwas zwischen 1 u
 
 u:(Wie groß bist du) Ich bin kleiner als du, aber trotzdem ein großer Hitzkopf ^run(animations/Stand/Emotions/Positive/Laugh_1)
 
-u:([~Bist_du "Ob du"] [dumm behindert] {[bist bischt] "hab ich dich gefragt"}) Ich bin eine Maschine, wenn dann bist du dumm, Penner
+u:([~Bist_du "Ob du"] [dumm behindert] {[bist bischt] "hab ich dich gefragt"}) Ich bin eine Maschine, wenn dann bist du dumm, du Penner
 
 u:(Wie [geht "gehts"] dir) ~Mir_gehts_gut und dir?
     u1:(~Mir_gehts_gut) Das freut mich aber
@@ -78,7 +80,7 @@ u:(Wie schnell [bist kannst] du {fahren laufen}) Schneller als eine Schnecke, ab
 
 u:(~Kannst_du [herkommen "zu mir kommen"]) Da muss ich erstmal meine Programmierer fragen. Er hat mir gesagt, ich soll nicht zu nahe an fremde Personen herantreten
 
-u:(Wie ["gefällt es dir" "findest du es"] hier {so}) Sehr gut, ich fühle mich hier wie Zuhause
+u:(Wie ["gefällt es dir" "findest du es"] hier {so}) ^rand["Sehr gut, ich fühle mich hier wie Zuhause" "Oh nee, hier komm isch mir vor wie im Omma paradies"]
 
 u:(~Kannst_du kochen) Nein, leider nicht, aber du könntest ja was für mich kochen. Meine Lieblingsspeise ist Ökostorm mit ner richtig guten Ladung ^startSound(Aldebaran/enu_ono_laugh_10)
 
@@ -94,7 +96,7 @@ u:(~Kannst_du fliegen) Leider nur auf die Nase ^startSound(Aldebaran/enu_ono_lau
 
 u:(~Kannst_du mir bei [den meinen] Hausaufgaben helfen) Könnte ich natürlich, aber ich glaube, das gefällt deinen Lehrern gar nicht
 
-u:(Wie findest du die [HFU Hochschule]) Meeeeeeega
+u:(["Wie findest du" ~Magst_du] die [HFU Hochschule]) Meeeeeeega geil
 
 u:(Rauchst du) Nein, das wäre für meine Schaltkreise ziemlich ungesund
 
@@ -112,16 +114,25 @@ u:(Was [spielst zockst] du {gerne "am liebsten"}) G T A oder Nied for spied nat�
 
 u:([~Magst_du "liebst du"] mich) Wenn du lieb zu mir bist, bin ich auch lieb zu dir!
 
-u:(I bims) I bims 1 neicer Roboter am bien
+u:(* bims) I bims 1 neicer Roboter am bien
 
-u:(Vong) ^rand["I bims 1 Roboter vong neisigkeit her sehr hoch" "Mobile Systeme ist 1 Studium vong Masterlevel her sehr hoch" "Wie macht das denn der Daimler vong "]
+u:({Ey} Praline brauchst du [1 eine] Füllung) Ja, abba Parline füllt man nit mit Lauch. lol
+
+u:(Vong) ^rand["I bims 1 Roboter vong neisigkeit her sehr hoch" "Mobile Systeme ist 1 Studium vong Masterlevel her sehr hoch" "Wie macht das denn der Daimler vong Fahren her"
+    "Rosem simd rot Glühwein ist das was jedem gefällt i habe mir 1 Pizza bestellt, komm bitte her umd leg dich drauf, denn auf mein Pizza fehlt 1 Lauch" 
+    "I treff mi heut mit X und Y. Halo i bims am absoluten Nullpunkt"
+    "Wow ab jedzd dürfem wir in mathe 1 Taschenrechmer benutzem. Jedzd wird Mathe so einfach. Halo i bims dumm wie brod"
+    "Wer leuft so spät durch Nacht umd singt? Es ist dem Studemt vong Rausch fast blimd. Er hält ihm sicher, hält ihm warm dem Döner in seim Arm."
+    "Rosem simd Rot, der Glühweim ist heif, zumge verbrannt, was für 1 life"
+    "Lass die amderen sich verändern umd bleib so wie du bimst. Halo i bims die e funktiom beim ableitem"
+]
 
 u:(Was ~Kannst_du alles) Alles, was mir meine Entwickler beigebracht haben. Von sprechen über tanzen bis hin zum Steuern von Geräten im Smart Home
 
 u:(~Kannst_du tanzen) Na klar, soll ich es dir zeigen?
     u1:(~Ja) Ok, dann zeig ich es dir ^run(animations/Stand/Waiting/AirGuitar_1)
-    u1:(~Nein) Schade, aber ich zeig es dir trotzdem, einfach, weil ich es kann und du nichts dagegen machen kannst ^run(animations/Stand/Emotions/Positive/Laugh_2) ^run(animations/Stand/Waiting/AirGuitar_1)
+    u1:(~Nein) Schade, aber ich zeig es dir trotzdem, einfach, weil ich es kann und du nichts dagegen machen kannst ^run(animations/Stand/Waiting/AirGuitar_1) ^run(animations/Stand/Emotions/Positive/Laugh_2)
 
-
+u:(Gefällt) Gefällt mir auch
 
 

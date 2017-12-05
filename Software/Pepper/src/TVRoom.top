@@ -7,10 +7,9 @@ proposal: Hier befinden wir uns nun im Fernsehzimmer. Puh... Ist euch auch so wa
 
 proposal: ^run(animations/Stand/Waiting/MysticalPower_1) Ist das nicht wundervoll? Durch das Öffnen der Fenster werden automatisch hier im Raum die Lampen aktiviert. Sobald das Fenster wieder geschlossen wird, geht das Licht wieder aus. Könnten einer das Fenster bitte wieder schließen? 
 
-proposal: Sehr gut, das Fenster ist wieder geschlossen. Jetzt möchte ich aber noch in Ruhe eine Runde Col of Djuti spielen. Bitte verlasst doch solange den Raum und macht die Türen zu.
+proposal: Sehr gut, das Fenster ist wieder geschlossen. Jetzt möchte ich aber noch in Ruhe eine Runde Nied for spied spielen.
 
-proposal: Aaahhh... das war geil! ^pCall(ALMemory.raiseEvent("PublishMQTTMessage", "HMScheibentransparenz1_1_State", "OFF")) Zum Schutz der Privatsfähre kann man auch die Scheiben undurchsichtig machen.
+proposal: Aaahhh... das war geil! ^pCall(ALMemory.raiseEvent("PublishMQTTMessage", "HMScheibentransparenz1_1_State;OFF")) Zum Schutz der Privatsfähre kann man auch die Scheiben undurchsichtig machen.
 proposal: Jetzt sind wir aber fertig hier. Macht etwas Platz für mich, jetzt geht es weiter in das Arbeitszimmer.
-
 
 
