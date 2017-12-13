@@ -67,7 +67,7 @@ u:(Wie groß bist du) Ich bin kleiner als du, aber trotzdem ein großer Hitzkopf
 
 u:([~Bist_du "Ob du"] [dumm behindert] {[bist bischt] "hab ich dich gefragt"}) Ich bin eine Maschine, wenn dann bist du dumm, du Penner
 
-u:(Wie [geht "gehts"] dir) ~Mir_gehts_gut und dir?
+u:(Wie [geht "gehts"] dir) ^rand[~Mir_gehts_gut "So la la, ein paar Schaltkreise könnten mal wieder eine Lötkur gebrauchen"] und dir?
     u1:(~Mir_gehts_gut) Das freut mich aber
     u1:(~Mir_gehts_schlecht) Oh, warum das?
         u2:(*) Das tut mir leid, ich wünsche dir eine gute Besserung
@@ -134,5 +134,7 @@ u:(~Kannst_du tanzen) Na klar, soll ich es dir zeigen?
     u1:(~Nein) Schade, aber ich zeig es dir trotzdem, einfach, weil ich es kann und du nichts dagegen machen kannst ^run(animations/Stand/Waiting/AirGuitar_1) ^run(animations/Stand/Emotions/Positive/Laugh_2)
 
 u:(Gefällt) Gefällt mir auch
+
+u:(Was ist das Jugendwort des Jahres) I bims natürlich, weißt du das etwa nicht?
 
 
