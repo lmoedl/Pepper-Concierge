@@ -1,0 +1,30 @@
+Dez 19, 2017 4:57:06 PM de.lmoedl.BasicBehaviour log
+INFORMATION: onSpeechRecognitionOff: OFF
+Dez 19, 2017 4:57:07 PM de.lmoedl.BasicBehaviour stateMachine
+SCHWERWIEGEND: null
+java.lang.RuntimeException: 	ALExtractor::received unsubscribe from non-subscribed module: 
+	Pepper_Concierge
+	at com.aldebaran.qi.Future.get(Future.java:96)
+	at com.aldebaran.qi.helper.proxies.ALDialog.unsubscribe(ALDialog.java:202)
+	at de.lmoedl.BasicBehaviour.stateMachine(BasicBehaviour.java:1001)
+	at de.lmoedl.BasicBehaviour.onSpeechRecognitionOff(BasicBehaviour.java:379)
+
+Dez 19, 2017 4:57:07 PM de.lmoedl.BasicBehaviour log
+INFORMATION: goodby_isUrlLoaded: true
+Dez 19, 2017 4:57:07 PM de.lmoedl.BasicBehaviour log
+INFORMATION: goodby_isShowWebview: true
+Dez 19, 2017 5:03:01 PM de.lmoedl.BasicBehaviour log
+INFORMATION: onSpeechRecognitionOff: OFF
+Dez 19, 2017 5:03:02 PM de.lmoedl.BasicBehaviour stateMachine
+SCHWERWIEGEND: null
+java.lang.RuntimeException: 	ALExtractor::received unsubscribe from non-subscribed module: 
+	Pepper_Concierge
+	at com.aldebaran.qi.Future.get(Future.java:96)
+	at com.aldebaran.qi.helper.proxies.ALDialog.unsubscribe(ALDialog.java:202)
+	at de.lmoedl.BasicBehaviour.stateMachine(BasicBehaviour.java:1001)
+	at de.lmoedl.BasicBehaviour.onSpeechRecognitionOff(BasicBehaviour.java:379)
+
+Dez 19, 2017 5:03:02 PM de.lmoedl.BasicBehaviour log
+INFORMATION: goodby_isUrlLoaded: true
+Dez 19, 2017 5:03:02 PM de.lmoedl.BasicBehaviour log
+INFORMATION: goodby_isShowWebview: true

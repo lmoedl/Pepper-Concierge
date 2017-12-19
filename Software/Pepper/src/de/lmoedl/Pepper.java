@@ -7,6 +7,7 @@ package de.lmoedl;
 
 import com.aldebaran.qi.Application;
 import com.aldebaran.qi.Session;
+import java.io.File;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -22,7 +23,9 @@ public class Pepper {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        String robotUrl = "tcp://" + Constants.Start.ROBOT_URL + ":" + Constants.Start.ROBOT_PORT;
+        new ConfigurationManager().loadConfigFile();
+        
+        String robotUrl = "tcp://" + Constants.Config.ROBOT_URL + ":" + Constants.Config.ROBOT_PORT;
         Application application = new Application(args, robotUrl);
         application.start();
         //Session session = application.session();

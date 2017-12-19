@@ -328,7 +328,7 @@ concept:(Nein) ^rand[
 ##### Human mood #####
 #------------------------------------------------------------------#
 concept:(Mir_gehts_gut) [
-    "Mir geht es [sehr absolut] gut"
+    "Mir ["geht es" gehts] [sehr absolut auch] gut"
     "nicht schlecht"
     "Ich fühle mich fit"
     super
@@ -337,6 +337,7 @@ concept:(Mir_gehts_gut) [
     "{sehr} gut {danke}"
     "hey yeah Mir geht es gut"
     "geht gut"
+    "auch gut"
 ]
 concept:(Mir_gehts_schlecht) [
     "Mir geht es nicht so gut"

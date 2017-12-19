@@ -18,11 +18,16 @@ public class Constants {
     public static final String APP_NAME = "Pepper_Concierge";
     public static final String LANGUAGE = "German";
 
-    public static class Start {
+    public static class Config {
 
         //public static final String ROBOT_URL = "192.168.0.22";
-        public static final String ROBOT_URL = "192.168.0.71";
+        public static String ROBOT_URL = "192.168.0.71";
         public static final String ROBOT_PORT = "9559";
+        public static boolean HEADLESS = true;
+        public static boolean DEBUG = true;
+        public static String MOVIE_URL = "http://192.168.0.65/video.php?path=videos/CUTRace_v4.mp4";
+        public static String SONOS_URL = "192.168.0.30";
+        public static String RATING_URL = "http://192.168.0.65/";
     }
 
     public static class Steps {

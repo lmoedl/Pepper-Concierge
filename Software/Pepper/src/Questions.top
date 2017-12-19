@@ -3,15 +3,7 @@ language: ged
 
 include: lexicon_ged.top
 
-# Defining extra concepts out of words or group of words
-#concept:(hello) [hello hi hey "good morning" greetings]
-
-# Catching inputs and triggering outputs
-#u:(e:onStart) $onStopped=1
-
-# Replying to speech
-#u:(~hello) ~hello
-
+proposal: Nun sind wir schon fast am Ende angekommen. Habt ihr noch Fragen? Solltet ihr keine Fragen mehr haben, dann sagt doch einer bitte Ende, damit ich weiter machen kann.
 
 u:([e:FrontTactilTouched e:MiddleTactilTouched e:RearTactilTouched]) Autsch, hör auf mich anzufassen!
 
@@ -28,8 +20,8 @@ u:(["Welches Datum" "{Den} wie vielten"] haben wir {heute}) Heute ist der $Dialo
 
 u:(["Wie spät ist es" "Wie viel Uhr ["ist es" "haben wir"]"]) Es ist jetzt $Dialog/Hour Uhr $Dialog/Minute
 
-u:({"[Schalte Schalt] das"} Licht ein) Ok, ich schalte das Licht ein ^pCall(ALMemory.raiseEvent("SwitchLight", "ON"))
-u:({"[Schalte Schalt] das"} Licht aus) Ok, ich schalte das Licht aus ^pCall(ALMemory.raiseEvent("SwitchLight", "OFF"))
+u:({"[Schalte Schalt] das"} Licht ein) Ok, ich schalte das Licht ein ^pCall(ALMemory.raiseEvent("PublishMQTTMessage", "Multimediawand_HUE6_Toggle;ON"))
+u:({"[Schalte Schalt] das"} Licht aus) Ok, ich schalte das Licht aus ^pCall(ALMemory.raiseEvent("PublishMQTTMessage", "Multimediawand_HUE6_Toggle;OFF"))
 
 u:(In welcher Position bist du) Meine Position ist ^call(ALRobotPosture.getPosture())
     c1:(_*) $1  # say any result from call
@@ -123,7 +115,7 @@ u:(Vong) ^rand["I bims 1 Roboter vong neisigkeit her sehr hoch" "Mobile Systeme 
     "I treff mi heut mit X und Y. Halo i bims am absoluten Nullpunkt"
     "Wow ab jedzd dürfem wir in mathe 1 Taschenrechmer benutzem. Jedzd wird Mathe so einfach. Halo i bims dumm wie brod"
     "Wer leuft so spät durch Nacht umd singt? Es ist dem Studemt vong Rausch fast blimd. Er hält ihm sicher, hält ihm warm dem Döner in seim Arm."
-    "Rosem simd Rot, der Glühweim ist heif, zumge verbrannt, was für 1 life"
+    "Rosem simd Rot, der Glühweim ist heif, zumge verbrannt, was für 1 leif"
     "Lass die amderen sich verändern umd bleib so wie du bimst. Halo i bims die e funktiom beim ableitem"
 ]
 
@@ -136,5 +128,9 @@ u:(~Kannst_du tanzen) Na klar, soll ich es dir zeigen?
 u:(Gefällt) Gefällt mir auch
 
 u:(Was ist das Jugendwort des Jahres) I bims natürlich, weißt du das etwa nicht?
+
+u:(Was ist zwei plus zwei) Tu plus tu ist for, minus won, ist thrie, quick maths
+
+u:(Spiel * bims [Lied Song]) Ok, ich spiele den I Bims Song ^pCall(ALMemory.raiseEvent("PlayMusic", "Reece_MIKI-I_Bims.mp3"))
 
 

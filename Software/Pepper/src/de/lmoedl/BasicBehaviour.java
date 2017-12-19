@@ -64,11 +64,11 @@ public class BasicBehaviour implements MQTTSubscriberCallbackInterface {
     private ALTracker tracker;
     private ALAnimationPlayer animationPlayer;
     private ALNavigation navigation;
-    private ALSonar sonar;
     private ALTabletService tabletService;
 
     private ConnectionManager connectionManager;
     private MQTTConnectionManager mQTTConnectionManager;
+    private SonosDevice sonos;
 
     private String currentState;
 
@@ -79,6 +79,7 @@ public class BasicBehaviour implements MQTTSubscriberCallbackInterface {
     private long eventSubscriptionIdStart = 0;
     private long windowOpendID = 0;
     private long windowClosedID = 0;
+    private long redballID = 0;
 
     private boolean isDancing = true;
     private boolean isPlaying = true;
@@ -89,16 +90,19 @@ public class BasicBehaviour implements MQTTSubscriberCallbackInterface {
     private FileHandler fh;
 
     public BasicBehaviour(Application application) {
-        logger = Logger.getLogger(BasicBehaviour.class.getName());
-        SimpleDateFormat sdf = new SimpleDateFormat("dd_MM_yyyy_HH_mm");
-        try {
-            fh = new FileHandler("pepper_" + sdf.format(new Date()) + ".log");
-            logger.addHandler(fh);
-            SimpleFormatter formatter = new SimpleFormatter();
-            fh.setFormatter(formatter);
-        } catch (IOException | SecurityException ex) {
-            logger.log(Level.SEVERE, null, ex);
+        if (Constants.Config.DEBUG) {
+            logger = Logger.getLogger(BasicBehaviour.class.getName());
+            SimpleDateFormat sdf = new SimpleDateFormat("dd_MM_yyyy_HH_mm");
+            try {
+                fh = new FileHandler("pepper_" + sdf.format(new Date()) + ".log");
+                logger.addHandler(fh);
+                SimpleFormatter formatter = new SimpleFormatter();
+                fh.setFormatter(formatter);
+            } catch (IOException | SecurityException ex) {
+                log(Level.SEVERE, ex);
+            }
         }
+
         this.session = application.session();
         this.application = application;
     }
@@ -119,33 +123,25 @@ public class BasicBehaviour implements MQTTSubscriberCallbackInterface {
             connectionManager = new ConnectionManager();
             mQTTConnectionManager = new MQTTConnectionManager(this);
             navigation = new ALNavigation(session);
-            sonar = new ALSonar(session);
             tabletService = new ALTabletService(session);
+            sonos = new SonosDevice(Constants.Config.SONOS_URL);
 
             config();
         } catch (Exception ex) {
-            logger.log(Level.SEVERE, null, ex);
+            log(Level.SEVERE, ex);
         }
 
-        //stateMachine(Constants.Steps.STEP_STARUP);
-        //stateMachine(Constants.Steps.STEP_MOVE_AROUND);
-        //stateMachine(Constants.Steps.STEP_FACERECOGNITION);
-        //stateMachine(Constants.Steps.STEP_SOUNDLOCALIZATION);
-        //stateMachine(Constants.Steps.STEP_END);
-        //stateMachine(Constants.Steps.STEP_COCHLOVIUS);
         //stateMachine(Constants.Steps.STEP_DIALOG);
-        //stateMachine(Constants.Steps.STEP_MQTT);
-        //stateMachine(Constants.Steps.STEP_TRAJECTORY);
+
     }
 
-    public void run() throws CallError, InterruptedException, Exception {
+    /*    public void run() throws CallError, InterruptedException, Exception {
         eventSubscriptionIdStart = memory.subscribeToEvent("RearTactilTouched", "onTouchHead::(f)", this);
         while (isDancing) {
             animationPlayer.run("animations/Stand/Waiting/AirGuitar_1");
         }
 
-    }
-
+    }*/
     private void config() throws CallError, InterruptedException, Exception {
         textToSpeech.setLanguage(Constants.LANGUAGE);
         dialog.setLanguage(Constants.LANGUAGE);
@@ -158,32 +154,24 @@ public class BasicBehaviour implements MQTTSubscriberCallbackInterface {
         tabletService.enableWifi();
         tabletService.hideWebview();
 
-        sonar.subscribe(Constants.APP_NAME);
-        sonar();
         motion.setOrthogonalSecurityDistance(0.15f);
         motion.wakeUp();
         memory.subscribeToEvent("RearTactilTouched", "onTouchEnd::(f)", this);
 
-        memory.subscribeToEvent("SwitchLight", "onLightSwitch::(s)", this);
-        //memory.subscribeToEvent("RearTactilTouched", "onTouchEnd::(f)", this); 
+        memory.subscribeToEvent("PlayMusic", "onPlayMusic::(s)", this);
+
         memory.subscribeToEvent("SubscribeMQTTTopic", "onSubscribeMQTTTopic::(s)", this);
         memory.subscribeToEvent("UnsubscribeMQTTTopic", "onUnsubscribeMQTTTopic::(s)", this);
+        memory.subscribeToEvent("GetValue", "onGetValue::(s)", this);
+        memory.subscribeToEvent("UnsubscribeMQTTTopic", "onUnsubscribeMQTTTopic::(s)", this);
         memory.subscribeToEvent("PublishMQTTMessage", "onPublishMQTTMessage::(s)", this);
-        /*windowOpendID = memory.subscribeToEvent("WindowOpend", "onWindowOpend::(s)", this);
-        windowClosedID = memory.subscribeToEvent("WindowClosed", "onWindowClosed::(s)", this);*/
         memory.subscribeToEvent("SpeechRecognitionOff", "onSpeechRecognitionOff::(s)", this);
-        startConcierge();
+        //startConcierge();
 
         memory.subscribeToEvent("ALMotion/MoveFailed", new EventCallback() {
             @Override
             public void onEvent(Object t) throws InterruptedException, CallError {
-                logger.log(Level.SEVERE, "movefailed: " + t.toString());
-                //System.out.println(t.getClass());
-                //ArrayList<Object> obj = (ArrayList<Object>) t;
-                //for (Object object : obj) {
-                //    System.out.println(object);
-                //}
-
+                log(Level.SEVERE, "movefailed: " + t.toString());
             }
         });
         memory.subscribeToEvent("Navigation/AvoidanceNavigator/ObstacleDetected", new EventCallback() {
@@ -211,24 +199,28 @@ public class BasicBehaviour implements MQTTSubscriberCallbackInterface {
         loadTopic("/home/nao/TVRoom.top");
         dialog.forceInput("xxx");
         dialog.forceOutput();*/
-        //Testen
-        //memory.raiseEvent("PublishMQTTMessage", new ArrayList<>(Arrays.asList(Constants.MQTTTopics.Kitchen.RANGE_HOOD_LIGHT, "ON")));
+
+        //eventSubscriptionIdStart = memory.subscribeToEvent("RearTactilTouched", "onTouchHead::(f)", this);
     }
 
     public void onTouchHead(Float value) throws InterruptedException, CallError, IOException, SonosControllerException, Exception {
-        logger.info(Constants.APP_NAME + " : Touch " + value);
+        log(Constants.APP_NAME + " : Touch " + value);
         if (value == 1.0) {
-            isDancing = false;
-            animationPlayer.reset();
+            animationPlayer.run("animations/Stand/Waiting/AirGuitar_1");
+
             memory.unsubscribeToEvent(eventSubscriptionIdStart);
+
             startConcierge();
+
+            if (Constants.Config.DEBUG) {
+                memory.subscribeToEvent("RearTactilTouched", "onTouchEnd::(f)", this);
+            }
         }
     }
 
     public void startConcierge() throws CallError, InterruptedException, IOException, SonosControllerException, Exception {
-        //Future<Boolean> success = null;
         boolean success;
-
+        motion.wakeUp();
         //Start of tour - Move from door to switch cabinet
         loadTopic("/home/nao/Welcome.top");
         dialog.forceInput("xxx");
@@ -238,9 +230,8 @@ public class BasicBehaviour implements MQTTSubscriberCallbackInterface {
 
         List<Float> old = motion.getRobotPosition(false);
         success = (boolean) motion.call("moveTo", 5.4f, 0f, 0f).get();
-        logger.info("startConcierge_\"moveTo\", 5.4f, 0f, 0f_" + success);
+        log("startConcierge_\"moveTo\", 5.4f, 0f, 0f_" + success);
         System.out.println(success);
-        //checkDestination(success, old, motion.getRobotPosition(false), new float[]{5.2f, 0f, 0f});
 
         success = (boolean) motion.call("moveTo", 0f, 0f, new Float(Math.toRadians(180))).get();
 
@@ -248,16 +239,14 @@ public class BasicBehaviour implements MQTTSubscriberCallbackInterface {
         loadTopicWithForceOutput("/home/nao/General.top");
         success = (boolean) motion.call("moveTo", 0f, 0f, new Float(Math.toRadians(-90))).get();
 
-        //navigation.moveAlong("[\"Composed\", [\"Holonomic\", [\"Line\", [1.0, 0.0]], 0.0, 5.0], [\"Holonomic\", [\"Line\", [-1.0, 0.0]], 0.0, 10.0]]");
-        //navigation.moveAlong(trajectory);
         //Move from switch cabinet to TV room
         old = motion.getRobotPosition(false);
         success = (boolean) motion.call("moveTo", 6f, 0f, 0f).get();
-        logger.info("startConcierge_\"moveTo\", 6f, 0f, 0f_" + success);
+        log("startConcierge_\"moveTo\", 6f, 0f, 0f_" + success);
         checkDestination(success, old, motion.getRobotPosition(false), new float[]{5f, 0f, 0f});
         old = motion.getRobotPosition(false);
         success = navigation.navigateTo(3f, 0f);
-        logger.info("startConcierge_\"navigateTo\", 3f, 0f, 0f_" + success);
+        log("startConcierge_\"navigateTo\", 3f, 0f, 0f_" + success);
         checkDestination(success, old, motion.getRobotPosition(false), new float[]{3f, 0f, 0f});
         /*if (!success) {
                     old = motion.getRobotPosition(false);
@@ -274,7 +263,7 @@ public class BasicBehaviour implements MQTTSubscriberCallbackInterface {
     }
 
     public void tvRoom() throws Exception {
-        logger.info("tvRoom");
+        log("tvRoom");
         boolean success;
         //Window open scene
         windowOpendID = memory.subscribeToEvent("WindowOpend", "onWindowOpend::(s)", this);
@@ -305,6 +294,7 @@ public class BasicBehaviour implements MQTTSubscriberCallbackInterface {
             dialog.activateTopic(this.topic);
             dialog.subscribe(Constants.APP_NAME);
         } catch (CallError | InterruptedException ex) {
+            log(Level.SEVERE, ex);
             Logger.getLogger(BasicBehaviour.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
@@ -315,16 +305,18 @@ public class BasicBehaviour implements MQTTSubscriberCallbackInterface {
             dialog.deactivateTopic(this.topic);
             dialog.unloadTopic(this.topic);
         } catch (CallError | InterruptedException ex) {
+            log(Level.SEVERE, ex);
             Logger.getLogger(BasicBehaviour.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
     private void runGamingScene() throws IOException, SonosControllerException, InterruptedException, CallError {
-        logger.info("runGamingScene");
+
+        log("runGamingScene");
         new Thread(new Runnable() {
             @Override
             public void run() {
-                connectionManager.getRequest("http://192.168.0.65/video.php?path=videos/CUTRace_v4.mp4");
+                connectionManager.getRequest(Constants.Config.MOVIE_URL);
             }
         }).start();
 
@@ -332,148 +324,136 @@ public class BasicBehaviour implements MQTTSubscriberCallbackInterface {
         animationPlayer.run("animations/Stand/Waiting/DriveCar_1");
     }
 
-    public void onSubscribeMQTTTopic(String topic) throws CallError, InterruptedException {
-        //mQTTConnectionManager.subscribeToItem(topic);
-        String[] res = connectionManager.openHabGetRequest(topic, "state");
+    public void onSubscribeMQTTTopic(String mqttTopic) throws CallError, InterruptedException {
+        log("onSubscribeMQTTTopic: " + mqttTopic);
+        mQTTConnectionManager.subscribeToItem(topic);
+        /*String[] res = connectionManager.openHabGetRequest(mqttTopic, "state");
         logger.info("onSubscribeMQTTTopic_" + res[0] + " " + res[1]);
+        if (res != null) {
+            memory.insertData(res[0], res[1]);
+        }*/
+    }
+
+    public void onGetValue(String mqttTopic) throws CallError, InterruptedException {
+        String[] res = connectionManager.openHabGetRequest(mqttTopic, "state");
+        log("onSubscribeMQTTTopic_" + res[0] + " " + res[1]);
         if (res != null) {
             memory.insertData(res[0], res[1]);
         }
     }
 
-    public void onUnsubscribeMQTTTopic(String topic) {
-        logger.info("onUnsubscribeMQTTTopic: " + topic);
-        //mQTTConnectionManager.unsubscribeOfItem(topic);
+    public void onUnsubscribeMQTTTopic(String mqttTopic) {
+        log("onUnsubscribeMQTTTopic: " + mqttTopic);
+        mQTTConnectionManager.unsubscribeOfItem(mqttTopic);
     }
 
     public void onPublishMQTTMessage(String value) {
         String[] values = value.split(";");
-        logger.info("topic: " + values[0] + " payload: " + values[1]);
+        log("topic: " + values[0] + " payload: " + values[1]);
         mQTTConnectionManager.publishToItem(values[0], values[1]);
     }
 
     public void onWindowOpend(String item) throws CallError, InterruptedException {
-        logger.info("onWindowOpend");
-        //dialog.forceInput("xxx");
+        log("onWindowOpend: " + item);
         dialog.forceOutput();
         memory.unsubscribeToEvent(windowOpendID);
     }
 
     public void onWindowClosed(String item) throws CallError, InterruptedException, IOException, SonosControllerException, Exception {
-        logger.info("onWindowClosed: " + item);
+        log("onWindowClosed: " + item);
         memory.unsubscribeToEvent(windowClosedID);
-        //dialog.forceInput("xxx");
         dialog.forceOutput();
 
         resumeTvRoom();
     }
 
     public void onSpeechRecognitionOff(String state) throws IOException, SonosControllerException {
-        logger.info("onSpeechRecognitionOff: " + state);
+        log("onSpeechRecognitionOff: " + state);
         stateMachine(Constants.Steps.STEP_END);
         try {
-            boolean isUrlLoaded = tabletService.loadUrl("http://192.168.0.65/");
-            logger.info("goodby_isUrlLoaded: " + isUrlLoaded);
+            boolean isUrlLoaded = tabletService.loadUrl(Constants.Config.RATING_URL);
+            log("goodby_isUrlLoaded: " + isUrlLoaded);
             boolean isShowWebview = tabletService.showWebview();
-            logger.info("goodby_isShowWebview: " + isShowWebview);
+            log("goodby_isShowWebview: " + isShowWebview);
             loadTopic("/home/nao/Goodby.top");
             dialog.forceOutput();
-            animationPlayer.async().run("animations/Stand/Waiting/FunnyDancer_1");
+            //animationPlayer.async().run("animations/Stand/Waiting/FunnyDancer_1");
             //lightShow();
             dialog.forceOutput();
             unloadTopic();
 
-            SonosDevice sonos = new SonosDevice("192.168.0.30");
+            sonos.setBass(0);
+            sonos.setVolume(40);
             sonos.playUri("x-rincon-mp3radio://http://listen.technobase.fm/tunein-mp3-pls", "Technobase.fm");
         } catch (CallError | InterruptedException ex) {
-            logger.log(Level.SEVERE, null, ex);
+            log(Level.SEVERE, ex);
         }
 
     }
 
     private void resumeTvRoom() throws CallError, InterruptedException, IOException, SonosControllerException, Exception {
-        logger.info("resumeTvRoom");
+        log("resumeTvRoom");
         boolean success;
-        float x = 0, y = 0, theta = 0;
 
-        mQTTConnectionManager.unsubscribeOfItems(Constants.MQTTTopics.Window.WINDOWS);
+        //mQTTConnectionManager.unsubscribeOfItems(Constants.MQTTTopics.Window.WINDOWS);
         //Gaming scene
-        //Menschenerkennung einfügen
+
         runGamingScene();
         dialog.forceOutput();
         dialog.forceOutput();
         System.out.println("Topic to unsubscribe");
         unloadTopic();
-
-        //\"Line\", [1.0, 0.0]
-        /*ArrayList<Object> trajectory = new ArrayList<>();
-        ArrayList<Object> line = new ArrayList<>();
-        line.add("Line");
-        line.add(new ArrayList<>(Arrays.asList(1.0f, 0.0f)));
-        trajectory.add(line);
-        success = navigation.moveAlong(line);*/
         List<Float> old = motion.getRobotPosition(false);
         success = navigation.navigateTo(2f, 0f);
-        logger.info("resumeTvRoom\"navigateTo\", 2f, 0f, 0f_" + success);
+        log("resumeTvRoom\"navigateTo\", 2f, 0f, 0f_" + success);
         checkDestination(success, old, motion.getRobotPosition(false), new float[]{2f, 0f, 0f});
 
         //Move from TV room to working room
-        /*success = (boolean) motion.call("moveTo", 2.5f, 0f, 0f).get();
-        if (!success){
-            checkDestination(success, old, motion.getRobotPosition(false), new float[]{2.5f, 0f, 0f});
-        }*/
         success = (boolean) motion.call("moveTo", 0f, 0f, new Float(Math.toRadians(-90))).get();
-        /*old = motion.getRobotPosition(false);
-        success = (boolean) motion.call("moveTo", 2.8f, 0f, 0f).get();
-        
-        if (!success){
-            checkDestination(success, old, motion.getRobotPosition(false), new float[]{2.8f, 0f, 0f});
-        }*/
+
         old = motion.getRobotPosition(false);
         if (success) {
             success = (boolean) motion.call("moveTo", 2.5f, 0f, 0f).get();
-            logger.info("resumeTvRoom_if(success)_\"moveTo\", 2.5f, 0f, 0f_" + success);
+            log("resumeTvRoom_if(success)_\"moveTo\", 2.5f, 0f, 0f_" + success);
         } else {
-            success = navigation.navigateTo(3f, 0f);
-            logger.info("resumeTvRoom_else_\"navigateTo\", 2.5f, 0f, 0f_" + success);
+            success = navigation.navigateTo(2.5f, 0f);
+            log("resumeTvRoom_else_\"navigateTo\", 2.5f, 0f, 0f_" + success);
             checkDestination(success, old, motion.getRobotPosition(false), new float[]{2.5f, 0f, 0f});
         }
-        //success = (boolean) motion.call("moveTo", 0f, 0f, new Float(Math.toRadians(-90))).get();
+
         success = navigation.navigateTo(0f, 0f, new Float(Math.toRadians(-90)));
 
-        //success = (boolean) motion.call("moveTo", 2.0f, 0f, 0f).get();
         old = motion.getRobotPosition(false);
         success = navigation.navigateTo(2.0f, 0f);
-        logger.info("resumeTvRoom_\"navigateTo\", 2f, 0f, 0f_" + success);
+        log("resumeTvRoom_\"navigateTo\", 2f, 0f, 0f_" + success);
         checkDestination(success, old, motion.getRobotPosition(false), new float[]{2f, 0f, 0f});
 
-        success = (boolean) motion.call("moveTo", 0f, 0f, new Float(Math.toRadians(180))).get();
+        motion.call("moveTo", 0f, 0f, new Float(Math.toRadians(180))).get();
 
         if (isFullConcierge) {
+
             workingRoom();
+
         }
+
     }
 
     public void workingRoom() throws CallError, InterruptedException, IOException, SonosControllerException, Exception {
         boolean success;
-        logger.info("Workingroom");
+        log("Workingroom");
         loadTopicWithForceOutput("/home/nao/WorkingRoom.top");
         List<Float> old = motion.getRobotPosition(false);
 
         success = (boolean) motion.call("moveTo", 2.7f, 0f, 0f).get();
-        logger.info("workingRoom_\"moveTo\", 2.7f, 0f, 0f_" + success);
+        log("workingRoom_\"moveTo\", 2.7f, 0f, 0f_" + success);
         checkDestination(success, old, motion.getRobotPosition(false), new float[]{2.7f, 0f, 0f});
 
         success = navigation.navigateTo(0f, 0f, new Float(Math.toRadians(-90)));
         old = motion.getRobotPosition(false);
         success = navigation.navigateTo(2.2f, 0f);
-        logger.info("workingRoom_\"navigateTo\", 2.2f, 0f, 0f_" + success);
+        log("workingRoom_\"navigateTo\", 2.2f, 0f, 0f_" + success);
         checkDestination(success, old, motion.getRobotPosition(false), new float[]{2.2f, 0f, 0f});
         success = navigation.navigateTo(0f, 0f, new Float(Math.toRadians(180)));
-        //success = navigation.navigateTo(-1f, 0f);
-        /*success = (boolean) motion.call("moveTo", 6f, 0f, 0f).get();
-        success = (boolean) motion.call("moveTo", 0f, 0f, new Float(Math.toRadians(90))).get();
-        success = (boolean) motion.call("moveTo", -1f, 0f, 0f).get();*/
 
         if (isFullConcierge) {
             bathRoom();
@@ -482,8 +462,9 @@ public class BasicBehaviour implements MQTTSubscriberCallbackInterface {
 
     public void bathRoom() throws CallError, InterruptedException, IOException, SonosControllerException, Exception {
         boolean success;
-        logger.info("Bathroom");
+        log("Bathroom");
         loadTopic("/home/nao/Bathroom.top");
+        dialog.forceOutput();
         dialog.forceOutput();
         dialog.forceOutput();
         unloadTopic();
@@ -491,18 +472,18 @@ public class BasicBehaviour implements MQTTSubscriberCallbackInterface {
         List<Float> old = motion.getRobotPosition(false);
 
         success = (boolean) motion.call("moveTo", 1f, 0f, 0f).get();
-        logger.info("bathroom_\"moveTo\", 1f, 0f, 0f_" + success);
+        log("bathroom_\"moveTo\", 1f, 0f, 0f_" + success);
         checkDestination(success, old, motion.getRobotPosition(false), new float[]{1f, 0f, 0f});
         success = (boolean) motion.call("moveTo", 0f, 0f, new Float(Math.toRadians(-90))).get();
         old = motion.getRobotPosition(false);
         success = navigation.navigateTo(3f, 0f);
-        //success = (boolean) motion.call("moveTo", 2.8f, 0f, 0f).get();
-        logger.info("bathroom_\"navigateTo\", 2.8f, 0f, 0f_" + success);
+
+        log("bathroom_\"navigateTo\", 2.8f, 0f, 0f_" + success);
         checkDestination(success, old, motion.getRobotPosition(false), new float[]{2.8f, 0f, 0f});
         success = (boolean) motion.call("moveTo", 0f, 0f, new Float(Math.toRadians(-90))).get();
         old = motion.getRobotPosition(false);
         success = navigation.navigateTo(2f, 0f);
-        logger.info("bathroom_\"navigateTo\", 2f, 0f, 0f_" + success);
+        log("bathroom_\"navigateTo\", 2f, 0f, 0f_" + success);
         checkDestination(success, old, motion.getRobotPosition(false), new float[]{2f, 0f, 0f});
         success = navigation.navigateTo(0f, 0f, new Float(Math.toRadians(180)));
 
@@ -513,15 +494,15 @@ public class BasicBehaviour implements MQTTSubscriberCallbackInterface {
 
     public void kitchen() throws CallError, InterruptedException, IOException, SonosControllerException, Exception {
         boolean success;
-        logger.info("Kitchen");
+        log("Kitchen");
         loadTopicWithForceOutput("/home/nao/Kitchen.top");
 
         success = (boolean) motion.call("moveTo", 1f, 0f, 0f).get();
-        logger.info("kitchen_\"moveTo\", 1f, 0f, 0f_" + success);
+        log("kitchen_\"moveTo\", 1f, 0f, 0f_" + success);
         success = (boolean) motion.call("moveTo", 0f, 0f, new Float(Math.toRadians(-90))).get();
         List<Float> old = motion.getRobotPosition(false);
         success = (boolean) motion.call("moveTo", 3f, 0f, 0f).get();
-        logger.info("kitchen_\"moveTo\", 3f, 0f, 0f_" + success);
+        log("kitchen_\"moveTo\", 3f, 0f, 0f_" + success);
         checkDestination(success, old, motion.getRobotPosition(false), new float[]{3f, 0f, 0f});
         success = (boolean) motion.call("moveTo", 0f, 0f, new Float(Math.toRadians(180))).get();
 
@@ -531,18 +512,14 @@ public class BasicBehaviour implements MQTTSubscriberCallbackInterface {
     }
 
     public void goodby() throws CallError, InterruptedException, IOException, SonosControllerException {
-        logger.info("goodby");
+        log("goodby");
         //boolean isWifiConfig = tabletService.configureWifi("wpa", "SHLAB02-5", "91054319");
         //System.out.println("isWifiConfig: " + isWifiConfig);
         //boolean isConnectWifi = tabletService.connectWifi("SHLAB02-5");
         //System.out.println("isConnectWifi: " + isConnectWifi);
         loadTopic("/home/nao/Questions.top");
 
-        //boolean isWebviewLoaded = tabletService.showWebview("http://192.168.0.65/");
-        //System.out.println("isWebviewLoaded: " + isWebviewLoaded);
-        logger.info("ByeBye");
-        //tabletService.hideWebview();
-
+        log("ByeBye");
     }
 
     private float calcDistanceToWalk(float parameter) {
@@ -556,9 +533,7 @@ public class BasicBehaviour implements MQTTSubscriberCallbackInterface {
         return 0f;
     }
 
-    //public void checkDestination() throws Exception{
     public void checkDestination(boolean success, List<Float> oldPosition, List<Float> newPosition, float[] shouldGo) throws CallError, InterruptedException, Exception {
-        //check Sonar values
 
         if (success) {
             return;
@@ -604,7 +579,7 @@ public class BasicBehaviour implements MQTTSubscriberCallbackInterface {
                 float x = calcDistanceToWalk(sGo[0] - diffX);
                 float y = calcDistanceToWalk(sGo[1] - diffY);
                 float z = calcDistanceToWalk(sGo[2] - diffZ);
-                logger.info("corrigationVector: " + x + " " + y + " " + z);
+                log("corrigationVector: " + x + " " + y + " " + z);
 
                 //motion.moveTo(x, y, z);
                 success = navigation.navigateTo(x, y);
@@ -617,46 +592,6 @@ public class BasicBehaviour implements MQTTSubscriberCallbackInterface {
                 pauseProgramm();
                 counter++;
             }
-        }
-
-        //System.out.println("diff: x: " + (oldValues.get(0) - newValues.get(0)) + " y: " + (oldValues.get(1) - newValues.get(1)) + " z: " + (oldValues.get(2) - newValues.get(2)));
-    }
-
-    public void sonar() {
-        try {
-            //System.out.println(memory.getData("Device/SubDeviceList/US/Left/Sensor/Value"));
-
-            memory.subscribeToEvent("SonarLeftDetected", new EventCallback() {
-                @Override
-                public void onEvent(Object t) throws InterruptedException, CallError {
-                    System.out.println("SonarLeftDetected: " + t.toString());
-                }
-            });
-
-            memory.subscribeToEvent("SonarRightDetected", new EventCallback() {
-                @Override
-                public void onEvent(Object t) throws InterruptedException, CallError {
-                    System.out.println("SonarRightDetected: " + t.toString());
-                }
-            });
-
-            memory.subscribeToEvent("SonarLeftNothingDetected", new EventCallback() {
-                @Override
-                public void onEvent(Object t) throws InterruptedException, CallError {
-                    System.out.println("SonarLeftNothingDetected: " + t.toString());
-                }
-            });
-
-            memory.subscribeToEvent("SonarRightNothingDetected", new EventCallback() {
-                @Override
-                public void onEvent(Object t) throws InterruptedException, CallError {
-                    System.out.println("SonarRightNothingDetected: " + t.toString());
-                }
-            });
-
-            //sonar.unsubscribe(Constants.APP_NAME);
-        } catch (Exception ex) {
-            Logger.getLogger(BasicBehaviour.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
@@ -677,7 +612,6 @@ public class BasicBehaviour implements MQTTSubscriberCallbackInterface {
             mQTTConnectionManager.publishToItem(Constants.MQTTTopics.Shutter.MAIN_SHUTTER_3, "DOWN");
             Thread.sleep(6000);
 
-            SonosDevice sonos = new SonosDevice("192.168.0.30");
             sonos.setVolume(70);
             sonos.setBass(7);
             sonos.playUri("x-file-cifs://192.168.0.10/Medialib/Audio/Pepper/NEFFEX-Unstoppable.mp3", null);
@@ -829,10 +763,30 @@ public class BasicBehaviour implements MQTTSubscriberCallbackInterface {
             mQTTConnectionManager.publishToItem(Constants.MQTTTopics.Shutter.MAIN_SHUTTER_2, "UP");
             mQTTConnectionManager.publishToItem(Constants.MQTTTopics.Shutter.MAIN_SHUTTER_3, "UP");
         } catch (InterruptedException | IOException | SonosControllerException ex) {
+            log(Level.SEVERE, ex);
             Logger.getLogger(BasicBehaviour.class.getName()).log(Level.SEVERE, null, ex);
         }
 
     }
+
+    /*private void startRedBallTracker() {
+        try {
+            tracker.registerTarget("RedBall", 0.15f);
+            tracker.setMode("Move");
+            tracker.track("RedBall");
+        } catch (CallError | InterruptedException ex) {
+            Logger.getLogger(BasicBehaviour.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    private void stopRedBallTracker() {
+        try {
+            tracker.stopTracker();
+            tracker.unregisterAllTargets();
+        } catch (CallError | InterruptedException ex) {
+            Logger.getLogger(BasicBehaviour.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }*/
 
     private void stateMachine(String step) {
         try {
@@ -949,7 +903,7 @@ public class BasicBehaviour implements MQTTSubscriberCallbackInterface {
                 case Constants.Steps.STEP_DIALOG:
                     dialog.setLanguage(Constants.LANGUAGE);
                     //System.out.println(getClass().getClassLoader().getResource("TestDialog.top").getPath());
-                    topic = dialog.loadTopic("/home/nao/Bathroom.top");
+                    topic = dialog.loadTopic("/home/nao/Questions.top");
                     dialog.activateTopic(topic);
                     dialog.subscribe(Constants.APP_NAME);
                     //dialog.forceInput("xxx");
@@ -1087,7 +1041,15 @@ public class BasicBehaviour implements MQTTSubscriberCallbackInterface {
     public void onTouchEnd(Float value) {
         System.out.println(Constants.APP_NAME + " : Touch " + value);
         if (value == 1.0) {
-            stateMachine(Constants.Steps.STEP_END);
+            try {
+                tracker.stopTracker();
+                tracker.unregisterAllTargets();
+                stateMachine(Constants.Steps.STEP_END);
+
+            } catch (CallError | InterruptedException ex) {
+                Logger.getLogger(BasicBehaviour.class.getName()).log(Level.SEVERE, null, ex);
+            }
+
         }
     }
 
@@ -1244,22 +1206,16 @@ public class BasicBehaviour implements MQTTSubscriberCallbackInterface {
         speechRecognition.pause(false);
     }
 
-    public void onLightSwitch(String value) {
-        System.out.println(Constants.APP_NAME + " : LightSwitch " + value);
-        connectionManager.openHabPostRequest("items/Multimediawand_HUE6_Toggle", value);
+    public void onPlayMusic(String title) throws IOException, SonosControllerException {
+        System.out.println(Constants.APP_NAME + " : onPlayMusic " + title);
+        sonos.setVolume(50);
+        sonos.playUri("x-file-cifs://192.168.0.10/Medialib/Audio/Pepper/" + title, title);
     }
 
     @Override
     public void onSubscription(String item, String value) {
         String itemDescription = item.split("\\/")[3];
 
-        /*try {
-            memory.insertData(itemDescription, value);
-        } catch (CallError ex) {
-            Logger.getLogger(BasicBehaviour.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (InterruptedException ex) {
-            Logger.getLogger(BasicBehaviour.class.getName()).log(Level.SEVERE, null, ex);
-        }*/
         System.out.println("onSubscription: " + itemDescription);
 
         switch (itemDescription) {
@@ -1291,12 +1247,41 @@ public class BasicBehaviour implements MQTTSubscriberCallbackInterface {
                 }
 
                 break;
+            default:
+        {
+            try {
+                memory.insertData(item, value);
+            } catch (CallError | InterruptedException ex) {
+                Logger.getLogger(BasicBehaviour.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        }
+    }
 
+    private void log(String message) {
+        if (Constants.Config.DEBUG) {
+            logger.info(message);
+        }
+    }
+
+    private void log(Level loglevel, String message) {
+        if (Constants.Config.DEBUG) {
+            logger.log(loglevel, message);
+        }
+    }
+
+    private void log(Level loglevel, Exception ex) {
+        if (Constants.Config.DEBUG) {
+            logger.log(loglevel, null, ex);
         }
     }
 
     public void setIsFullConcierge(boolean isFullConcierge) {
         this.isFullConcierge = isFullConcierge;
+    }
+
+    public boolean isIsFullConcierge() {
+        return isFullConcierge;
     }
 
 }

@@ -37,6 +37,11 @@ public class ConciergeController {
     }
 
     public void menu() {
+        
+        if (Constants.Config.HEADLESS) {
+            //basicBehaviour.st
+        }
+        
         Scanner scanner = new Scanner(System.in);
 
         while (true) {
@@ -50,7 +55,7 @@ public class ConciergeController {
                 }
                 switch (val) {
                     case 0:
-                        basicBehaviour.setIsFullConcierge(true);
+                        basicBehaviour.setIsFullConcierge(!basicBehaviour.isIsFullConcierge());
                         break;
                     case 1:
                         basicBehaviour.setIsFullConcierge(true);
@@ -88,7 +93,7 @@ public class ConciergeController {
     private void printMenue() {
         System.out.println("Bitte eine Zahl für die entsprechende Funktion eingeben");
         System.out.println("-------------------------------------------------------");
-        System.out.println("0) Fortfolaufende Tour ab ... starten");
+        System.out.println("0) Fortfolaufende Tour ab ... starten: " + basicBehaviour.isIsFullConcierge());
         System.out.println("1) Komplette Tour starten");
         System.out.println("2) Begrüßung und allgemeine Informationen starten");
         System.out.println("3) TV Raum starten");

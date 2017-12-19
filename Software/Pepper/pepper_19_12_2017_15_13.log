@@ -1,0 +1,654 @@
+Dez 19, 2017 3:13:41 PM de.lmoedl.BasicBehaviour log
+INFORMATION: resumeTvRoom
+Dez 19, 2017 3:13:50 PM de.lmoedl.BasicBehaviour log
+INFORMATION: resumeTvRoom"navigateTo", 2f, 0f, 0f_true
+Dez 19, 2017 3:13:57 PM de.lmoedl.BasicBehaviour log
+INFORMATION: resumeTvRoom_if(success)_"moveTo", 2.5f, 0f, 0f_false
+Dez 19, 2017 3:13:57 PM de.lmoedl.BasicBehaviour log
+SCHWERWIEGEND: movefailed: [Safety, 1, [2.2641017, 0.26732615, 0.0]]
+Dez 19, 2017 3:13:57 PM de.lmoedl.BasicBehaviour log
+SCHWERWIEGEND: movefailed: [Internal stop, 0, java.lang.Void@262bd2d]
+Dez 19, 2017 3:13:57 PM de.lmoedl.BasicBehaviour log
+INFORMATION: resumeTvRoom_"navigateTo", 2f, 0f, 0f_false
+Dez 19, 2017 3:13:57 PM de.lmoedl.BasicBehaviour log
+SCHWERWIEGEND: movefailed: [Internal stop, 0, java.lang.Void@2ce14197]
+Dez 19, 2017 3:13:57 PM de.lmoedl.BasicBehaviour log
+SCHWERWIEGEND: movefailed: [Internal stop, 0, java.lang.Void@1d25b355]
+Dez 19, 2017 3:13:57 PM de.lmoedl.BasicBehaviour log
+INFORMATION: Workingroom
+Dez 19, 2017 3:13:57 PM de.lmoedl.BasicBehaviour log
+SCHWERWIEGEND: movefailed: [Internal stop, 0, java.lang.Void@43fd0f4a]
+Dez 19, 2017 3:13:58 PM de.lmoedl.BasicBehaviour log
+INFORMATION: workingRoom_"moveTo", 2.7f, 0f, 0f_false
+Dez 19, 2017 3:13:58 PM de.lmoedl.BasicBehaviour log
+INFORMATION: corrigationVector: 2.7 0.0 0.0
+Dez 19, 2017 3:13:58 PM de.lmoedl.BasicBehaviour log
+SCHWERWIEGEND: movefailed: [Safety, 0, [2.4040835, 0.113998175, 0.0]]
+Dez 19, 2017 3:13:58 PM de.lmoedl.BasicBehaviour log
+SCHWERWIEGEND: movefailed: [Internal stop, 0, java.lang.Void@60fac58d]
+Dez 19, 2017 3:13:59 PM de.lmoedl.BasicBehaviour log
+SCHWERWIEGEND: movefailed: [Safety, 0, [2.3540835, 0.46399832, 0.0]]
+Dez 19, 2017 3:13:59 PM de.lmoedl.BasicBehaviour log
+SCHWERWIEGEND: movefailed: [Safety, 0, [2.3540835, 0.46399832, 0.0]]
+Dez 19, 2017 3:13:59 PM de.lmoedl.BasicBehaviour log
+SCHWERWIEGEND: movefailed: [Safety, 0, [2.3540835, 0.46399832, 0.0]]
+Dez 19, 2017 3:14:01 PM de.lmoedl.BasicBehaviour log
+INFORMATION: corrigationVector: 2.6999514 0.0 0.0
+Dez 19, 2017 3:14:02 PM de.lmoedl.BasicBehaviour log
+SCHWERWIEGEND: movefailed: [Safety, 0, [2.3540835, 0.46399832, 0.0]]
+Dez 19, 2017 3:14:05 PM de.lmoedl.BasicBehaviour log
+INFORMATION: corrigationVector: 2.6999476 0.0 0.0
+Dez 19, 2017 3:14:07 PM de.lmoedl.BasicBehaviour log
+SCHWERWIEGEND: movefailed: [Safety, 0, [2.5540836, 0.31399822, 0.0]]
+Dez 19, 2017 3:14:12 PM de.lmoedl.BasicBehaviour log
+INFORMATION: corrigationVector: 2.6356676 0.0 0.0
+Dez 19, 2017 3:14:20 PM de.lmoedl.BasicBehaviour log
+SCHWERWIEGEND: movefailed: [Safety, 1, [2.6442082, -2.006741, 0.0]]
+Dez 19, 2017 3:14:21 PM de.lmoedl.BasicBehaviour log
+SCHWERWIEGEND: movefailed: [Safety, 0, [2.6993604, -2.0193455, 0.0]]
+Dez 19, 2017 3:14:22 PM de.lmoedl.BasicBehaviour log
+SCHWERWIEGEND: movefailed: [Safety, 0, [2.6993604, -2.0193455, 0.0]]
+Dez 19, 2017 3:14:22 PM de.lmoedl.BasicBehaviour log
+SCHWERWIEGEND: movefailed: [Safety, 0, [2.6993604, -2.0193455, 0.0]]
+Dez 19, 2017 3:14:23 PM de.lmoedl.BasicBehaviour log
+SCHWERWIEGEND: movefailed: [Safety, 0, [2.6993604, -2.0193455, 0.0]]
+Dez 19, 2017 3:14:23 PM de.lmoedl.BasicBehaviour log
+SCHWERWIEGEND: movefailed: [Safety, 0, [2.6993604, -2.0193455, 0.0]]
+Dez 19, 2017 3:14:24 PM de.lmoedl.BasicBehaviour log
+SCHWERWIEGEND: movefailed: [Safety, 0, [2.6993604, -2.0193455, 0.0]]
+Dez 19, 2017 3:14:24 PM de.lmoedl.BasicBehaviour log
+SCHWERWIEGEND: movefailed: [Safety, 0, [2.6993604, -2.0193455, 0.0]]
+Dez 19, 2017 3:14:24 PM de.lmoedl.BasicBehaviour log
+SCHWERWIEGEND: movefailed: [Safety, 0, [2.6993604, -2.0193455, 0.0]]
+Dez 19, 2017 3:14:24 PM de.lmoedl.BasicBehaviour log
+INFORMATION: corrigationVector: 2.6114204 0.0 0.0
+Dez 19, 2017 3:14:25 PM de.lmoedl.BasicBehaviour log
+SCHWERWIEGEND: movefailed: [Safety, 0, [2.6993604, -2.0193455, 0.0]]
+Dez 19, 2017 3:14:26 PM de.lmoedl.BasicBehaviour log
+SCHWERWIEGEND: movefailed: [Safety, 0, [2.6993604, -2.0193455, 0.0]]
+Dez 19, 2017 3:14:27 PM de.lmoedl.BasicBehaviour log
+SCHWERWIEGEND: movefailed: [Safety, 0, [2.6993604, -2.0193455, 0.0]]
+Dez 19, 2017 3:14:31 PM de.lmoedl.BasicBehaviour log
+SCHWERWIEGEND: movefailed: [Safety, 1, [2.3761861, -2.452614, 0.0]]
+Dez 19, 2017 3:14:32 PM de.lmoedl.BasicBehaviour log
+SCHWERWIEGEND: movefailed: [Safety, 0, [1.9261861, -2.652614, 0.0]]
+Dez 19, 2017 3:14:33 PM de.lmoedl.BasicBehaviour log
+SCHWERWIEGEND: movefailed: [Safety, 0, [1.826186, -2.652614, 0.0]]
+Dez 19, 2017 3:14:33 PM de.lmoedl.BasicBehaviour log
+SCHWERWIEGEND: movefailed: [Safety, 1, [2.076186, -2.752614, 0.0]]
+Dez 19, 2017 3:14:35 PM de.lmoedl.BasicBehaviour log
+INFORMATION: corrigationVector: 2.2769413 0.0 0.0
+Dez 19, 2017 3:14:35 PM de.lmoedl.BasicBehaviour log
+SCHWERWIEGEND: movefailed: [Safety, 0, [1.8631978, -2.7823994, 0.0]]
+Dez 19, 2017 3:14:36 PM de.lmoedl.BasicBehaviour log
+SCHWERWIEGEND: movefailed: [Safety, 0, [1.8131979, -2.7823994, 0.0]]
+Dez 19, 2017 3:14:36 PM de.lmoedl.BasicBehaviour log
+SCHWERWIEGEND: movefailed: [Safety, 0, [2.0631979, -2.8823993, 0.0]]
+Dez 19, 2017 3:14:36 PM de.lmoedl.BasicBehaviour log
+SCHWERWIEGEND: movefailed: [Safety, 0, [2.0631979, -2.8823993, 0.0]]
+Dez 19, 2017 3:14:37 PM de.lmoedl.BasicBehaviour log
+SCHWERWIEGEND: movefailed: [Safety, 1, [2.0631979, -2.8823993, 0.0]]
+Dez 19, 2017 3:14:38 PM de.lmoedl.BasicBehaviour log
+SCHWERWIEGEND: movefailed: [Safety, 0, [1.713198, -2.7823994, 0.0]]
+Dez 19, 2017 3:14:39 PM de.lmoedl.BasicBehaviour log
+SCHWERWIEGEND: movefailed: [Safety, 0, [1.713198, -2.7323995, 0.0]]
+Dez 19, 2017 3:14:39 PM de.lmoedl.BasicBehaviour log
+SCHWERWIEGEND: movefailed: [Safety, 0, [1.713198, -2.7323995, 0.0]]
+Dez 19, 2017 3:14:39 PM de.lmoedl.BasicBehaviour log
+SCHWERWIEGEND: movefailed: [Safety, 0, [1.713198, -2.7323995, 0.0]]
+Dez 19, 2017 3:14:39 PM de.lmoedl.BasicBehaviour log
+INFORMATION: corrigationVector: 2.2660332 0.0 0.0
+Dez 19, 2017 3:14:40 PM de.lmoedl.BasicBehaviour log
+SCHWERWIEGEND: movefailed: [Safety, 0, [1.713198, -2.7323995, 0.0]]
+Dez 19, 2017 3:14:40 PM de.lmoedl.BasicBehaviour log
+SCHWERWIEGEND: movefailed: [Safety, 0, [1.713198, -2.7323995, 0.0]]
+Dez 19, 2017 3:14:40 PM de.lmoedl.BasicBehaviour log
+SCHWERWIEGEND: movefailed: [Safety, 0, [1.713198, -2.7323995, 0.0]]
+Dez 19, 2017 3:14:41 PM de.lmoedl.BasicBehaviour log
+SCHWERWIEGEND: movefailed: [Safety, 0, [1.713198, -2.7323995, 0.0]]
+Dez 19, 2017 3:14:41 PM de.lmoedl.BasicBehaviour log
+SCHWERWIEGEND: movefailed: [Safety, 0, [1.713198, -2.7323995, 0.0]]
+Dez 19, 2017 3:14:41 PM de.lmoedl.BasicBehaviour log
+SCHWERWIEGEND: movefailed: [Safety, 0, [1.713198, -2.7323995, 0.0]]
+Dez 19, 2017 3:14:42 PM de.lmoedl.BasicBehaviour log
+SCHWERWIEGEND: movefailed: [Safety, 0, [1.713198, -2.7323995, 0.0]]
+Dez 19, 2017 3:14:42 PM de.lmoedl.BasicBehaviour log
+SCHWERWIEGEND: movefailed: [Safety, 0, [1.7631979, -2.7823994, 0.0]]
+Dez 19, 2017 3:14:42 PM de.lmoedl.BasicBehaviour log
+SCHWERWIEGEND: movefailed: [Safety, 0, [1.713198, -2.7323995, 0.0]]
+Dez 19, 2017 3:14:42 PM de.lmoedl.BasicBehaviour log
+SCHWERWIEGEND: movefailed: [Safety, 0, [1.713198, -2.7323995, 0.0]]
+Dez 19, 2017 3:14:43 PM de.lmoedl.BasicBehaviour log
+SCHWERWIEGEND: movefailed: [Safety, 0, [1.713198, -2.7323995, 0.0]]
+Dez 19, 2017 3:14:43 PM de.lmoedl.BasicBehaviour log
+SCHWERWIEGEND: movefailed: [Safety, 0, [1.7631979, -2.7823994, 0.0]]
+Dez 19, 2017 3:14:44 PM de.lmoedl.BasicBehaviour log
+SCHWERWIEGEND: movefailed: [Safety, 0, [2.013198, -2.9323993, 0.0]]
+Dez 19, 2017 3:14:44 PM de.lmoedl.BasicBehaviour log
+SCHWERWIEGEND: movefailed: [Safety, 1, [1.713198, -2.6823993, 0.0]]
+Dez 19, 2017 3:14:45 PM de.lmoedl.BasicBehaviour log
+SCHWERWIEGEND: movefailed: [Safety, 0, [1.7631979, -2.7823994, 0.0]]
+Dez 19, 2017 3:14:46 PM de.lmoedl.BasicBehaviour log
+SCHWERWIEGEND: movefailed: [Safety, 0, [1.7631979, -2.7823994, 0.0]]
+Dez 19, 2017 3:14:46 PM de.lmoedl.BasicBehaviour log
+SCHWERWIEGEND: movefailed: [Safety, 0, [1.7631979, -2.7823994, 0.0]]
+Dez 19, 2017 3:14:47 PM de.lmoedl.BasicBehaviour log
+SCHWERWIEGEND: movefailed: [Safety, 0, [1.7631979, -2.7823994, 0.0]]
+Dez 19, 2017 3:14:47 PM de.lmoedl.BasicBehaviour log
+SCHWERWIEGEND: movefailed: [Safety, 0, [1.7631979, -2.7823994, 0.0]]
+Dez 19, 2017 3:14:47 PM de.lmoedl.BasicBehaviour log
+SCHWERWIEGEND: movefailed: [Safety, 0, [1.7631979, -2.7823994, 0.0]]
+Dez 19, 2017 3:14:48 PM de.lmoedl.BasicBehaviour log
+SCHWERWIEGEND: movefailed: [Safety, 0, [1.7631979, -2.7823994, 0.0]]
+Dez 19, 2017 3:14:48 PM de.lmoedl.BasicBehaviour log
+SCHWERWIEGEND: movefailed: [Safety, 0, [1.7631979, -2.7823994, 0.0]]
+Dez 19, 2017 3:14:48 PM de.lmoedl.BasicBehaviour log
+SCHWERWIEGEND: movefailed: [Safety, 0, [1.7631979, -2.7823994, 0.0]]
+Dez 19, 2017 3:14:48 PM de.lmoedl.BasicBehaviour log
+INFORMATION: corrigationVector: 2.2112932 0.0 0.0
+Dez 19, 2017 3:14:49 PM de.lmoedl.BasicBehaviour log
+SCHWERWIEGEND: movefailed: [Safety, 0, [1.7631979, -2.7823994, 0.0]]
+Dez 19, 2017 3:14:49 PM de.lmoedl.BasicBehaviour log
+SCHWERWIEGEND: movefailed: [Safety, 0, [1.7631979, -2.7823994, 0.0]]
+Dez 19, 2017 3:14:49 PM de.lmoedl.BasicBehaviour log
+SCHWERWIEGEND: movefailed: [Safety, 0, [1.8131979, -2.8323994, 0.0]]
+Dez 19, 2017 3:14:50 PM de.lmoedl.BasicBehaviour log
+SCHWERWIEGEND: movefailed: [Safety, 0, [1.8131979, -2.8323994, 0.0]]
+Dez 19, 2017 3:14:50 PM de.lmoedl.BasicBehaviour log
+SCHWERWIEGEND: movefailed: [Safety, 0, [1.8631978, -2.8323994, 0.0]]
+Dez 19, 2017 3:14:50 PM de.lmoedl.BasicBehaviour log
+SCHWERWIEGEND: movefailed: [Safety, 0, [1.913198, -2.9323993, 0.0]]
+Dez 19, 2017 3:14:51 PM de.lmoedl.BasicBehaviour log
+SCHWERWIEGEND: movefailed: [Safety, 0, [1.8631978, -2.8823993, 0.0]]
+Dez 19, 2017 3:14:51 PM de.lmoedl.BasicBehaviour log
+SCHWERWIEGEND: movefailed: [Safety, 0, [1.913198, -2.9323993, 0.0]]
+Dez 19, 2017 3:14:51 PM de.lmoedl.BasicBehaviour log
+SCHWERWIEGEND: movefailed: [Safety, 0, [1.913198, -2.9323993, 0.0]]
+Dez 19, 2017 3:14:52 PM de.lmoedl.BasicBehaviour log
+SCHWERWIEGEND: movefailed: [Safety, 0, [1.8631978, -2.8823993, 0.0]]
+Dez 19, 2017 3:14:52 PM de.lmoedl.BasicBehaviour log
+SCHWERWIEGEND: movefailed: [Safety, 0, [1.8631978, -2.8823993, 0.0]]
+Dez 19, 2017 3:14:52 PM de.lmoedl.BasicBehaviour log
+SCHWERWIEGEND: movefailed: [Safety, 0, [1.913198, -2.9323993, 0.0]]
+Dez 19, 2017 3:14:53 PM de.lmoedl.BasicBehaviour log
+SCHWERWIEGEND: movefailed: [Safety, 0, [1.913198, -2.9323993, 0.0]]
+Dez 19, 2017 3:14:53 PM de.lmoedl.BasicBehaviour log
+SCHWERWIEGEND: movefailed: [Safety, 0, [1.913198, -2.9323993, 0.0]]
+Dez 19, 2017 3:14:53 PM de.lmoedl.BasicBehaviour log
+SCHWERWIEGEND: movefailed: [Safety, 0, [1.913198, -2.9323993, 0.0]]
+Dez 19, 2017 3:14:54 PM de.lmoedl.BasicBehaviour log
+SCHWERWIEGEND: movefailed: [Safety, 0, [1.913198, -2.9323993, 0.0]]
+Dez 19, 2017 3:14:54 PM de.lmoedl.BasicBehaviour log
+SCHWERWIEGEND: movefailed: [Safety, 0, [1.913198, -2.9323993, 0.0]]
+Dez 19, 2017 3:14:55 PM de.lmoedl.BasicBehaviour log
+SCHWERWIEGEND: movefailed: [Safety, 0, [1.913198, -2.9323993, 0.0]]
+Dez 19, 2017 3:14:55 PM de.lmoedl.BasicBehaviour log
+INFORMATION: corrigationVector: 2.2102866 0.0 0.0
+Dez 19, 2017 3:14:55 PM de.lmoedl.BasicBehaviour log
+SCHWERWIEGEND: movefailed: [Safety, 0, [1.8631978, -2.8823993, 0.0]]
+Dez 19, 2017 3:14:55 PM de.lmoedl.BasicBehaviour log
+SCHWERWIEGEND: movefailed: [Safety, 0, [1.8631978, -2.8823993, 0.0]]
+Dez 19, 2017 3:14:56 PM de.lmoedl.BasicBehaviour log
+SCHWERWIEGEND: movefailed: [Safety, 0, [1.913198, -2.8823993, 0.0]]
+Dez 19, 2017 3:14:57 PM de.lmoedl.BasicBehaviour log
+SCHWERWIEGEND: movefailed: [Safety, 0, [1.8131979, -2.8323994, 0.0]]
+Dez 19, 2017 3:14:57 PM de.lmoedl.BasicBehaviour log
+SCHWERWIEGEND: movefailed: [Safety, 0, [1.7631979, -2.7823994, 0.0]]
+Dez 19, 2017 3:14:58 PM de.lmoedl.BasicBehaviour log
+SCHWERWIEGEND: movefailed: [Safety, 0, [1.7631979, -2.7823994, 0.0]]
+Dez 19, 2017 3:14:58 PM de.lmoedl.BasicBehaviour log
+SCHWERWIEGEND: movefailed: [Safety, 0, [1.8131979, -2.8323994, 0.0]]
+Dez 19, 2017 3:14:58 PM de.lmoedl.BasicBehaviour log
+SCHWERWIEGEND: movefailed: [Safety, 1, [1.7631979, -2.7823994, 0.0]]
+Dez 19, 2017 3:15:00 PM de.lmoedl.BasicBehaviour log
+SCHWERWIEGEND: movefailed: [Safety, 0, [1.663198, -2.7323995, 0.0]]
+Dez 19, 2017 3:15:00 PM de.lmoedl.BasicBehaviour log
+SCHWERWIEGEND: movefailed: [Safety, 0, [1.663198, -2.7323995, 0.0]]
+Dez 19, 2017 3:15:00 PM de.lmoedl.BasicBehaviour log
+SCHWERWIEGEND: movefailed: [Safety, 0, [1.663198, -2.7323995, 0.0]]
+Dez 19, 2017 3:15:01 PM de.lmoedl.BasicBehaviour log
+SCHWERWIEGEND: movefailed: [Safety, 0, [1.663198, -2.7323995, 0.0]]
+Dez 19, 2017 3:15:01 PM de.lmoedl.BasicBehaviour log
+SCHWERWIEGEND: movefailed: [Safety, 0, [1.663198, -2.7323995, 0.0]]
+Dez 19, 2017 3:15:01 PM de.lmoedl.BasicBehaviour log
+SCHWERWIEGEND: movefailed: [Safety, 0, [1.663198, -2.7323995, 0.0]]
+Dez 19, 2017 3:15:02 PM de.lmoedl.BasicBehaviour log
+SCHWERWIEGEND: movefailed: [Safety, 0, [1.663198, -2.7323995, 0.0]]
+Dez 19, 2017 3:15:02 PM de.lmoedl.BasicBehaviour log
+SCHWERWIEGEND: movefailed: [Safety, 0, [1.663198, -2.7323995, 0.0]]
+Dez 19, 2017 3:15:02 PM de.lmoedl.BasicBehaviour log
+SCHWERWIEGEND: movefailed: [Safety, 0, [1.663198, -2.7323995, 0.0]]
+Dez 19, 2017 3:15:02 PM de.lmoedl.BasicBehaviour log
+SCHWERWIEGEND: movefailed: [Safety, 0, [1.663198, -2.7323995, 0.0]]
+Dez 19, 2017 3:15:03 PM de.lmoedl.BasicBehaviour log
+INFORMATION: corrigationVector: 2.1651814 0.0 0.0
+Dez 19, 2017 3:15:03 PM de.lmoedl.BasicBehaviour log
+SCHWERWIEGEND: movefailed: [Safety, 0, [1.663198, -2.7323995, 0.0]]
+Dez 19, 2017 3:15:03 PM de.lmoedl.BasicBehaviour log
+SCHWERWIEGEND: movefailed: [Safety, 0, [1.663198, -2.7323995, 0.0]]
+Dez 19, 2017 3:15:03 PM de.lmoedl.BasicBehaviour log
+SCHWERWIEGEND: movefailed: [Safety, 0, [1.663198, -2.7323995, 0.0]]
+Dez 19, 2017 3:15:04 PM de.lmoedl.BasicBehaviour log
+SCHWERWIEGEND: movefailed: [Safety, 0, [1.713198, -2.7823994, 0.0]]
+Dez 19, 2017 3:15:04 PM de.lmoedl.BasicBehaviour log
+SCHWERWIEGEND: movefailed: [Safety, 0, [1.7631979, -2.7823994, 0.0]]
+Dez 19, 2017 3:15:04 PM de.lmoedl.BasicBehaviour log
+SCHWERWIEGEND: movefailed: [Safety, 0, [1.8131979, -2.8323994, 0.0]]
+Dez 19, 2017 3:15:05 PM de.lmoedl.BasicBehaviour log
+SCHWERWIEGEND: movefailed: [Safety, 0, [1.8131979, -2.8323994, 0.0]]
+Dez 19, 2017 3:15:05 PM de.lmoedl.BasicBehaviour log
+SCHWERWIEGEND: movefailed: [Safety, 0, [1.8131979, -2.8323994, 0.0]]
+Dez 19, 2017 3:15:05 PM de.lmoedl.BasicBehaviour log
+SCHWERWIEGEND: movefailed: [Safety, 0, [1.7631979, -2.7823994, 0.0]]
+Dez 19, 2017 3:15:06 PM de.lmoedl.BasicBehaviour log
+SCHWERWIEGEND: movefailed: [Safety, 0, [1.7631979, -2.7823994, 0.0]]
+Dez 19, 2017 3:15:06 PM de.lmoedl.BasicBehaviour log
+SCHWERWIEGEND: movefailed: [Safety, 0, [1.8131979, -2.8323994, 0.0]]
+Dez 19, 2017 3:15:06 PM de.lmoedl.BasicBehaviour log
+SCHWERWIEGEND: movefailed: [Safety, 0, [1.7631979, -2.7823994, 0.0]]
+Dez 19, 2017 3:15:07 PM de.lmoedl.BasicBehaviour log
+SCHWERWIEGEND: movefailed: [Safety, 0, [1.7631979, -2.7823994, 0.0]]
+Dez 19, 2017 3:15:07 PM de.lmoedl.BasicBehaviour log
+SCHWERWIEGEND: movefailed: [Safety, 0, [1.7631979, -2.7823994, 0.0]]
+Dez 19, 2017 3:15:07 PM de.lmoedl.BasicBehaviour log
+SCHWERWIEGEND: movefailed: [Safety, 0, [1.7631979, -2.7823994, 0.0]]
+Dez 19, 2017 3:15:08 PM de.lmoedl.BasicBehaviour log
+SCHWERWIEGEND: movefailed: [Safety, 0, [1.8131979, -2.8323994, 0.0]]
+Dez 19, 2017 3:15:08 PM de.lmoedl.BasicBehaviour log
+SCHWERWIEGEND: movefailed: [Safety, 0, [1.8131979, -2.8323994, 0.0]]
+Dez 19, 2017 3:15:08 PM de.lmoedl.BasicBehaviour log
+SCHWERWIEGEND: movefailed: [Safety, 0, [1.8131979, -2.8323994, 0.0]]
+Dez 19, 2017 3:15:10 PM de.lmoedl.BasicBehaviour log
+SCHWERWIEGEND: movefailed: [Safety, 1, [1.8631978, -2.8823993, 0.0]]
+Dez 19, 2017 3:15:11 PM de.lmoedl.BasicBehaviour log
+SCHWERWIEGEND: movefailed: [Safety, 0, [1.7631979, -2.8323994, 0.0]]
+Dez 19, 2017 3:15:11 PM de.lmoedl.BasicBehaviour log
+SCHWERWIEGEND: movefailed: [Safety, 0, [1.7631979, -2.5823994, 0.0]]
+Dez 19, 2017 3:15:12 PM de.lmoedl.BasicBehaviour log
+SCHWERWIEGEND: movefailed: [Safety, 0, [1.7631979, -2.5823994, 0.0]]
+Dez 19, 2017 3:15:13 PM de.lmoedl.BasicBehaviour log
+SCHWERWIEGEND: movefailed: [Safety, 0, [1.6131978, -2.6823993, 0.0]]
+Dez 19, 2017 3:15:13 PM de.lmoedl.BasicBehaviour log
+SCHWERWIEGEND: movefailed: [Safety, 0, [1.6131978, -2.6823993, 0.0]]
+Dez 19, 2017 3:15:13 PM de.lmoedl.BasicBehaviour log
+SCHWERWIEGEND: movefailed: [Safety, 0, [1.6131978, -2.6823993, 0.0]]
+Dez 19, 2017 3:15:14 PM de.lmoedl.BasicBehaviour log
+SCHWERWIEGEND: movefailed: [Safety, 0, [1.6131978, -2.6823993, 0.0]]
+Dez 19, 2017 3:15:14 PM de.lmoedl.BasicBehaviour log
+SCHWERWIEGEND: movefailed: [Safety, 0, [1.6131978, -2.6823993, 0.0]]
+Dez 19, 2017 3:15:14 PM de.lmoedl.BasicBehaviour log
+SCHWERWIEGEND: movefailed: [Safety, 0, [1.6131978, -2.6823993, 0.0]]
+Dez 19, 2017 3:15:15 PM de.lmoedl.BasicBehaviour log
+INFORMATION: corrigationVector: 2.1576862 0.0 0.0
+Dez 19, 2017 3:15:15 PM de.lmoedl.BasicBehaviour log
+SCHWERWIEGEND: movefailed: [Safety, 0, [1.6131978, -2.6823993, 0.0]]
+Dez 19, 2017 3:15:15 PM de.lmoedl.BasicBehaviour log
+SCHWERWIEGEND: movefailed: [Safety, 0, [1.6131978, -2.6823993, 0.0]]
+Dez 19, 2017 3:15:16 PM de.lmoedl.BasicBehaviour log
+SCHWERWIEGEND: movefailed: [Safety, 0, [1.8131979, -2.6323993, 0.0]]
+Dez 19, 2017 3:15:16 PM de.lmoedl.BasicBehaviour log
+SCHWERWIEGEND: movefailed: [Safety, 0, [1.7631979, -2.5323994, 0.0]]
+Dez 19, 2017 3:15:16 PM de.lmoedl.BasicBehaviour log
+SCHWERWIEGEND: movefailed: [Safety, 0, [1.7631979, -2.6323993, 0.0]]
+Dez 19, 2017 3:15:17 PM de.lmoedl.BasicBehaviour log
+SCHWERWIEGEND: movefailed: [Safety, 0, [1.7631979, -2.6323993, 0.0]]
+Dez 19, 2017 3:15:17 PM de.lmoedl.BasicBehaviour log
+SCHWERWIEGEND: movefailed: [Safety, 0, [1.8131979, -2.5823994, 0.0]]
+Dez 19, 2017 3:15:17 PM de.lmoedl.BasicBehaviour log
+SCHWERWIEGEND: movefailed: [Safety, 0, [1.8131979, -2.5823994, 0.0]]
+Dez 19, 2017 3:15:20 PM de.lmoedl.BasicBehaviour log
+SCHWERWIEGEND: movefailed: [Safety, 1, [1.8631978, -2.6823993, 0.0]]
+Dez 19, 2017 3:15:21 PM de.lmoedl.BasicBehaviour log
+SCHWERWIEGEND: movefailed: [Safety, 0, [1.7631979, -2.7823994, 0.0]]
+Dez 19, 2017 3:15:21 PM de.lmoedl.BasicBehaviour log
+SCHWERWIEGEND: movefailed: [Safety, 0, [1.7631979, -2.7823994, 0.0]]
+Dez 19, 2017 3:15:22 PM de.lmoedl.BasicBehaviour log
+SCHWERWIEGEND: movefailed: [Safety, 0, [1.7631979, -2.7823994, 0.0]]
+Dez 19, 2017 3:15:22 PM de.lmoedl.BasicBehaviour log
+SCHWERWIEGEND: movefailed: [Safety, 0, [1.7631979, -2.7823994, 0.0]]
+Dez 19, 2017 3:15:23 PM de.lmoedl.BasicBehaviour log
+SCHWERWIEGEND: movefailed: [Safety, 0, [2.213198, -2.8823993, 0.0]]
+Dez 19, 2017 3:15:23 PM de.lmoedl.BasicBehaviour log
+SCHWERWIEGEND: movefailed: [Safety, 0, [2.213198, -2.8823993, 0.0]]
+Dez 19, 2017 3:15:23 PM de.lmoedl.BasicBehaviour log
+SCHWERWIEGEND: movefailed: [Safety, 0, [2.013198, -2.9823995, 0.0]]
+Dez 19, 2017 3:15:23 PM de.lmoedl.BasicBehaviour log
+SCHWERWIEGEND: movefailed: [Safety, 0, [1.8631978, -2.8823993, 0.0]]
+Dez 19, 2017 3:15:24 PM de.lmoedl.BasicBehaviour log
+SCHWERWIEGEND: movefailed: [Safety, 0, [1.8131979, -2.8323994, 0.0]]
+Dez 19, 2017 3:15:24 PM de.lmoedl.BasicBehaviour log
+SCHWERWIEGEND: movefailed: [Safety, 0, [1.7631979, -2.7823994, 0.0]]
+Dez 19, 2017 3:15:24 PM de.lmoedl.BasicBehaviour log
+SCHWERWIEGEND: movefailed: [Safety, 0, [2.263198, -2.8323994, 0.0]]
+Dez 19, 2017 3:15:25 PM de.lmoedl.BasicBehaviour log
+SCHWERWIEGEND: movefailed: [Safety, 0, [1.8131979, -2.8323994, 0.0]]
+Dez 19, 2017 3:15:25 PM de.lmoedl.BasicBehaviour log
+SCHWERWIEGEND: movefailed: [Safety, 0, [1.8131979, -2.8323994, 0.0]]
+Dez 19, 2017 3:15:26 PM de.lmoedl.BasicBehaviour log
+SCHWERWIEGEND: movefailed: [Safety, 0, [2.263198, -2.8323994, 0.0]]
+Dez 19, 2017 3:15:26 PM de.lmoedl.BasicBehaviour log
+SCHWERWIEGEND: movefailed: [Safety, 0, [2.263198, -2.8323994, 0.0]]
+Dez 19, 2017 3:15:27 PM de.lmoedl.BasicBehaviour log
+SCHWERWIEGEND: movefailed: [Safety, 0, [2.263198, -2.8323994, 0.0]]
+Dez 19, 2017 3:15:27 PM de.lmoedl.BasicBehaviour log
+SCHWERWIEGEND: movefailed: [Safety, 0, [2.263198, -2.8323994, 0.0]]
+Dez 19, 2017 3:15:27 PM de.lmoedl.BasicBehaviour log
+SCHWERWIEGEND: movefailed: [Safety, 0, [2.263198, -2.8323994, 0.0]]
+Dez 19, 2017 3:15:28 PM de.lmoedl.BasicBehaviour log
+SCHWERWIEGEND: movefailed: [Safety, 0, [2.263198, -2.8323994, 0.0]]
+Dez 19, 2017 3:15:28 PM de.lmoedl.BasicBehaviour log
+SCHWERWIEGEND: movefailed: [Safety, 0, [2.163198, -2.9323993, 0.0]]
+Dez 19, 2017 3:15:29 PM de.lmoedl.BasicBehaviour log
+SCHWERWIEGEND: movefailed: [Safety, 1, [1.7631979, -2.7823994, 0.0]]
+Dez 19, 2017 3:15:30 PM de.lmoedl.BasicBehaviour log
+SCHWERWIEGEND: movefailed: [Safety, 0, [1.6131978, -2.6823993, 0.0]]
+Dez 19, 2017 3:15:30 PM de.lmoedl.BasicBehaviour log
+INFORMATION: workingRoom_"navigateTo", 2.2f, 0f, 0f_false
+Dez 19, 2017 3:15:30 PM de.lmoedl.BasicBehaviour log
+INFORMATION: corrigationVector: 2.1532986 0.0 0.0
+Dez 19, 2017 3:15:38 PM de.lmoedl.BasicBehaviour log
+SCHWERWIEGEND: movefailed: [Safety, 1, [1.463198, -2.5323994, 0.0]]
+Dez 19, 2017 3:15:39 PM de.lmoedl.BasicBehaviour log
+SCHWERWIEGEND: movefailed: [Safety, 0, [1.463198, -2.5323994, 0.0]]
+Dez 19, 2017 3:15:40 PM de.lmoedl.BasicBehaviour log
+SCHWERWIEGEND: movefailed: [Safety, 0, [1.463198, -2.5323994, 0.0]]
+Dez 19, 2017 3:15:40 PM de.lmoedl.BasicBehaviour log
+SCHWERWIEGEND: movefailed: [Safety, 0, [1.463198, -2.5323994, 0.0]]
+Dez 19, 2017 3:15:40 PM de.lmoedl.BasicBehaviour log
+SCHWERWIEGEND: movefailed: [Safety, 0, [1.463198, -2.5323994, 0.0]]
+Dez 19, 2017 3:15:40 PM de.lmoedl.BasicBehaviour log
+SCHWERWIEGEND: movefailed: [Safety, 0, [1.463198, -2.5323994, 0.0]]
+Dez 19, 2017 3:15:42 PM de.lmoedl.BasicBehaviour log
+INFORMATION: corrigationVector: 1.8840435 0.0 0.0
+Dez 19, 2017 3:15:42 PM de.lmoedl.BasicBehaviour log
+SCHWERWIEGEND: movefailed: [Safety, 0, [1.463198, -2.5323994, 0.0]]
+Dez 19, 2017 3:15:42 PM de.lmoedl.BasicBehaviour log
+SCHWERWIEGEND: movefailed: [Safety, 0, [1.463198, -2.5323994, 0.0]]
+Dez 19, 2017 3:15:43 PM de.lmoedl.BasicBehaviour log
+SCHWERWIEGEND: movefailed: [Safety, 0, [1.463198, -2.5323994, 0.0]]
+Dez 19, 2017 3:15:45 PM de.lmoedl.BasicBehaviour log
+SCHWERWIEGEND: movefailed: [Safety, 1, [1.463198, -2.5323994, 0.0]]
+Dez 19, 2017 3:15:46 PM de.lmoedl.BasicBehaviour log
+SCHWERWIEGEND: movefailed: [Safety, 0, [1.473092, -2.528141, 0.0]]
+Dez 19, 2017 3:15:47 PM de.lmoedl.BasicBehaviour log
+SCHWERWIEGEND: movefailed: [Safety, 0, [1.473092, -2.528141, 0.0]]
+Dez 19, 2017 3:15:47 PM de.lmoedl.BasicBehaviour log
+SCHWERWIEGEND: movefailed: [Safety, 0, [1.473092, -2.528141, 0.0]]
+Dez 19, 2017 3:15:49 PM de.lmoedl.BasicBehaviour log
+SCHWERWIEGEND: movefailed: [Safety, 1, [1.3230919, -1.8281412, 0.0]]
+Dez 19, 2017 3:15:49 PM de.lmoedl.BasicBehaviour log
+INFORMATION: corrigationVector: 1.7362913 0.0 0.0
+Dez 19, 2017 3:15:49 PM de.lmoedl.BasicBehaviour log
+SCHWERWIEGEND: movefailed: [Internal stop, 0, java.lang.Void@3d0c6e85]
+Dez 19, 2017 3:15:50 PM de.lmoedl.BasicBehaviour log
+SCHWERWIEGEND: movefailed: [Safety, 0, [1.3230919, -1.778141, 0.0]]
+Dez 19, 2017 3:15:50 PM de.lmoedl.BasicBehaviour log
+SCHWERWIEGEND: movefailed: [Safety, 0, [1.3230919, -1.778141, 0.0]]
+Dez 19, 2017 3:15:50 PM de.lmoedl.BasicBehaviour log
+SCHWERWIEGEND: movefailed: [Safety, 0, [1.3230919, -1.778141, 0.0]]
+Dez 19, 2017 3:15:51 PM de.lmoedl.BasicBehaviour log
+SCHWERWIEGEND: movefailed: [Safety, 0, [1.3230919, -1.778141, 0.0]]
+Dez 19, 2017 3:15:51 PM de.lmoedl.BasicBehaviour log
+SCHWERWIEGEND: movefailed: [Safety, 0, [1.3230919, -1.778141, 0.0]]
+Dez 19, 2017 3:15:52 PM de.lmoedl.BasicBehaviour log
+SCHWERWIEGEND: movefailed: [Safety, 0, [1.3730918, -1.7281411, 0.0]]
+Dez 19, 2017 3:15:53 PM de.lmoedl.BasicBehaviour log
+SCHWERWIEGEND: movefailed: [Safety, 0, [1.3730918, -1.778141, 0.0]]
+Dez 19, 2017 3:15:53 PM de.lmoedl.BasicBehaviour log
+SCHWERWIEGEND: movefailed: [Safety, 0, [1.2730919, -1.8281412, 0.0]]
+Dez 19, 2017 3:15:53 PM de.lmoedl.BasicBehaviour log
+SCHWERWIEGEND: movefailed: [Safety, 0, [1.2730919, -1.8281412, 0.0]]
+Dez 19, 2017 3:15:53 PM de.lmoedl.BasicBehaviour log
+INFORMATION: corrigationVector: 1.734641 0.0 0.0
+Dez 19, 2017 3:15:54 PM de.lmoedl.BasicBehaviour log
+SCHWERWIEGEND: movefailed: [Safety, 0, [1.2730919, -1.8281412, 0.0]]
+Dez 19, 2017 3:15:54 PM de.lmoedl.BasicBehaviour log
+SCHWERWIEGEND: movefailed: [Safety, 0, [1.2730919, -1.8281412, 0.0]]
+Dez 19, 2017 3:15:54 PM de.lmoedl.BasicBehaviour log
+SCHWERWIEGEND: movefailed: [Safety, 0, [1.2730919, -1.8781412, 0.0]]
+Dez 19, 2017 3:15:55 PM de.lmoedl.BasicBehaviour log
+SCHWERWIEGEND: movefailed: [Safety, 0, [1.2730919, -1.8781412, 0.0]]
+Dez 19, 2017 3:15:57 PM de.lmoedl.BasicBehaviour log
+SCHWERWIEGEND: movefailed: [Safety, 0, [1.3230919, -1.8781412, 0.0]]
+Dez 19, 2017 3:15:57 PM de.lmoedl.BasicBehaviour log
+SCHWERWIEGEND: movefailed: [Safety, 0, [1.3230919, -1.8781412, 0.0]]
+Dez 19, 2017 3:15:58 PM de.lmoedl.BasicBehaviour log
+SCHWERWIEGEND: movefailed: [Safety, 0, [1.2730919, -1.8281412, 0.0]]
+Dez 19, 2017 3:15:58 PM de.lmoedl.BasicBehaviour log
+SCHWERWIEGEND: movefailed: [Safety, 1, [1.2730919, -1.8281412, 0.0]]
+Dez 19, 2017 3:16:01 PM de.lmoedl.BasicBehaviour log
+SCHWERWIEGEND: movefailed: [Safety, 1, [1.3230112, -1.8945458, 0.0]]
+Dez 19, 2017 3:16:03 PM de.lmoedl.BasicBehaviour log
+INFORMATION: corrigationVector: 1.6108654 0.0 0.0
+Dez 19, 2017 3:16:03 PM de.lmoedl.BasicBehaviour log
+SCHWERWIEGEND: movefailed: [Internal stop, 0, java.lang.Void@441047a3]
+Dez 19, 2017 3:16:04 PM de.lmoedl.BasicBehaviour log
+SCHWERWIEGEND: movefailed: [Safety, 0, [1.1230111, -1.8945458, 0.0]]
+Dez 19, 2017 3:16:06 PM de.lmoedl.BasicBehaviour log
+INFORMATION: corrigationVector: 1.6108654 0.0 0.0
+Dez 19, 2017 3:16:07 PM de.lmoedl.BasicBehaviour log
+SCHWERWIEGEND: movefailed: [Safety, 0, [1.1230111, -1.8945458, 0.0]]
+Dez 19, 2017 3:16:09 PM de.lmoedl.BasicBehaviour log
+SCHWERWIEGEND: movefailed: [Safety, 0, [0.4230111, -2.044546, 0.0]]
+Dez 19, 2017 3:16:09 PM de.lmoedl.BasicBehaviour log
+SCHWERWIEGEND: movefailed: [Safety, 0, [0.4230111, -1.9945459, 0.0]]
+Dez 19, 2017 3:16:09 PM de.lmoedl.BasicBehaviour log
+SCHWERWIEGEND: movefailed: [Safety, 1, [0.42301103, -1.9945459, 0.0]]
+Dez 19, 2017 3:16:11 PM de.lmoedl.BasicBehaviour log
+SCHWERWIEGEND: movefailed: [Safety, 0, [0.55461836, -1.7421513, 0.0]]
+Dez 19, 2017 3:16:14 PM de.lmoedl.BasicBehaviour log
+INFORMATION: corrigationVector: 1.3910512 0.0 0.0
+Dez 19, 2017 3:16:16 PM de.lmoedl.BasicBehaviour log
+SCHWERWIEGEND: movefailed: [Safety, 0, [0.35461834, -1.9421511, 0.0]]
+Dez 19, 2017 3:16:17 PM de.lmoedl.BasicBehaviour log
+SCHWERWIEGEND: movefailed: [Safety, 0, [0.35461834, -1.7921512, 0.0]]
+Dez 19, 2017 3:16:17 PM de.lmoedl.BasicBehaviour log
+SCHWERWIEGEND: movefailed: [Safety, 0, [0.4046185, -1.8421512, 0.0]]
+Dez 19, 2017 3:16:17 PM de.lmoedl.BasicBehaviour log
+SCHWERWIEGEND: movefailed: [Safety, 0, [0.45461845, -1.7921512, 0.0]]
+Dez 19, 2017 3:16:18 PM de.lmoedl.BasicBehaviour log
+SCHWERWIEGEND: movefailed: [Safety, 0, [0.5046184, -1.7421513, 0.0]]
+Dez 19, 2017 3:16:18 PM de.lmoedl.BasicBehaviour log
+SCHWERWIEGEND: movefailed: [Safety, 0, [0.50461847, -1.7421513, 0.0]]
+Dez 19, 2017 3:16:19 PM de.lmoedl.BasicBehaviour log
+SCHWERWIEGEND: movefailed: [Safety, 0, [0.45461842, -1.6921511, 0.0]]
+Dez 19, 2017 3:16:19 PM de.lmoedl.BasicBehaviour log
+SCHWERWIEGEND: movefailed: [Safety, 0, [0.45461848, -1.6921511, 0.0]]
+Dez 19, 2017 3:16:20 PM de.lmoedl.BasicBehaviour log
+SCHWERWIEGEND: movefailed: [Safety, 0, [0.45461842, -1.6921511, 0.0]]
+Dez 19, 2017 3:16:20 PM de.lmoedl.BasicBehaviour log
+SCHWERWIEGEND: movefailed: [Safety, 0, [0.45461845, -1.6921511, 0.0]]
+Dez 19, 2017 3:16:20 PM de.lmoedl.BasicBehaviour log
+SCHWERWIEGEND: movefailed: [Safety, 0, [0.45461842, -1.7421513, 0.0]]
+Dez 19, 2017 3:16:29 PM de.lmoedl.BasicBehaviour log
+INFORMATION: Bathroom
+Dez 19, 2017 3:16:30 PM de.lmoedl.BasicBehaviour log
+SCHWERWIEGEND: movefailed: [Safety, 1, [0.2546184, -2.192151, 0.0]]
+Dez 19, 2017 3:16:30 PM de.lmoedl.BasicBehaviour log
+INFORMATION: bathroom_"moveTo", 1f, 0f, 0f_false
+Dez 19, 2017 3:16:30 PM de.lmoedl.BasicBehaviour log
+INFORMATION: corrigationVector: 1.0 0.0 0.0
+Dez 19, 2017 3:16:30 PM de.lmoedl.BasicBehaviour log
+SCHWERWIEGEND: movefailed: [Internal stop, 0, java.lang.Void@35d815f7]
+Dez 19, 2017 3:16:30 PM de.lmoedl.BasicBehaviour log
+SCHWERWIEGEND: movefailed: [Internal stop, 0, java.lang.Void@841b2e3]
+Dez 19, 2017 3:16:32 PM de.lmoedl.BasicBehaviour log
+SCHWERWIEGEND: movefailed: [Safety, 0, [0.35461825, -1.9421511, 0.0]]
+Dez 19, 2017 3:16:32 PM de.lmoedl.BasicBehaviour log
+SCHWERWIEGEND: movefailed: [Safety, 0, [0.3546183, -1.9421511, 0.0]]
+Dez 19, 2017 3:16:33 PM de.lmoedl.BasicBehaviour log
+SCHWERWIEGEND: movefailed: [Safety, 0, [0.25461838, -2.2921512, 0.0]]
+Dez 19, 2017 3:16:33 PM de.lmoedl.BasicBehaviour log
+SCHWERWIEGEND: movefailed: [Safety, 0, [0.3546183, -1.9421511, 0.0]]
+Dez 19, 2017 3:16:34 PM de.lmoedl.BasicBehaviour log
+SCHWERWIEGEND: movefailed: [Safety, 0, [0.3546183, -1.9421511, 0.0]]
+Dez 19, 2017 3:16:35 PM de.lmoedl.BasicBehaviour log
+INFORMATION: corrigationVector: 0.97370595 0.0 0.0
+Dez 19, 2017 3:16:37 PM de.lmoedl.BasicBehaviour log
+SCHWERWIEGEND: movefailed: [Safety, 1, [1.1046183, -1.8921511, 0.0]]
+Dez 19, 2017 3:16:37 PM de.lmoedl.BasicBehaviour log
+SCHWERWIEGEND: movefailed: [Safety, 0, [0.8546183, -2.142151, 0.0]]
+Dez 19, 2017 3:16:37 PM de.lmoedl.BasicBehaviour log
+SCHWERWIEGEND: movefailed: [Internal stop, 0, java.lang.Void@30e81466]
+Dez 19, 2017 3:16:42 PM de.lmoedl.BasicBehaviour log
+INFORMATION: corrigationVector: 0.6783998 0.0 0.0
+Dez 19, 2017 3:16:44 PM de.lmoedl.BasicBehaviour log
+SCHWERWIEGEND: movefailed: [Safety, 1, [1.1546185, -1.7921512, 0.0]]
+Dez 19, 2017 3:16:44 PM de.lmoedl.BasicBehaviour log
+SCHWERWIEGEND: movefailed: [Internal stop, 0, java.lang.Void@3755677d]
+Dez 19, 2017 3:16:44 PM de.lmoedl.BasicBehaviour log
+SCHWERWIEGEND: movefailed: [Safety, 0, [0.9046185, -2.0921512, 0.0]]
+Dez 19, 2017 3:16:48 PM de.lmoedl.BasicBehaviour log
+INFORMATION: corrigationVector: 0.6219681 0.0 0.0
+Dez 19, 2017 3:16:48 PM de.lmoedl.BasicBehaviour log
+SCHWERWIEGEND: movefailed: [Safety, 0, [1.1046183, -1.9421511, 0.0]]
+Dez 19, 2017 3:16:51 PM de.lmoedl.BasicBehaviour log
+INFORMATION: corrigationVector: 0.6219674 0.0 0.0
+Dez 19, 2017 3:16:52 PM de.lmoedl.BasicBehaviour log
+SCHWERWIEGEND: movefailed: [Safety, 0, [1.1046183, -1.9421511, 0.0]]
+Dez 19, 2017 3:16:52 PM de.lmoedl.BasicBehaviour log
+SCHWERWIEGEND: movefailed: [Safety, 1, [1.1046183, -1.9421511, 0.0]]
+Dez 19, 2017 3:16:55 PM de.lmoedl.BasicBehaviour log
+INFORMATION: corrigationVector: 0.62192285 0.0 0.0
+Dez 19, 2017 3:16:55 PM de.lmoedl.BasicBehaviour log
+SCHWERWIEGEND: movefailed: [Safety, 0, [1.1046183, -1.9421511, 0.0]]
+Dez 19, 2017 3:16:58 PM de.lmoedl.BasicBehaviour log
+INFORMATION: corrigationVector: 0.6219228 0.0 0.0
+Dez 19, 2017 3:17:01 PM de.lmoedl.BasicBehaviour log
+SCHWERWIEGEND: movefailed: [Safety, 1, [1.1046183, -1.8921511, 0.0]]
+Dez 19, 2017 3:17:05 PM de.lmoedl.BasicBehaviour log
+INFORMATION: corrigationVector: 0.55963516 0.0 0.0
+Dez 19, 2017 3:17:06 PM de.lmoedl.BasicBehaviour log
+SCHWERWIEGEND: movefailed: [Safety, 0, [1.1046183, -1.8421512, 0.0]]
+Dez 19, 2017 3:17:09 PM de.lmoedl.BasicBehaviour log
+INFORMATION: corrigationVector: 0.55963516 0.0 0.0
+Dez 19, 2017 3:17:10 PM de.lmoedl.BasicBehaviour log
+SCHWERWIEGEND: movefailed: [Safety, 1, [1.1046183, -1.8421512, 0.0]]
+Dez 19, 2017 3:17:10 PM de.lmoedl.BasicBehaviour log
+SCHWERWIEGEND: movefailed: [Safety, 0, [1.1046183, -1.8421512, 0.0]]
+Dez 19, 2017 3:17:10 PM de.lmoedl.BasicBehaviour log
+SCHWERWIEGEND: movefailed: [Internal stop, 0, java.lang.Void@23675334]
+Dez 19, 2017 3:17:14 PM de.lmoedl.BasicBehaviour log
+INFORMATION: corrigationVector: 0.542464 0.0 0.0
+Dez 19, 2017 3:17:14 PM de.lmoedl.BasicBehaviour log
+SCHWERWIEGEND: movefailed: [Safety, 0, [1.1546185, -1.8421512, 0.0]]
+Dez 19, 2017 3:17:14 PM de.lmoedl.BasicBehaviour log
+SCHWERWIEGEND: movefailed: [Safety, 1, [1.1546185, -1.8421512, 0.0]]
+Dez 19, 2017 3:17:18 PM de.lmoedl.BasicBehaviour log
+INFORMATION: corrigationVector: 0.542464 0.0 0.0
+Dez 19, 2017 3:17:19 PM de.lmoedl.BasicBehaviour log
+SCHWERWIEGEND: movefailed: [Safety, 1, [1.1546185, -1.8421512, 0.0]]
+Dez 19, 2017 3:17:19 PM de.lmoedl.BasicBehaviour log
+SCHWERWIEGEND: movefailed: [Safety, 0, [1.1546185, -1.8421512, 0.0]]
+Dez 19, 2017 3:17:19 PM de.lmoedl.BasicBehaviour log
+SCHWERWIEGEND: movefailed: [Internal stop, 0, java.lang.Void@5795f9d9]
+Dez 19, 2017 3:17:23 PM de.lmoedl.BasicBehaviour log
+SCHWERWIEGEND: movefailed: [Safety, 0, [1.1546185, -1.8421512, 0.0]]
+Dez 19, 2017 3:17:24 PM de.lmoedl.BasicBehaviour log
+INFORMATION: bathroom_"navigateTo", 2.8f, 0f, 0f_false
+Dez 19, 2017 3:17:24 PM de.lmoedl.BasicBehaviour log
+SCHWERWIEGEND: movefailed: [Safety, 0, [1.1546185, -1.8421512, 0.0]]
+Dez 19, 2017 3:17:24 PM de.lmoedl.BasicBehaviour log
+INFORMATION: corrigationVector: 2.8 0.0 0.0
+Dez 19, 2017 3:17:25 PM de.lmoedl.BasicBehaviour log
+SCHWERWIEGEND: movefailed: [Safety, 0, [1.1546185, -1.8421512, 0.0]]
+Dez 19, 2017 3:17:28 PM de.lmoedl.BasicBehaviour log
+INFORMATION: corrigationVector: 2.8 0.0 0.0
+Dez 19, 2017 3:17:29 PM de.lmoedl.BasicBehaviour log
+SCHWERWIEGEND: movefailed: [Safety, 0, [1.1546185, -1.8421512, 0.0]]
+Dez 19, 2017 3:17:29 PM de.lmoedl.BasicBehaviour log
+SCHWERWIEGEND: movefailed: [Safety, 1, [1.1546185, -1.8421512, 0.0]]
+Dez 19, 2017 3:17:32 PM de.lmoedl.BasicBehaviour log
+INFORMATION: corrigationVector: 2.8 0.0 0.0
+Dez 19, 2017 3:17:46 PM de.lmoedl.BasicBehaviour log
+SCHWERWIEGEND: movefailed: [Safety, 0, [0.9046185, -2.0921512, 0.0]]
+Dez 19, 2017 3:17:49 PM de.lmoedl.BasicBehaviour log
+INFORMATION: corrigationVector: 2.7376063 0.0 0.0
+Dez 19, 2017 3:17:50 PM de.lmoedl.BasicBehaviour log
+SCHWERWIEGEND: movefailed: [Safety, 0, [0.9046185, -2.0921512, 0.0]]
+Dez 19, 2017 3:17:53 PM de.lmoedl.BasicBehaviour log
+INFORMATION: corrigationVector: 2.7376063 0.0 0.0
+Dez 19, 2017 3:17:53 PM de.lmoedl.BasicBehaviour log
+SCHWERWIEGEND: movefailed: [Safety, 0, [0.7546184, -2.142151, 0.0]]
+Dez 19, 2017 3:17:53 PM de.lmoedl.BasicBehaviour log
+SCHWERWIEGEND: movefailed: [Safety, 1, [0.7546184, -2.142151, 0.0]]
+Dez 19, 2017 3:17:57 PM de.lmoedl.BasicBehaviour log
+INFORMATION: corrigationVector: 2.7375965 0.0 0.0
+Dez 19, 2017 3:17:57 PM de.lmoedl.BasicBehaviour log
+SCHWERWIEGEND: movefailed: [Safety, 0, [0.8546183, -1.6921511, 0.0]]
+Dez 19, 2017 3:18:00 PM de.lmoedl.BasicBehaviour log
+INFORMATION: corrigationVector: 2.7375965 0.0 0.0
+Dez 19, 2017 3:18:07 PM de.lmoedl.BasicBehaviour log
+INFORMATION: corrigationVector: 2.7372189 0.0 0.0
+Dez 19, 2017 3:18:07 PM de.lmoedl.BasicBehaviour log
+SCHWERWIEGEND: movefailed: [Safety, 0, [0.7546184, -1.6421511, 0.0]]
+Dez 19, 2017 3:18:11 PM de.lmoedl.BasicBehaviour log
+INFORMATION: corrigationVector: 2.7372189 0.0 0.0
+Dez 19, 2017 3:18:19 PM de.lmoedl.BasicBehaviour log
+INFORMATION: corrigationVector: 2.6939845 0.0 0.0
+Dez 19, 2017 3:18:29 PM de.lmoedl.BasicBehaviour log
+INFORMATION: corrigationVector: 2.6098962 0.0 0.0
+Dez 19, 2017 3:18:43 PM de.lmoedl.BasicBehaviour log
+INFORMATION: bathroom_"navigateTo", 2f, 0f, 0f_false
+Dez 19, 2017 3:18:43 PM de.lmoedl.BasicBehaviour log
+INFORMATION: corrigationVector: 1.9943373 0.0 0.0
+Dez 19, 2017 3:18:48 PM de.lmoedl.BasicBehaviour log
+INFORMATION: corrigationVector: 1.9826475 0.0 0.0
+Dez 19, 2017 3:18:52 PM de.lmoedl.BasicBehaviour log
+INFORMATION: corrigationVector: 1.9819494 0.0 0.0
+Dez 19, 2017 3:18:56 PM de.lmoedl.BasicBehaviour log
+INFORMATION: corrigationVector: 1.9819494 0.0 0.0
+Dez 19, 2017 3:19:00 PM de.lmoedl.BasicBehaviour log
+INFORMATION: corrigationVector: 1.980721 0.0 0.0
+Dez 19, 2017 3:19:04 PM de.lmoedl.BasicBehaviour log
+INFORMATION: corrigationVector: 1.980721 0.0 0.0
+Dez 19, 2017 3:19:08 PM de.lmoedl.BasicBehaviour log
+INFORMATION: corrigationVector: 1.9794931 0.0 0.0
+Dez 19, 2017 3:19:12 PM de.lmoedl.BasicBehaviour log
+INFORMATION: corrigationVector: 1.9779487 0.0 0.0
+Dez 19, 2017 3:19:16 PM de.lmoedl.BasicBehaviour log
+INFORMATION: corrigationVector: 1.976721 0.0 0.0
+Dez 19, 2017 3:19:20 PM de.lmoedl.BasicBehaviour log
+INFORMATION: corrigationVector: 1.976721 0.0 0.0
+Dez 19, 2017 3:19:25 PM de.lmoedl.BasicBehaviour log
+INFORMATION: corrigationVector: 1.976721 0.0 0.0
+Dez 19, 2017 3:19:34 PM de.lmoedl.BasicBehaviour log
+INFORMATION: Kitchen
+Dez 19, 2017 3:19:38 PM de.lmoedl.BasicBehaviour log
+INFORMATION: kitchen_"moveTo", 1f, 0f, 0f_false
+Dez 19, 2017 3:19:38 PM de.lmoedl.BasicBehaviour log
+SCHWERWIEGEND: movefailed: [Safety, 1, [-0.07375121, -2.1335049, 0.0]]
+Dez 19, 2017 3:19:38 PM de.lmoedl.BasicBehaviour log
+SCHWERWIEGEND: movefailed: [Internal stop, 0, java.lang.Void@465c6665]
+Dez 19, 2017 3:19:38 PM de.lmoedl.BasicBehaviour log
+INFORMATION: kitchen_"moveTo", 3f, 0f, 0f_false
+Dez 19, 2017 3:19:38 PM de.lmoedl.BasicBehaviour log
+INFORMATION: corrigationVector: 3.0 0.0 0.0
+Dez 19, 2017 3:19:38 PM de.lmoedl.BasicBehaviour log
+SCHWERWIEGEND: movefailed: [Safety, 0, [-0.07375121, -2.1335049, 0.0]]
+Dez 19, 2017 3:19:38 PM de.lmoedl.BasicBehaviour log
+SCHWERWIEGEND: movefailed: [Internal stop, 0, java.lang.Void@487c9c7e]
+Dez 19, 2017 3:19:41 PM de.lmoedl.BasicBehaviour log
+INFORMATION: corrigationVector: 2.9944744 0.0 0.0
+Dez 19, 2017 3:19:47 PM de.lmoedl.BasicBehaviour log
+INFORMATION: corrigationVector: 2.880699 0.0 0.0
+Dez 19, 2017 3:19:52 PM de.lmoedl.BasicBehaviour log
+INFORMATION: corrigationVector: 2.8647628 0.0 0.0
+Dez 19, 2017 3:19:56 PM de.lmoedl.BasicBehaviour log
+INFORMATION: corrigationVector: 2.8647628 0.0 0.0
+Dez 19, 2017 3:19:59 PM de.lmoedl.BasicBehaviour log
+INFORMATION: corrigationVector: 2.8647628 0.0 0.0
+Dez 19, 2017 3:20:02 PM de.lmoedl.BasicBehaviour log
+INFORMATION: corrigationVector: 2.8647628 0.0 0.0
+Dez 19, 2017 3:20:06 PM de.lmoedl.BasicBehaviour log
+INFORMATION: corrigationVector: 2.8647628 0.0 0.0
+Dez 19, 2017 3:20:10 PM de.lmoedl.BasicBehaviour log
+INFORMATION: corrigationVector: 2.8647628 0.0 0.0
+Dez 19, 2017 3:20:13 PM de.lmoedl.BasicBehaviour log
+INFORMATION: corrigationVector: 2.8647628 0.0 0.0
+Dez 19, 2017 3:20:17 PM de.lmoedl.BasicBehaviour log
+INFORMATION: corrigationVector: 2.8647628 0.0 0.0
+Dez 19, 2017 3:20:25 PM de.lmoedl.BasicBehaviour log
+INFORMATION: goodby
+Dez 19, 2017 3:20:26 PM de.lmoedl.BasicBehaviour log
+INFORMATION: ByeBye
