@@ -28,11 +28,10 @@ public class Pepper {
         String robotUrl = "tcp://" + Constants.Config.ROBOT_URL + ":" + Constants.Config.ROBOT_PORT;
         Application application = new Application(args, robotUrl);
         application.start();
-        //Session session = application.session();
-        /*ConciergeController conciergeController = new ConciergeController(application);
-        conciergeController.menu();*/
-        BasicBehaviour basicBehaviour = new BasicBehaviour(application);
-        basicBehaviour.start();
+        ConciergeController conciergeController = new ConciergeController(application);
+        conciergeController.menu();
+        /*BasicBehaviour basicBehaviour = new BasicBehaviour(application);
+        basicBehaviour.start();*/
         
         application.run();
     }

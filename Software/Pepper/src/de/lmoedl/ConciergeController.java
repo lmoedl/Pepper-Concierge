@@ -33,13 +33,13 @@ public class ConciergeController {
 
     private void setup() {
         basicBehaviour = new BasicBehaviour(application);
-        basicBehaviour.start();
+        //basicBehaviour.start();
     }
 
     public void menu() {
         
         if (Constants.Config.HEADLESS) {
-            //basicBehaviour.st
+            return;    
         }
         
         Scanner scanner = new Scanner(System.in);
@@ -79,6 +79,9 @@ public class ConciergeController {
                     case 7:
                         basicBehaviour.goodby();
                         break;
+                    case 8:
+                        basicBehaviour.resetEnvironment();
+                        break;
                 }
             } catch (InterruptedException ex) {
                 Logger.getLogger(ConciergeController.class.getName()).log(Level.SEVERE, null, ex);
@@ -101,6 +104,7 @@ public class ConciergeController {
         System.out.println("5) Bad starten");
         System.out.println("6) Küche starten");
         System.out.println("7) Verabschiedung starten");
+        System.out.println("8) Smart Home Labor auf Ausgangseinstellungen setzen");
     }
 
 }
