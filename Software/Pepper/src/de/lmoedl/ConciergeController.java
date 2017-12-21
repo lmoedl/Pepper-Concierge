@@ -82,6 +82,12 @@ public class ConciergeController {
                     case 8:
                         basicBehaviour.resetEnvironment();
                         break;
+                    case 9:
+                        basicBehaviour.rebootRobot();
+                        break;
+                    case 10: 
+                        basicBehaviour.shutdownRobot();
+                        break;
                 }
             } catch (InterruptedException ex) {
                 Logger.getLogger(ConciergeController.class.getName()).log(Level.SEVERE, null, ex);
@@ -105,6 +111,8 @@ public class ConciergeController {
         System.out.println("6) Küche starten");
         System.out.println("7) Verabschiedung starten");
         System.out.println("8) Smart Home Labor auf Ausgangseinstellungen setzen");
+        System.out.println("9) Reboot Pepper");
+        System.out.println("10) Shutdown Pepper");
     }
 
 }

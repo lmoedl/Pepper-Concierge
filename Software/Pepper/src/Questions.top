@@ -7,8 +7,8 @@ proposal: Nun sind wir schon fast am Ende angekommen. Habt ihr noch Fragen? Soll
 
 u:([e:FrontTactilTouched e:MiddleTactilTouched e:RearTactilTouched]) Autsch, hör auf mich anzufassen!
 
-u:(~Wie_heisst_du) Ich heiße $Dialog/RobotName , aber da wir Freunde sind, darfst du mich auch Peppi nennen. Und wie heißt du?
-    u1:(_*) ~hallo $1 . Freut mich dich kennenzulernen
+u:(~Wie_heisst_du) Ich heiße $Dialog/RobotName , aber da wir Freunde sind, darfst du mich auch Peppi nennen. 
+#Und wie heißt du?    u1:(_*) ~hallo $1 . Freut mich dich kennenzulernen
 
 u:(Peppi) Hallo I bims hier.
 
@@ -20,8 +20,8 @@ u:(["Welches Datum" "{Den} wie vielten"] haben wir {heute}) Heute ist der $Dialo
 
 u:(["Wie spät ist es" "Wie viel Uhr ["ist es" "haben wir"]"]) Es ist jetzt $Dialog/Hour Uhr $Dialog/Minute
 
-u:({"[Schalte Schalt] das"} Licht ein) Ok, ich schalte das Licht ein ^pCall(ALMemory.raiseEvent("PublishMQTTMessage", "Multimediawand_HUE6_Toggle;ON"))
-u:({"[Schalte Schalt] das"} Licht aus) Ok, ich schalte das Licht aus ^pCall(ALMemory.raiseEvent("PublishMQTTMessage", "Multimediawand_HUE6_Toggle;OFF"))
+u:({"[Schalte Schalt] das"} Licht ein) Ok, ich schalte das Licht ein ^pCall(ALMemory.raiseEvent("PublishMQTTMessage", "Multimediawand_HUE6_Toggle;ON")) ^pCall(ALMemory.raiseEvent("PublishMQTTMessage", "Multimediawand_HUE5_Toggle;ON"))
+u:({"[Schalte Schalt] das"} Licht aus) Ok, ich schalte das Licht aus ^pCall(ALMemory.raiseEvent("PublishMQTTMessage", "Multimediawand_HUE6_Toggle;OFF")) ^pCall(ALMemory.raiseEvent("PublishMQTTMessage", "Multimediawand_HUE5_Toggle;OFF"))
 
 u:(In welcher Position bist du) Meine Position ist ^call(ALRobotPosture.getPosture())
     c1:(_*) $1  # say any result from call
@@ -40,14 +40,14 @@ u:(ende) ok ich schalte die sprachsteuerung aus ^pCall(ALMemory.raiseEvent("Spee
 #        u2:(~nein) Ich hoffe, deine Wohnung ist groß genug
 #    u1:([nichts "gar nichts"] {"von beidem"}) Ich auch nicht
 
-proposal: Nimm einen Becher und fülle ihn mit Milch
-proposal: füge 3 Erdbeeren hinzu
-proposal: füge etwas Vanilleeis hinzu
-proposal: verschließe den Becher mit einem Deckel und schüttle ihn
-proposal: Du hast es geschafft! Jetzt kannst du deinen Milchshake genießen
+#proposal: Nimm einen Becher und fülle ihn mit Milch
+#proposal: füge 3 Erdbeeren hinzu
+#proposal: füge etwas Vanilleeis hinzu
+#proposal: verschließe den Becher mit einem Deckel und schüttle ihn
+#proposal: Du hast es geschafft! Jetzt kannst du deinen Milchshake genießen
 
-u:(~möchte {einen} Milch) Los geht's! Folge meinen Anweisungen und sage weiter, wenn du fertig bist, um zum nächsten Schritt zu gelangen.
-    u1:(weiter) ^nextProposal ^stayInScope
+#u:(~möchte {einen} Milch) Los geht's! Folge meinen Anweisungen und sage weiter, wenn du fertig bist, um zum nächsten Schritt zu gelangen.
+#    u1:(weiter) ^nextProposal ^stayInScope
 
 u:([Erzähl Erzähle] {mir einen} Witz) Das Gras ist hoch, es ist kaum zu überblicken, darin kann man gut... Na, weißt du's?
     u1:(~nein) Man bist du schlecht. Verstecken spielen natürlich
@@ -59,7 +59,7 @@ u:(Wie groß bist du) Ich bin kleiner als du, aber trotzdem ein großer Hitzkopf
 
 u:([~Bist_du "Ob du"] [dumm behindert] {[bist bischt] "hab ich dich gefragt"}) Ich bin eine Maschine, wenn dann bist du dumm, du Penner
 
-u:(Wie [geht "gehts"] dir) ^rand[~Mir_gehts_gut "So la la, ein paar Schaltkreise könnten mal wieder eine Lötkur gebrauchen"] und dir?
+u:(Wie ["geht es" "gehts"] dir) ^rand[~Mir_gehts_gut "So la la, ein paar Schaltkreise könnten mal wieder eine Lötkur gebrauchen"] und dir?
     u1:(~Mir_gehts_gut) Das freut mich aber
     u1:(~Mir_gehts_schlecht) Oh, warum das?
         u2:(*) Das tut mir leid, ich wünsche dir eine gute Besserung
@@ -92,7 +92,7 @@ u:(["Wie findest du" ~Magst_du] die [HFU Hochschule]) Meeeeeeega geil
 
 u:(Rauchst du) Nein, das wäre für meine Schaltkreise ziemlich ungesund
 
-u:(Wie groß ist das {"Smart Home"} Labor) x mal x Meter
+u:(Wie groß ist das {"Smart Home"} Labor) 8 mal 12 Meter
 
 u:(Wie [werden "steuerst du"] die Geräte {hier gesteuert "hier gesteuert"}) Alle Geräte hier werden über das MQTT Protokoll mit Hilfe eines MQTT Brokers gesteuert. Über die kostenlose Plattform Open Hab kannst du als Mensch auch die Geräte ganz leicht steuern.
 
@@ -102,7 +102,7 @@ u:(~Kannst_du {einen} Kaffee [machen kochen]) Leider noch nicht. Die Kaffeemasch
 
 u:(~Magst_du Kaffee) Isch ja ekelhaft, lass mich in Ruhe mit dem Zeug. Meine Entwickler lieben die braune Brühe aber
 
-u:(Was [spielst zockst] du {gerne "am liebsten"}) G T A oder Nied for spied natürlich
+u:(Was [spielst zockst] du {[gerne "am liebsten"]}) G T A oder Nied for spied natürlich
 
 u:([~Magst_du "liebst du"] mich) Wenn du lieb zu mir bist, bin ich auch lieb zu dir!
 
@@ -127,10 +127,21 @@ u:(~Kannst_du tanzen) Na klar, soll ich es dir zeigen?
 
 u:(Gefällt) Gefällt mir auch
 
-u:(Was ist das Jugendwort des Jahres) I bims natürlich, weißt du das etwa nicht?
+u:({["Was ist" "Wie lautet"]} das Jugendwort des Jahres) I bims natürlich, weißt du das etwa nicht?
+    u1:(~Ja) Warum fragst du dann überhaupt, wenn du es sowieso weißt
+    u1:(~Nein) Man man man, das geht ja mal gar nicht. Du lebst wohl noch im achzehnten Jahrhundert
 
-u:(Was ist zwei plus zwei) Tu plus tu ist for, minus won, ist thrie, quick maths
+u:({Was ist} zwei plus zwei) Tu plus tu ist for, minus won, ist thrie, quick maths
 
-u:(Spiel * bims [Lied Song]) Ok, ich spiele den I Bims Song ^pCall(ALMemory.raiseEvent("PlayMusic", "Reece_MIKI-I_Bims.mp3"))
+u:(Spiel * bims [Lied Song]) Ok, ich spiele den I Bims Song ^pCall(ALMemory.raiseEvent("PlayMusic", "x-file-cifs://192.168.0.10/Medialib/Audio/Pepper/Reece_MIKI-I_Bims.mp3"))
 
+u:(Öffne Open Hab) Ok, ich lade Open Hab auf meinem Tablet ^pCall(ALMemory.raiseEvent("OpenUrl", "http://192.168.0.11:8080/"))
+
+u:(["Fack ju" "Fick dich"]) Fick dich selber ^run(animations/Stand/Waiting/ShowMuscles_1)
+
+
+u:(["Wie viel Grad hat es {hier}" "Welche Temperatur ["hat es" "haben wir"] {hier}"]) ^pCall(ALMemory.raiseEvent("GetValue", "NAInnenraumsensorBad_Temperature")) Aktuell haben wir hier ^break ^call(ALMemory.getData("NAInnenraumsensorBad_Temperature")) Grad
+    c1:(_*) $1
+
+u:(Mach ein [Bild Selfie]) Ok, ich mach ein Bild von dir ^pCall(ALMemory.raiseEvent("TakePicture", "test"))
 

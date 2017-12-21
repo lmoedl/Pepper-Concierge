@@ -18,15 +18,21 @@ import com.aldebaran.qi.helper.proxies.ALFaceDetection;
 import com.aldebaran.qi.helper.proxies.ALMemory;
 import com.aldebaran.qi.helper.proxies.ALMotion;
 import com.aldebaran.qi.helper.proxies.ALNavigation;
+import com.aldebaran.qi.helper.proxies.ALPhotoCapture;
 import com.aldebaran.qi.helper.proxies.ALSoundLocalization;
 import com.aldebaran.qi.helper.proxies.ALSpeechRecognition;
+import com.aldebaran.qi.helper.proxies.ALSystem;
 import com.aldebaran.qi.helper.proxies.ALTextToSpeech;
 import com.aldebaran.qi.helper.proxies.ALTracker;
+import com.aldebaran.qi.helper.proxies.ALVideoDevice;
 import com.vmichalak.sonoscontroller.SonosDevice;
 import com.vmichalak.sonoscontroller.exception.SonosControllerException;
 import de.lmoedl.interfaces.MQTTSubscriberCallbackInterface;
 import java.io.IOException;
+import java.nio.ByteBuffer;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Random;
@@ -58,16 +64,24 @@ public class BasicBehaviour implements MQTTSubscriberCallbackInterface {
     private ALAnimationPlayer animationPlayer;
     private ALNavigation navigation;
     private ALTabletService tabletService;
+    private ALSystem system;
+    private ALVideoDevice video;
+    private ALPhotoCapture photoCapture;
 
     private ConnectionManager connectionManager;
     private MQTTConnectionManager mQTTConnectionManager;
     private SonosDevice sonos;
 
-
     private long eventSubscriptionIdStart = 0;
     private long windowOpendID = 0;
     private long windowClosedID = 0;
     //private long redballID = 0;
+    
+    private int topCamera = 0;
+    private int resolution = 2; // 640 x 480
+    private int colorspace = 11; // RGB
+    private int frameRate = 10; // FPS
+    private String moduleName;
 
     private boolean isPlaying = true;
 
@@ -92,7 +106,7 @@ public class BasicBehaviour implements MQTTSubscriberCallbackInterface {
 
         this.session = application.session();
         this.application = application;
-        
+
         try {
             memory = new ALMemory(session);
             awareness = new ALBasicAwareness(session).async();
@@ -107,7 +121,10 @@ public class BasicBehaviour implements MQTTSubscriberCallbackInterface {
             navigation = new ALNavigation(session);
             tabletService = new ALTabletService(session);
             sonos = new SonosDevice(Constants.Config.SONOS_URL);
-
+            system = new ALSystem(session);
+            video = new ALVideoDevice(session);
+            photoCapture = new ALPhotoCapture(session);
+            
             config();
         } catch (Exception ex) {
             log(Level.SEVERE, ex);
@@ -115,15 +132,38 @@ public class BasicBehaviour implements MQTTSubscriberCallbackInterface {
     }
 
     public void start() {
-        
-
-        //stateMachine(Constants.Steps.STEP_DIALOG);
-        
-        //startConcierge();
+        try {
+            /*try {
+            //stateMachine(Constants.Steps.STEP_DIALOG);
+            //startConcierge();
+            //putHeadUp();
+            goodby();
+            } catch (CallError | InterruptedException | IOException | SonosControllerException ex) {
+            Logger.getLogger(BasicBehaviour.class.getName()).log(Level.SEVERE, null, ex);
+            }*/
+            
+            bathRoom();
+        } catch (InterruptedException ex) {
+            Logger.getLogger(BasicBehaviour.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            Logger.getLogger(BasicBehaviour.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SonosControllerException ex) {
+            Logger.getLogger(BasicBehaviour.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (Exception ex) {
+            Logger.getLogger(BasicBehaviour.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
-
     private void config() throws CallError, InterruptedException, Exception {
+        Runtime.getRuntime().addShutdownHook(new Thread(new Runnable() {
+            @Override
+            public void run() {
+                disconnectAll();
+                System.out.println("shutdownhook called");
+            }
+        }));
+
+        sonos.setMute(false);
         textToSpeech.setLanguage(Constants.LANGUAGE);
         dialog.setLanguage(Constants.LANGUAGE);
         motion.setExternalCollisionProtectionEnabled("All", true);
@@ -131,12 +171,12 @@ public class BasicBehaviour implements MQTTSubscriberCallbackInterface {
 
         tabletService.enableWifi();
         tabletService.hideWebview();
+        tabletService.hideImage();
 
         motion.setOrthogonalSecurityDistance(0.15f);
         motion.wakeUp();
-        
-        //memory.subscribeToEvent("RearTactilTouched", "onTouchEnd::(f)", this);
 
+        //memory.subscribeToEvent("RearTactilTouched", "onTouchEnd::(f)", this);
         memory.subscribeToEvent("PlayMusic", "onPlayMusic::(s)", this);
         memory.subscribeToEvent("SubscribeMQTTTopic", "onSubscribeMQTTTopic::(s)", this);
         memory.subscribeToEvent("UnsubscribeMQTTTopic", "onUnsubscribeMQTTTopic::(s)", this);
@@ -144,7 +184,8 @@ public class BasicBehaviour implements MQTTSubscriberCallbackInterface {
         memory.subscribeToEvent("UnsubscribeMQTTTopic", "onUnsubscribeMQTTTopic::(s)", this);
         memory.subscribeToEvent("PublishMQTTMessage", "onPublishMQTTMessage::(s)", this);
         memory.subscribeToEvent("SpeechRecognitionOff", "onSpeechRecognitionOff::(s)", this);
-        
+        memory.subscribeToEvent("OpenUrl", "onOpenUrl::(s)", this);
+        memory.subscribeToEvent("TakePicture", "onTakePicture::(s)", this);
 
         memory.subscribeToEvent("ALMotion/MoveFailed", new EventCallback() {
             @Override
@@ -177,11 +218,13 @@ public class BasicBehaviour implements MQTTSubscriberCallbackInterface {
         loadTopic("/home/nao/TVRoom.top");
         dialog.forceInput("xxx");
         dialog.forceOutput();*/
-
         eventSubscriptionIdStart = memory.subscribeToEvent("RearTactilTouched", "onTouchHead::(f)", this);
+        memory.subscribeToEvent("HandRightBackTouched", "onRightHandTouched::(f)", this);
+
+        resetEnvironment();
     }
-    
-    public void resetEnvironment(){
+
+    public void resetEnvironment() {
         mQTTConnectionManager.publishToItem(Constants.MQTTTopics.Shutter.INDOOR_SHUTTER_1, "UP");
         mQTTConnectionManager.publishToItem(Constants.MQTTTopics.Shutter.INDOOR_SHUTTER_2, "UP");
         mQTTConnectionManager.publishToItem(Constants.MQTTTopics.Shutter.INDOOR_SHUTTER_3, "UP");
@@ -193,15 +236,15 @@ public class BasicBehaviour implements MQTTSubscriberCallbackInterface {
     public void onTouchHead(Float value) throws InterruptedException, CallError, IOException, SonosControllerException, Exception {
         log(Constants.APP_NAME + " : Touch " + value);
         if (value == 1.0) {
+            motion.wakeUp();
             animationPlayer.run("animations/Stand/Waiting/AirGuitar_1");
 
-            memory.unsubscribeToEvent(eventSubscriptionIdStart);
-
-            startConcierge();
-
-            if (Constants.Config.DEBUG) {
+            if (Constants.Config.DEBUG && !Constants.Config.HEADLESS) {
+                memory.unsubscribeToEvent(eventSubscriptionIdStart);
                 memory.subscribeToEvent("RearTactilTouched", "onTouchEnd::(f)", this);
             }
+
+            startConcierge();
         }
     }
 
@@ -222,7 +265,7 @@ public class BasicBehaviour implements MQTTSubscriberCallbackInterface {
 
         success = (boolean) motion.call("moveTo", 0f, 0f, new Float(Math.toRadians(180))).get();
 
-        //Kopf hoch
+        putHeadUp();
         loadTopicWithForceOutput("/home/nao/General.top");
         success = (boolean) motion.call("moveTo", 0f, 0f, new Float(Math.toRadians(-90))).get();
 
@@ -251,6 +294,7 @@ public class BasicBehaviour implements MQTTSubscriberCallbackInterface {
 
     public void tvRoom() throws Exception {
         log("tvRoom");
+        putHeadUp();
         boolean success;
         //Window open scene
         windowOpendID = memory.subscribeToEvent("WindowOpend", "onWindowOpend::(s)", this);
@@ -352,6 +396,7 @@ public class BasicBehaviour implements MQTTSubscriberCallbackInterface {
     public void onSpeechRecognitionOff(String state) throws IOException, SonosControllerException {
         log("onSpeechRecognitionOff: " + state);
         stateMachine(Constants.Steps.STEP_END);
+        putHeadUp();
         try {
             boolean isUrlLoaded = tabletService.loadUrl(Constants.Config.RATING_URL);
             log("goodby_isUrlLoaded: " + isUrlLoaded);
@@ -359,18 +404,41 @@ public class BasicBehaviour implements MQTTSubscriberCallbackInterface {
             log("goodby_isShowWebview: " + isShowWebview);
             loadTopic("/home/nao/Goodby.top");
             dialog.forceOutput();
-            //animationPlayer.async().run("animations/Stand/Waiting/FunnyDancer_1");
-            //lightShow();
+
+            //if (!Constants.Config.DEBUG) {
+                //animationPlayer.run("animations/Stand/Waiting/FunnyDancer_1");
+                lightShow();
+            //}
+
+            //if (Constants.Config.DEBUG) {
+            //    System.out.println("resumeGoodby debug: " + Constants.Config.DEBUG);
+                resumeGoodby();
+            //}
+
+            /*new Timer().schedule(new TimerTask() {
+                @Override
+                public void run() {
+                    resumeGoodby();
+                }
+            }, 40000);*/
+
+        } catch (CallError | InterruptedException ex) {
+            log(Level.SEVERE, ex);
+        }
+
+    }
+
+    private void resumeGoodby() {
+        try {
             dialog.forceOutput();
             unloadTopic();
 
             sonos.setBass(0);
             sonos.setVolume(40);
             sonos.playUri("x-rincon-mp3radio://http://listen.technobase.fm/tunein-mp3-pls", "Technobase.fm");
-        } catch (CallError | InterruptedException ex) {
+        } catch (CallError | InterruptedException | IOException | SonosControllerException ex) {
             log(Level.SEVERE, ex);
         }
-
     }
 
     private void resumeTvRoom() throws CallError, InterruptedException, IOException, SonosControllerException, Exception {
@@ -421,6 +489,7 @@ public class BasicBehaviour implements MQTTSubscriberCallbackInterface {
     }
 
     public void workingRoom() throws CallError, InterruptedException, IOException, SonosControllerException, Exception {
+        putHeadUp();
         boolean success;
         log("Workingroom");
         loadTopicWithForceOutput("/home/nao/WorkingRoom.top");
@@ -443,6 +512,7 @@ public class BasicBehaviour implements MQTTSubscriberCallbackInterface {
     }
 
     public void bathRoom() throws CallError, InterruptedException, IOException, SonosControllerException, Exception {
+        putHeadUp();
         boolean success;
         log("Bathroom");
         loadTopic("/home/nao/Bathroom.top");
@@ -475,6 +545,7 @@ public class BasicBehaviour implements MQTTSubscriberCallbackInterface {
     }
 
     public void kitchen() throws CallError, InterruptedException, IOException, SonosControllerException, Exception {
+        putHeadUp();
         boolean success;
         log("Kitchen");
         loadTopicWithForceOutput("/home/nao/Kitchen.top");
@@ -483,9 +554,9 @@ public class BasicBehaviour implements MQTTSubscriberCallbackInterface {
         log("kitchen_\"moveTo\", 1f, 0f, 0f_" + success);
         success = (boolean) motion.call("moveTo", 0f, 0f, new Float(Math.toRadians(-90))).get();
         List<Float> old = motion.getRobotPosition(false);
-        success = (boolean) motion.call("moveTo", 3f, 0f, 0f).get();
-        log("kitchen_\"moveTo\", 3f, 0f, 0f_" + success);
-        checkDestination(success, old, motion.getRobotPosition(false), new float[]{3f, 0f, 0f});
+        success = (boolean) motion.call("moveTo", 2.5f, 0f, 0f).get();
+        log("kitchen_\"moveTo\", 2.5f, 0f, 0f_" + success);
+        checkDestination(success, old, motion.getRobotPosition(false), new float[]{2.5f, 0f, 0f});
         success = (boolean) motion.call("moveTo", 0f, 0f, new Float(Math.toRadians(180))).get();
 
         if (isFullConcierge) {
@@ -495,13 +566,14 @@ public class BasicBehaviour implements MQTTSubscriberCallbackInterface {
 
     public void goodby() throws CallError, InterruptedException, IOException, SonosControllerException {
         log("goodby");
+        putHeadUp();
         //boolean isWifiConfig = tabletService.configureWifi("wpa", "SHLAB02-5", "91054319");
         //System.out.println("isWifiConfig: " + isWifiConfig);
         //boolean isConnectWifi = tabletService.connectWifi("SHLAB02-5");
         //System.out.println("isConnectWifi: " + isConnectWifi);
         loadTopic("/home/nao/Questions.top");
         dialog.forceOutput();
-        
+
         log("ByeBye");
     }
 
@@ -566,12 +638,18 @@ public class BasicBehaviour implements MQTTSubscriberCallbackInterface {
     }
 
     private void lightShow() {
+        /*try {
+            Thread showThrad = new Thread(new Runnable() {
+                @Override
+                public void run() {*/
+
         try {
             mQTTConnectionManager.publishToItem(Constants.MQTTTopics.Shutter.MAIN_SHUTTER_1, "DOWN");
             mQTTConnectionManager.publishToItem(Constants.MQTTTopics.Shutter.MAIN_SHUTTER_2, "DOWN");
             mQTTConnectionManager.publishToItem(Constants.MQTTTopics.Shutter.MAIN_SHUTTER_3, "DOWN");
             Thread.sleep(6000);
 
+            sonos.setMute(false);
             sonos.setVolume(70);
             sonos.setBass(7);
             sonos.playUri("x-file-cifs://192.168.0.10/Medialib/Audio/Pepper/NEFFEX-Unstoppable.mp3", null);
@@ -627,7 +705,7 @@ public class BasicBehaviour implements MQTTSubscriberCallbackInterface {
                 public void run() {
                     isPlaying = false;
                 }
-            }, 23000);
+            }, 20000);
 
             while (isPlaying) {
                 mQTTConnectionManager.publishToItem(Constants.MQTTTopics.Lights.TVRoom.HUE_1_COLOR, rand + ",100,100");
@@ -722,11 +800,26 @@ public class BasicBehaviour implements MQTTSubscriberCallbackInterface {
             mQTTConnectionManager.publishToItem(Constants.MQTTTopics.Shutter.MAIN_SHUTTER_1, "UP");
             mQTTConnectionManager.publishToItem(Constants.MQTTTopics.Shutter.MAIN_SHUTTER_2, "UP");
             mQTTConnectionManager.publishToItem(Constants.MQTTTopics.Shutter.MAIN_SHUTTER_3, "UP");
+            
+            Thread.sleep(4000);
         } catch (InterruptedException | IOException | SonosControllerException ex) {
             log(Level.SEVERE, ex);
             Logger.getLogger(BasicBehaviour.class.getName()).log(Level.SEVERE, null, ex);
         }
+        
+        
+        
+        resumeGoodby();
 
+        //}
+        /* });
+            showThrad.start();
+            showThrad.join();
+            
+            
+        } catch (InterruptedException ex) {
+            Logger.getLogger(BasicBehaviour.class.getName()).log(Level.SEVERE, null, ex);
+        }*/
     }
 
     /*private void startRedBallTracker() {
@@ -747,7 +840,6 @@ public class BasicBehaviour implements MQTTSubscriberCallbackInterface {
             Logger.getLogger(BasicBehaviour.class.getName()).log(Level.SEVERE, null, ex);
         }
     }*/
-
     private void stateMachine(String step) {
         try {
             switch (step) {
@@ -769,24 +861,17 @@ public class BasicBehaviour implements MQTTSubscriberCallbackInterface {
                     dialog.subscribe(Constants.APP_NAME);
                     //dialog.forceInput("xxx");
                     dialog.forceOutput();
-                    dialog.forceOutput();
+                    //dialog.forceOutput();
                     System.out.println("Subscribe dialog");
                     break;
 
                 case Constants.Steps.STEP_END:
-                    //memory.unsubscribeToEvent(speechRecognitionId);
-                    //speechRecognition.pause(true);
-                    //speechRecognition.unsubscribe(Constants.APP_NAME);
-                    //speechRecognition.removeAllContext();
-                    mQTTConnectionManager.disconnect();
+                    //mQTTConnectionManager.disconnect();
                     dialog.unsubscribe(Constants.APP_NAME);
                     dialog.deactivateTopic(topic);
                     dialog.unloadTopic(topic);
-                    //dialog.resetAll();
-                    //speechRecognition.stop(0);
-                    //speechRecognition.exit();
                     //motion.rest();
-                    application.stop();
+                    //application.stop();
                     break;
             }
         } catch (Exception ex) {
@@ -797,16 +882,18 @@ public class BasicBehaviour implements MQTTSubscriberCallbackInterface {
     public void onTouchEnd(Float value) {
         System.out.println(Constants.APP_NAME + " : Touch " + value);
         if (value == 1.0) {
-                //tracker.stopTracker();
-                //tracker.unregisterAllTargets();
-                stateMachine(Constants.Steps.STEP_END);
+            //tracker.stopTracker();
+            //tracker.unregisterAllTargets();
+            stateMachine(Constants.Steps.STEP_END);
         }
     }
 
-    public void onPlayMusic(String title) throws IOException, SonosControllerException {
-        System.out.println(Constants.APP_NAME + " : onPlayMusic " + title);
+    public void onPlayMusic(String url) throws IOException, SonosControllerException {
+        System.out.println(Constants.APP_NAME + " : onPlayMusic " + url);
+        String[] splittedParts = url.split("/");
+        sonos.setMute(false);
         sonos.setVolume(50);
-        sonos.playUri("x-file-cifs://192.168.0.10/Medialib/Audio/Pepper/" + title, title);
+        sonos.playUri(url, splittedParts[splittedParts.length - 1]);
     }
 
     @Override
@@ -842,13 +929,92 @@ public class BasicBehaviour implements MQTTSubscriberCallbackInterface {
 
                 break;
             default:
-        {
+
+                try {
+                    memory.insertData(item, value);
+                } catch (CallError | InterruptedException ex) {
+                    Logger.getLogger(BasicBehaviour.class.getName()).log(Level.SEVERE, null, ex);
+                }
+
+        }
+    }
+
+    public void onOpenUrl(String url) {
+        try {
+            boolean isUrlLoaded = tabletService.loadUrl(url);
+            log("onOpenUrl_isUrlLoaded: " + isUrlLoaded);
+            boolean isShowWebview = tabletService.showWebview();
+            log("onOpenUrl_isShowWebview: " + isShowWebview);
+        } catch (CallError | InterruptedException ex) {
+            Logger.getLogger(BasicBehaviour.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    public void onRightHandTouched(Float touch) {
+        if (touch == 1.0) {
+            System.out.println("right hand touched");
             try {
-                memory.insertData(item, value);
+                List<String> loadedTopics = dialog.getAllLoadedTopics();
+                if (loadedTopics.isEmpty()) {
+                    loadTopic("/home/nao/Questions.top");
+                } else {
+                    dialog.unsubscribe(Constants.APP_NAME);
+                    dialog.deactivateTopic(topic);
+                    dialog.unloadTopic(topic);
+                }
             } catch (CallError | InterruptedException ex) {
                 Logger.getLogger(BasicBehaviour.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
+    }
+    
+    public void onTakePicture(String value){
+        try {
+            photoCapture.setResolution(resolution);
+            photoCapture.setCameraID(topCamera);
+            photoCapture.setPictureFormat("jpg");
+            photoCapture.setColorSpace(colorspace);
+            String pictureName = "Picture_" + new Date().getTime();
+            List<Object> images = (List<Object>) photoCapture.takePicture("/home/nao/.local/share/PackageManager/apps/img/html", pictureName);
+            log("obj: " + images.get(0));
+            tabletService.showImage("http://198.18.0.1/apps/img/" + pictureName + ".jpg");
+  
+            /*try {
+            byte[] rawData = takePicture();
+            Picture picture = Util.toPicture(rawData);
+            System.out.println("Picture filename: " + picture.getFilename());
+            } catch (Exception ex) {
+            Logger.getLogger(BasicBehaviour.class.getName()).log(Level.SEVERE, null, ex);
+            }*/
+        } catch (CallError ex) {
+            Logger.getLogger(BasicBehaviour.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (InterruptedException ex) {
+            Logger.getLogger(BasicBehaviour.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
+    
+    private byte[] takePicture() throws Exception {
+        moduleName = video.subscribeCamera("demoAndroid", topCamera, resolution, colorspace, frameRate);
+        System.out.format("subscribed with id: %s", moduleName);
+
+        List<Object> image = (List<Object>) video.getImageRemote(moduleName);
+        for (int i = 0; i<image.size(); i++){
+            System.out.println(image.get(i));
+        }
+        ByteBuffer buffer = (ByteBuffer)image.get(6);
+        byte[] rawData = buffer.array();
+        video.unsubscribe(moduleName);
+        boolean released = video.releaseImage(moduleName);
+        System.out.println("released: " + released);
+        return rawData;
+}
+
+    private void putHeadUp() {
+        try {
+            motion.angleInterpolationWithSpeed("Head", new ArrayList<>(Arrays.asList(0.0f, -0.3f)), 0.3f);
+        } catch (CallError | InterruptedException ex) {
+            Logger.getLogger(BasicBehaviour.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
@@ -876,6 +1042,29 @@ public class BasicBehaviour implements MQTTSubscriberCallbackInterface {
 
     public boolean isIsFullConcierge() {
         return isFullConcierge;
+    }
+    
+    public void rebootRobot(){
+        try {
+            system.reboot();
+            System.exit(0);
+        } catch (CallError | InterruptedException ex) {
+            Logger.getLogger(BasicBehaviour.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
+    public void shutdownRobot(){
+        try {
+            system.shutdown();
+            System.exit(0);
+        } catch (CallError | InterruptedException ex) {
+            Logger.getLogger(BasicBehaviour.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
+    private void disconnectAll(){
+        mQTTConnectionManager.disconnect();
+        application.stop();
     }
 
 }
