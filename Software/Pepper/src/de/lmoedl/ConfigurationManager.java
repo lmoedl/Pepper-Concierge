@@ -21,7 +21,7 @@ public class ConfigurationManager {
     
     public void loadConfigFile(String fileName){
         String json = readConfigFile(fileName);
-        if (json != null) {
+        if (!json.equals("")) {
             parseJson(json);
         }
     }

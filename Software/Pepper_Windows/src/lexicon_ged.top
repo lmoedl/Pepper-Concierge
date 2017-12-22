@@ -1,0 +1,375 @@
+topic: ~lexicon()
+language: ged
+
+#pronunciation:(I) [i]
+
+dynamic:robotname
+dynamic:all_descriptions
+dynamic:all_languages
+dynamic:myrobotname
+
+dynamic:app-name
+dynamic:app-dance
+dynamic:app-game
+dynamic:app-story
+
+#==================================================================#
+##### Voice tweaking #####
+#concept:(neutral) \style=neutral\ \rspd=100\ \vct=110\
+#concept:(neutral_slow) \style=neutral\ \vct=105\ \rspd=100\
+#concept:(joyful) \style=joyful\ \rspd=90\ \vct=95\
+#concept:(didactic) \style=didactic\ \rspd=105\ \vct=110\
+#==================================================================#
+
+#==================================================================#
+##### Verbs #####
+#------------------------------------------------------------------#
+concept:(möchte) ["[möchte will "würde [sehr liebend]"] gerne"]
+#==================================================================#
+
+#==================================================================#
+##### 1rst person verbs #####
+#------------------------------------------------------------------#
+concept:(Ich_bin) ["Ich bin" "Mein Name ist"]
+concept:(Ich_habe) ["Ich habe" "Ich hab"]
+concept:(Ich_werde) ["Ich werde"]
+concept:(Ich_wuerde) ["Ich würde {gerne}"]
+concept:(Ich_bin_nicht) ["Ich bin nicht" "Bin nicht"]
+concept:(Ich_habe_nicht) ["Ich habe nicht" "Ich hab nicht" "Das hab ich nicht" "Das habe ich nicht"]
+concept:(Ich_tue_nicht) ["Ich tue nicht" "Das machte ich nicht" "Das tue ich nicht"]
+concept:(Ich_werde_nicht) ["Ich werde nicht" "Das werde ich nicht" "Ich möchte das nicht"]
+concept:(Ich_wuerde_nicht) ["Ich würde das nicht" "Würde das nicht"]
+concept:(Ich_muss) ["Ich muss"]
+concept:(Ich_will) ["Ich will" "Ich beabsichitge" "Ich wünsche"]
+concept:(Ich_moechte_nicht) ["Ich möchte nicht" "Möchte [lieber] nicht"]
+concept:(Ich_moechte) ["Ich möchte" "Ich möchte [sehr] gerne" "Liebend gerne"]
+concept:(Wir_sind) ["Wir sind"]
+concept:(Wir_sind_nicht) ["Wir sind nicht"]
+
+#------------------------------------------------------------------#
+##### 2nd person verbs #####
+#------------------------------------------------------------------#
+concept:(Du_bist) ["Du bist"]
+concept:(Du_warst) ["Du warst"]
+concept:(Du_hast) ["Du hast"]
+concept:(Du_wirst) ["Du wirst"]
+concept:(Du_bist_nicht) ["Du bist nicht" "Bist du nicht"]
+concept:(Du_hast_nicht) ["Du hast nicht" "Das hast du nicht"]
+concept:(Du_warst_nicht) ["Du warst das nicht" "Das warst du nicht"]
+concept:(Du_wirst_nicht) ["Du wirst nicht" "Das wirst du nicht"]
+
+#------------------------------------------------------------------#
+##### 3rd person verbs #####
+#------------------------------------------------------------------#
+concept:(es) [es "[das] {Ding hier}"] 
+#concept:(es_ist) ["es ist" "das ist" "[es das]" "{"Für meine Begriffe" "Meiner Auffassung nach" "Meines Erachtens nach" "Ohne Zweifel"}" ["ist es" "ist das"]]"
+concept:(es_ist_nicht) ["Das ist es nicht" "Das war es nicht" "Das wars nicht"]
+#==================================================================#
+
+#==================================================================#
+##### Other verbs #####
+#------------------------------------------------------------------#
+concept:(vb_imp_sprechen) "sprich nicht {"mit mir"} {über}"
+concept:(vb_imp_plaudern) "plauder nicht {"mit mir"} {über}"
+concept:(vb_imp_sagen) "Sag mir nicht {darüber}"
+concept:(vb_imp_diskutieren) "Diskutier das nicht mit mir"
+concept:(vb_imp_lästern) "Läster nicht {"darüber"}"
+concept:(verbs_imp_talk) [~vb_imp_sprechen ~vb_imp_plaudern ~vb_imp_sagen ~vb_imp_diskutieren ~vb_imp_lästern]
+concept:(Erzähl_mir) ["Erzähl mir" "Erzähls mir"]
+#==================================================================#
+
+#==================================================================#
+##### Adjectives and adverbs #####
+#------------------------------------------------------------------#
+concept:(verlangen) [
+    "[begierig sehnen] nach"
+    "bessesen von"
+    "fiebern nach"
+    "brenne auf"
+]
+concept:(groß) [groß enorm bedeutsam bedeutend gewichtig]
+concept:(klein) [klein winzig marginal gering kaum überschaubar]
+concept:(Groesse) [~groß ~klein]
+#------------------------------------------------------------------#
+concept:(adverbs) [wirklich unbedingt völlig wirklich tierisch absolut perfekt ungern zu besonders derart genauso bis sehr kaum ziemlich]
+#==================================================================#
+
+#==================================================================#
+##### Vocabulary #####
+#------------------------------------------------------------------#
+concept:(apps_sing) [application app activity programm software]
+concept:(apps_plur) [applications apps activities programe software]
+concept:(Monate) [Januar Februar März April Mai Juni Juli August September Oktober November Dezember]
+concept:(über) [über]
+#------------------------------------------------------------------#
+concept:(Tage) [Montag Dienstag Mittwoch Donnerstag Freitag Samstag Sonntag]
+#==================================================================#
+
+#==================================================================#
+##### Questions to the robot #####
+#------------------------------------------------------------------#
+concept:(Hast_du) ["Hast du"]
+concept:(Magst_du) [
+    "Magst du"
+    "Was denkst du darüber"
+    "Verstehst du das"
+    "Wie gehts ["geht es"] dir"
+]
+concept:(Weisst_du) ["Weißt du [wer was] das ist" "Hast du [davon] gehört"]
+concept:(Kannst_du) [
+    "[Kannst würdest könntest möchtest] du {bitte}"
+    "Denkst du du kannst das"
+    "Bist du bereit"
+    "Weißt du wie"
+    "Was kannst du"
+]
+concept:(Bist_du) ["Bist du"]
+concept:(Warst_du) ["Warst du"]
+concept:(Wo_bist_du) ["Wo bist du" "Weiß du wo du bist"]
+concept:(Wer_bist_du) ["Wer bist du" "Weiß du wer du bist" "Du bist wer"]
+concept:(Was_ist) [
+    "Erzähl mir" "Was ist das"
+    "Was ist das"
+    "Was sind"
+    "Was war"
+]
+concept:(Wer_ist) [
+    "{"Weißt du" "Kannst du mir sagen"} wer [das ist]"
+    ["Weißt du"]
+]
+concept:(Wo_ist) ["Wo ist" "Wo kann ich das finden"]
+concept:(Kann_ich) [
+    "[Kann könnte] [ich]"
+    "Würde es dir was ausmachen wenn ich"
+    "Ist es möglich [dass "dass ich"]"
+]
+concept:(Wie_heisst_du) [
+    "Wie heißt du"
+    "wie [darf kann] ich dich nennen"
+    "Erzähl mir wer du bist"
+    "Wer bist du"
+]
+concept:(Wie_ist_der_hallo) [
+    "Wie lautet der [Name Titel]"
+    "Wie lautet [ihr sein der] [Name Titel]"
+]
+concept:(Ueber_was_geht_es) [
+    "Worüber geht es"
+    "Was [erzählst sagst] du"
+    "Worum geht es {"in der [Diskussion Konversation]"}"
+]
+concept:(Wie_viel_ist) [
+    "Wie viel ["kostet das" "ist das wert"]"
+]
+#------------------------------------------------------------------#
+
+#------------------------------------------------------------------#
+##### Orders to the robot #####
+#------------------------------------------------------------------#
+concept:(helfen) [
+    "{"Würdest" "Kannst du"} mir helfen {bitte}"
+"Kannst du mir {einige} Informationen geben"
+    "Ich brauche [Informationen Details Hilfe]"
+]
+
+concept:(stoppen) [
+    stopp
+    "hör auf"
+    "["Kannst du" "Könntest du"] {bitte} ["leise sein" aufhören]"
+    "fuck off"
+    "sei leise"
+]
+concept:(stop_it) ~stoppen
+concept:(wieder_sprechen) [
+    "Sprich mit mir"
+    "{"Du kannst"} wieder ["mit mir"] sprechen"
+]
+
+concept:(stop_application) [
+    "[stopp schließ verlasse] [die das den] [Software App Applikation Anwendung Programm Dialog]"
+    "stoppe das"
+    "Das reicht"
+]
+concept:(restart_application) [
+    "[restart "starte wieder" reboot replay] [die das den] [Software App Applikation Anwendung Programm Dialog]"
+    "Geh wieder zum [Anfang Start]"
+    "Zurück bitte"
+]
+concept:(Wiederholen) [
+    "Wiederhole {mir} [deine die] {letzte} Frage"
+    "Was war die letzte Frage"
+    "Wiederhole ["den Satz" "deinen letzten Satz" "Was hast du eben gesagt"] {wieder} {bitte}"
+    "Sag es mir wieder"
+    "Was [war ist] die Frage"
+    "Was ["hast du" [gesagt gefragt]]"
+    "Stell die Frage noch einmal"
+    "Wiederhole [das bitte]"
+    "[Sag Frage] {das} nochmal"
+    "Kannst du [das die [Animation Bewegung Ding Sound Geräusch]]" nochmal machen" {bitte}"
+]
+concept:(stop_talking) [~vb_imp_sprechen ~vb_imp_plaudern ~vb_imp_sagen ~vb_imp_diskutieren ~vb_imp_lästern "stop talking"]
+concept:(lets_talk_about) [sprechen "sprich mit mir"]
+concept:(come_to_me) [
+    "[Komm lauf] [hier näher] ["zu mir"]"
+]
+concept:(show_me) [
+"Zeig {ihm ihr mir uns ihnen denen}"
+"Kannst dus {ihm ihr mir uns ihnen denen} zeigen"
+"Kann ich das sehen"
+]
+#==================================================================#
+
+#==================================================================#
+##### Human inputs #####
+#------------------------------------------------------------------#
+concept:(hallo) ^rand[
+    Hallo Hey Hi Morgen Mahlzeit
+    "hey ihr"
+    "{Guten} [Morgen Mittag Abend]"
+]
+concept:(thank_you) [
+    "Vielen Dank"
+    "Danke Dir"
+]
+concept:(i_dont_know) [
+    "Ich weiß nichts {darüber über}"
+    "Ich weiß gar nichts"
+    "Was ist das"
+    "Ich weiß [es] nicht"
+    "Davon habe ich noch nie gehört"
+]
+concept:(i_didnt_understand) [
+    "{Sorry} Ich habe dich nicht verstanden"
+    "Das habe ich nicht verstanden"
+"Was ist [das "das hier"]"
+"Was meinst du [wolltest du sagen]"
+    "Was versucht du zu sagen"
+    "Das macht keinen Sinn"
+]
+concept:(you_didnt_understand) [
+    "Du verstehst kein Wort von dem was ich sage"
+"Du hast es nicht verstanden"
+    "Du liegst falsch"
+    "Da liegst du falsch"
+]
+concept:(im_not_sure) [
+    "Ich bin mir da nicht sicher"
+    "Weiß [ich] nicht"
+    "Bin mir nicht sicher"
+    "keine Idee"
+]
+concept:(its_not_true) [
+    "Das stimmt [so] nicht"
+    "Das ist nicht wahr"
+]
+concept:(its_a_stupid_question) [
+    "Das ist {wirklich} eine {komplett wahrhaft} [dumme idiotische uninteressante] Frage"
+]
+concept:(schaetzen) [
+    rate schätze vermute rate
+    "was denkst du"
+    "was rätst du mir"
+    "Was würdest du mir empfehlen"
+    "Wie lautet dein Rat"
+]
+concept:(Ich_denke) [
+    "Ich denke"
+    "Ich schätze"
+    "Ich bin mir sicher"
+    "natürlich"
+    "meine Antwort ist"
+    "das ist"
+    "das war"
+    "es könnte sein"
+    "ich würde [sagen schätzen antworten]"
+]
+concept:(ich_werde_versuchen) [
+    "Lass es uns versuchen"
+    "Das werde ich versuchen"
+]
+#------------------------------------------------------------------#
+concept:(Ja) ^rand[
+    "{oh} [Ja Jep Jap Yeah] {Bitte "ich auch"}"
+    "[ok okay] {sicher "warum nicht"}"
+    gut
+    richtig
+    nagut
+    "alles klar"
+    super
+    natürlich
+    "sicher {"Das mache ich"}"
+    "Los gehts"
+    "Du liegst richtig"
+    perfekt
+    "warum nicht"
+    absolut
+    total
+    definitiv
+    "{Ja Jep Jap Yeah} Das wäre super"
+    "Wenn du magst"
+    "Kein Problem"
+    "[super exzellente] Idee"
+    exakt
+]
+#------------------------------------------------------------------#
+concept:(Nein) ^rand[
+    "[Nein Nope Nah Nö Ne No "Nix {da}"] {Danke}"
+    "no {fucking} way"
+    "{Nein} nicht wirklich"
+    "Das interessiert mich nicht"
+    "{Nein} ["Das möchte ich nicht"]"
+    "Ich bin mir da nicht sicher"
+    "Das sehe ich nicht so"
+    "Das ist falsch"
+    "Nicht wirklich"
+    "Auf keinen Fall"
+]
+#------------------------------------------------------------------#
+##### Human mood #####
+#------------------------------------------------------------------#
+concept:(Mir_gehts_gut) [
+    "Mir ["geht es" gehts] [sehr absolut auch] gut"
+    "nicht schlecht"
+    "Ich fühle mich fit"
+    super
+    perfekt
+    läuft
+    "{sehr} gut {danke}"
+    "hey yeah Mir geht es gut"
+    "geht gut"
+    "auch gut"
+]
+concept:(Mir_gehts_schlecht) [
+    "Mir geht es nicht so gut"
+    "Ich bin nicht in der besten Verfassung"
+    "Ging schon mal besser"
+    "nicht {sehr so} gut"
+    "passt schon"
+    "Geht so"
+]
+#==================================================================#
+
+#==================================================================#
+##### Sonstiges #####
+concept:(happy_human) [wundervoll exzellent super "das ist {wirklich} cool" "das ist [super gut wundervoll awesome]" "Du bist {wirklich sehr} nett"]
+#==================================================================#
+concept:(what_were_you_saying) [
+    "Was war [die deine] Frage"
+    "Über was [redest plauderst sprichst] du"
+]
+
+
+
+#==================================================================#
+##### DEPRECATED #####
+#------------------------------------------------------------------#
+concept:(Raueme) [Küche Badezimmer Toilette Wohnzimmer Schlafzimmer Flur Hausgang Kinderzimmer Fernsehrraum]
+#------------------------------------------------------------------#
+
+concept:(myname)[
+    "Mein Name ist"
+    "Nenn mich"
+    "Mich kennt man als"
+]
+
+
