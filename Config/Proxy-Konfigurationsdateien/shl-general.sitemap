@@ -1,0 +1,3 @@
+sitemap shl-general label="Smart-Home-Labor - OpenHAB-Proxy" {
+	Group item=AlleDinge label="Alle Smart-Home-Geräte"
+}
