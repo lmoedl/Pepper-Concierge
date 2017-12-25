@@ -1,0 +1,55 @@
+\documentclass[10pt,a4paper]{article}
+\usepackage[ngerman]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage{xspace}
+\usepackage[T1]{fontenc}
+\usepackage[pdftex]{graphicx}
+
+\title{Testfälle}
+\begin{document}
+
+\maketitle
+
+\section{Allgemeines zu Beachten}
+\begin{itemize}
+	\item Alle fertigen Daten liegen auf dem Master-Branch
+	\item Die vollständigen Pepper\_Full.jar-Dateien liegen im jeweiligen Projektordner für das jeweilige Betriebssystem (z.B. Pepper\_Windows) im Ordner \glqq store\grqq. 
+	\item Die Pepper\_Full.jar- und concierge.conf-Datei müssen im gleichen Ordner liegen.
+	\item Log-Dateien werden im gleichen Ordner erzeugt, wo die .jar-Datei liegt
+	\item Log-Dateien müssen eindeutig gekennzeichnet werden, welchen Testfall sie abdecken. Die *.log.lck-Dateien können ignoriert/gelöscht werden (Keine Ahnung, warum die automatisch angelegt werden)
+	\item Labor für die Tour vorbereiten (z.B. Stühle an den Tisch schieben, Fensterbänke freiräumen, ...)
+	\item Falls Pepper den Weg zur geplanten Stelle nicht findet, schiebe ihn an die richtige Stelle, um nach den Tests eine einigermaßen verlässliche Aussage treffen zu können, wie oft Pepper im Durchschnitt bei einer Tour nicht die richtige Stelle findet
+
+\end{itemize}
+
+\section{Testfälle}
+\subsection{Menüführung}
+\begin{enumerate}
+	\item Komplette Tour mindestens 15-20 mal testen und dokumentieren, wie oft Pepper das geplante Ziel nicht gefunden hat
+	\item Jeden Raum mindestens einmal separat testen (darauf achten, dass die Ausgabe im Menü bei Punkt 0 folgende ist: \glqq 0) Fortfolaufende Tour ab ... starten: \textbf{false}\grqq\xspace
+	\item Die verbleibende Tour ab jedem Raum mindestens einmal testen. Darauf achten, dass die Ausgabe im Menü bei Punkt 0 folgende ist: \glqq 0) Fortfolaufende Tour ab ... starten: \textbf{true}\grqq\xspace
+	\item Smart Home Labor auf Ausgangseinstellungen setzen einmal manuell testen
+	
+\end{enumerate}
+
+\subsection{Konfigurations-Datei}
+Diese Testfälle betreffen die Abänderung der concierge.conf-Datei. Nach einer Änderung in der Konfigurationsdatei muss die Anwendung neu gestartet werden. 
+\begin{enumerate}
+	\item Den Wert von \glqq debug\grqq\xspace auf true/false ändern und jeweils die Tour erneut testen
+	\item Den Wert von \glqq headless\grqq\xspace auf true/false ändern\\
+	\textbf{Achtung:} Im Headless-Mode wird kein Menü ausgegeben und es kann nur die komplette Tour durch berühren des Kopfes von Pepper gestartet werden!
+\end{enumerate}
+
+\subsection{Allgemeine Testfälle}
+\begin{enumerate}
+	\item Die komplette Tour und Einzelteile der Tour ohne Neustart der Anwendung mehrfach durchführen
+	\item Die komplette Tour durch berühren von Peppers Kopf starten (mit headless: false)
+	\item Die komplette Tour durch berühren von Peppers Kopf erneut starten, ohne Neustart der Anwendung (im Headless-Mode)
+	\item concierge.conf-Datei weglassen
+	\item Sprachsteuerung von Pepper testen (Fragestunde am Ende einer Führung, vor der Abschlussshow)\\
+	Möglichst wie mit einem normalen Menschen sprechen. Fall
+	\item Reboot von Pepper über das Menü testen
+	\item Herunterfahren von Pepper über das Menü testen
+\end{enumerate}
+
+\end{document}
