@@ -261,7 +261,6 @@ public class BasicBehaviour implements MQTTSubscriberCallbackInterface {
         List<Float> old = motion.getRobotPosition(false);
         success = (boolean) motion.call("moveTo", 5.4f, 0f, 0f).get();
         log("startConcierge_\"moveTo\", 5.4f, 0f, 0f_" + success);
-        System.out.println(success);
 
         success = (boolean) motion.call("moveTo", 0f, 0f, new Float(Math.toRadians(180))).get();
 
