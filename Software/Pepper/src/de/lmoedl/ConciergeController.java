@@ -102,7 +102,7 @@ public class ConciergeController {
     private void printMenue() {
         System.out.println("Bitte eine Zahl für die entsprechende Funktion eingeben");
         System.out.println("-------------------------------------------------------");
-        System.out.println("0) Fortfolaufende Tour ab ... starten: " + basicBehaviour.isIsFullConcierge());
+        System.out.println("0) Fortlaufende Tour ab ... starten: " + basicBehaviour.isIsFullConcierge());
         System.out.println("1) Komplette Tour starten");
         System.out.println("2) Begrüßung und allgemeine Informationen starten");
         System.out.println("3) TV Raum starten");

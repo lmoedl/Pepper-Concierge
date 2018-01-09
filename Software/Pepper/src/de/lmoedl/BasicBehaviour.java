@@ -170,8 +170,7 @@ public class BasicBehaviour implements MQTTSubscriberCallbackInterface {
         motion.setWalkArmsEnabled(Boolean.TRUE, Boolean.TRUE);
 
         tabletService.enableWifi();
-        tabletService.hideWebview();
-        tabletService.hideImage();
+
 
         motion.setOrthogonalSecurityDistance(0.15f);
         motion.wakeUp();
@@ -181,7 +180,6 @@ public class BasicBehaviour implements MQTTSubscriberCallbackInterface {
         memory.subscribeToEvent("SubscribeMQTTTopic", "onSubscribeMQTTTopic::(s)", this);
         memory.subscribeToEvent("UnsubscribeMQTTTopic", "onUnsubscribeMQTTTopic::(s)", this);
         memory.subscribeToEvent("GetValue", "onGetValue::(s)", this);
-        memory.subscribeToEvent("UnsubscribeMQTTTopic", "onUnsubscribeMQTTTopic::(s)", this);
         memory.subscribeToEvent("PublishMQTTMessage", "onPublishMQTTMessage::(s)", this);
         memory.subscribeToEvent("SpeechRecognitionOff", "onSpeechRecognitionOff::(s)", this);
         memory.subscribeToEvent("OpenUrl", "onOpenUrl::(s)", this);
@@ -224,7 +222,10 @@ public class BasicBehaviour implements MQTTSubscriberCallbackInterface {
         resetEnvironment();
     }
 
-    public void resetEnvironment() {
+    public void resetEnvironment() throws CallError, InterruptedException, IOException, SonosControllerException {
+        tabletService.hideWebview();
+        tabletService.hideImage();
+        sonos.pause();
         mQTTConnectionManager.publishToItem(Constants.MQTTTopics.Shutter.INDOOR_SHUTTER_1, "UP");
         mQTTConnectionManager.publishToItem(Constants.MQTTTopics.Shutter.INDOOR_SHUTTER_2, "UP");
         mQTTConnectionManager.publishToItem(Constants.MQTTTopics.Shutter.INDOOR_SHUTTER_3, "UP");
@@ -361,7 +362,7 @@ public class BasicBehaviour implements MQTTSubscriberCallbackInterface {
 
     public void onGetValue(String mqttTopic) throws CallError, InterruptedException {
         String[] res = connectionManager.openHabGetRequest(mqttTopic, "state");
-        log("onSubscribeMQTTTopic_" + res[0] + " " + res[1]);
+        log("onGetValue_" + res[0] + " " + res[1]);
         if (res != null) {
             memory.insertData(res[0], res[1]);
         }
@@ -405,13 +406,13 @@ public class BasicBehaviour implements MQTTSubscriberCallbackInterface {
             dialog.forceOutput();
 
             //if (!Constants.Config.DEBUG) {
-                //animationPlayer.run("animations/Stand/Waiting/FunnyDancer_1");
+                animationPlayer.async().run("animations/Stand/Waiting/FunnyDancer_1");
                 lightShow();
             //}
 
             //if (Constants.Config.DEBUG) {
             //    System.out.println("resumeGoodby debug: " + Constants.Config.DEBUG);
-                resumeGoodby();
+                //resumeGoodby();
             //}
 
             /*new Timer().schedule(new TimerTask() {
@@ -969,6 +970,7 @@ public class BasicBehaviour implements MQTTSubscriberCallbackInterface {
     
     public void onTakePicture(String value){
         try {
+            putHeadUp();
             photoCapture.setResolution(resolution);
             photoCapture.setCameraID(topCamera);
             photoCapture.setPictureFormat("jpg");

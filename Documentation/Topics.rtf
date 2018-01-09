@@ -1,0 +1,228 @@
+{\rtf1\ansi\ansicpg1252\cocoartf1561\cocoasubrtf200
+{\fonttbl\f0\fswiss\fcharset0 Helvetica;}
+{\colortbl;\red255\green255\blue255;}
+{\*\expandedcolortbl;;}
+\paperw11900\paperh16840\margl1440\margr1440\vieww10800\viewh8400\viewkind0
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardirnatural\partightenfactor0
+
+\f0\b\fs28 \cf0 Welcome.top
+\b0\fs24 \
+\
+topic: ~welcome()\
+language: ged\
+\
+u:(xxx) Herzlich Willkommen im Smart Home Labor der Hochschule Furtwangen.\
+proposal: Mein Name ist $Dialog/RobotName . Ich stehe euch f\'fcr eine F\'fchrung zur freien Verf\'fcgung. Bitte folgt mir!\
+\
+
+\b\fs28 General.top
+\b0\fs24 \
+\
+topic: ~general()\
+language: ged\
+\
+proposal:  Zuerst ein paar allgemeine Informationen zum Labor. Eingerichtet wurde es mit dem Ziel Smart Home Komponenten im Kontext einer Wohnung zu erforschen. Dabei wird ein besonderes Augenmerk auf die Interaktion der Ger\'e4te untereinander und die Entwicklung weitere Jus Cases sowie deren ausf\'fchrliches testing gelegt. Es besteht die M\'f6glichkeit Komponenten \'fcber das Netzwerk fern zu steuern und auch deren Status abzufragen. Auf einer Fl\'e4che von 8 mal 12 Metern sind hierzu vier R\'e4ume angelegt mit insgesamt weit \'fcber 100 Smart Home Ger\'e4ten angefangen bei intelligenten Lampen bis hin zur Smart Waschmaschine. Weiter geht es nun in den ersten Raum, den TV-Raum. Bitte folgt mir auff\'e4llig.\
+\
+
+\b\fs28 TVRoom.top
+\b0\fs24 \
+\
+topic: ~tvroom()\
+language: ged\
+\
+proposal: Hier befinden wir uns nun im Fernsehzimmer. Puh... Ist euch auch so warm wie mir? ^start(dialog_move_head/animations/LookLeft) ^start(dialog_move_arms/animations/UpLArm) ^start(dialog_move_arms/animations/StretchLArm) Ich komme leider nicht an das Fenster heran. K\'f6nnte einer mir bitte helfen und ein Fenster \'f6ffnen?\
+\
+proposal: ^run(animations/Stand/Waiting/MysticalPower_1) Ist das nicht wundervoll? Durch das \'d6ffnen der Fenster werden automatisch hier im Raum die Lampen aktiviert. Sobald das Fenster wieder geschlossen wird, geht das Licht wieder aus. K\'f6nnte einer das Fenster bitte wieder schlie\'dfen? \
+\
+proposal: Sehr gut, das Fenster ist wieder geschlossen. Jetzt m\'f6chte ich aber noch in Ruhe eine Runde Nied for spied spielen.\
+\
+proposal: Aaahhh... das war geil! Zum Schutz der Privatsf\'e4hre kann man auch die Scheiben undurchsichtig ^pCall(ALMemory.raiseEvent("PublishMQTTMessage", "HMScheibentransparenz1_1_State;OFF")) machen.\
+proposal: Jetzt sind wir aber fertig hier. Macht etwas Platz f\'fcr mich, jetzt geht es weiter in das Arbeitszimmer.\
+\
+\
+
+\b\fs28 WorkingRoom.top
+\b0\fs24 \
+\
+topic: ~workingroom()\
+language: ged\
+\
+proposal: Hier befinden wir uns nun im Arbeitszimmer. An den W\'e4nden seht ihr sogenannte Nao Marks. Ich bin hier auch noch in ein anderes Projekt involviert, bei dem ich als Woter Baddy daf\'fcr sorge, dass vorwiegend \'e4ltere Menschen ausreichend Fl\'fcssigkeit zu sich nehmen. Im Zweifel bringe ich ihnen auch Wasser. Diese Marks erm\'f6glichen es mir mit einfachen Mitteln mich im Raum zu orientieren und meine Position zu bestimmen. Dies ist vor allem zu Beginn von der Entwicklung von Programmen f\'fcr mich von gro\'dfem Nutzen. Zu meiner Linken seht ihr den Ideum Tatsch Teibl, der zum Arbeiten genutzt werden kann. Au\'dferdem arbeitet ein anders Tiem damit, um pseudo 3D Hologramme darzustellen. Hinter den W\'e4nden befindet sich die gesamte Technik f\'fcr die Steuerung aller Ger\'e4te hier im Raum. Jetzt geht es aber weiter in den n\'e4chsten Raum. Bitte macht Platz und lasst mich durch.\
+\
+
+\b\fs28 Bathroom.top
+\b0\fs24 \
+\
+topic: ~bathroom()\
+language: ged\
+\
+proposal: ^pCall(ALMemory.raiseEvent("GetValue", "NAInnenraumsensorBad_Temperature")) ^pCall(ALMemory.raiseEvent("GetValue", "NAInnenraumsensorBad_CO2")) Das ist das Badezimmer. Leider kein stilles \'f6rtchen wie wahrscheinlich bei euch zu Hause, aber trotzdem ein toller Raum. Ja, ihr seht richtig, hier ist keine Toilette, aber als Elektro-Roboter brauche ich auch keinen \'d6lwechsel ^run(animations/Stand/Emotions/Positive/Laugh_1). Hier gibt es aber eine Menge anderer toller Ger\'e4te, die \'fcber das Netzwerk \'fcberwacht und gesteuert werden k\'f6nnen, wie eine Waschmaschine und einen Trockner. Die Temperatur hier im Raum betr\'e4gt ^break ^call(ALMemory.getData("NAInnenraumsensorBad_Temperature")) Grad. Der CO 2 Wert betr\'e4gt ^break ^call(ALMemory.getData("NAInnenraumsensorBad_CO2")) ppm . Jetzt gehen wir auch schon in den letzten Raum, die K\'fcche. Bitte macht den Weg f\'fcr mich frei und folgt mir. \
+    c1:(_*) $1\
+\
+proposal: Halt wartet! Wo ist eigentlich Siri? ^start(dialog_move_head/animations/LookRight) ^wait(dialog_move_head/animations/LookRight) ^start(dialog_move_head/animations/LookLeft) ^wait(dialog_move_head/animations/LookLeft) Ich muss aufpassen, dass mir Siri nicht \'fcber den Weg l\'e4uft. Die ist sauer, weil Alexa immer mit mir flirtet. ^start(animations/Stand/Waiting/Think_1) ^wait(animations/Stand/Waiting/Think_1) Alexa ^start(animations/Stand/Waiting/Think_1) ^wait(animations/Stand/Waiting/Think_1) aktiviere Privatsph\'e4re. ^run(animations/Stand/Waiting/Think_1)\
+\
+proposal: Ok gut, jetzt kann ich unbemerkt in die K\'fcche gehen. Bitte macht den Weg f\'fcr mich frei.\
+\
+\
+
+\b\fs28 Kitchen.top
+\b0\fs24 \
+\
+topic: ~kitchen()\
+language: ged\
+\
+#proposal:  ^pCall(ALMemory.raiseEvent("GetValue", "MieleFridgeFreezer_CurrentTemperatureFridge")) Nun sind wir im wichtigsten Raum der Wohnung angekommen, der K\'fcche. Hier gibt es informatikerfreundlichen starken Kaffee, einen K\'fchlschrank und auch einen intelligenten Herd. Ich k\'f6nnte jetzt nat\'fcrlich den Herd einschalten, aber ich will ja nicht das ganze Labor abfackeln, deshalb teile ich euch nur die Temperatur des K\'fchlschranks mit, welche aktuell ^break ^call(ALMemory.getData("MieleFridgeFreezer_CurrentTemperatureFridge")) Grad betr\'e4gt.\
+proposal: Nun sind wir im wichtigsten Raum der Wohnung angekommen, der K\'fcche. Hier gibt es informatikerfreundlichen starken Kaffee, einen K\'fchlschrank und auch einen intelligenten Herd. Ich k\'f6nnte jetzt nat\'fcrlich den Herd einschalten, aber ich will ja nicht das ganze Labor abfackeln, deshalb teile ich euch nur die Temperatur des K\'fchlschranks mit, welche aktuell ^break ^call(ALMemory.getData("MieleFridgeFreezer_CurrentTemperatureFridge")) Grad betr\'e4gt.\
+    c1:(_*) $1\
+\
+
+\b\fs28 Goodby.top
+\b0\fs24 \
+\
+topic: ~goodby()\
+language: ged\
+\
+\
+proposal: Ich m\'f6chte mich recht herzlich bei euch bedanken, dass ihr die Tour mit mir gemacht habt. Au\'dferdem m\'f6chte ich noch meinen 4 Entwicklern, Caroline Fichtner, Eric Mei\'df, Julian Keller und nat\'fcrlich Lothar M\'f6dl danken, die mir das ganze Semester \'fcber so viele tolle Funktionen beigebracht haben. Wenn ihr nachher den Raum verlasst, w\'fcrde ich mich freuen, wenn ihr die Tour noch auf ^start(animations/Stand/Gestures/ShowTablet_1) meinem Tablet bewerten w\'fcrdet. Jetzt w\'fcnsche ich euch noch viel Spa\'df bei meiner Abschlussschow.\
+proposal: Ich hoffe, es hat euch gefallen und wir sehen uns bald wieder ^start(animations/Stand/Gestures/ShowTablet_1) und bewerten nicht vergessen. Bis bald ^run(animations/Stand/Gestures/Hey_1) \
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+
+\b\fs28 Questions.top
+\b0\fs24 \
+\
+topic: ~questions()\
+language: ged\
+\
+include: lexicon_ged.top\
+\
+proposal: Nun sind wir schon fast am Ende angekommen. Habt ihr noch Fragen? Solltet ihr keine Fragen mehr haben, dann sagt doch einer bitte Ende, damit ich weiter machen kann.\
+\
+u:([e:FrontTactilTouched e:MiddleTactilTouched e:RearTactilTouched]) Autsch, h\'f6r auf mich anzufassen!\
+\
+u:(~Wie_heisst_du) Ich hei\'dfe $Dialog/RobotName , aber da wir Freunde sind, darfst du mich auch Peppi nennen. \
+#Und wie hei\'dft du?    u1:(_*) ~hallo $1 . Freut mich dich kennenzulernen\
+\
+u:(Peppi) Hallo I bims hier.\
+\
+u:(["Was hast du \{davor\} gesagt" ~Wiederholen]) Ich sagte $Dialog/Answered\
+\
+u:(e:Dialog/NotUnderstood) ^rand["Das habe ich jetzt nicht verstanden." "Was laberscht du" ]\
+\
+u:(["Welches Datum" "\{Den\} wie vielten"] haben wir \{heute\}) Heute ist der $Dialog/DateCode\
+\
+u:(["Wie sp\'e4t ist es" "Wie viel Uhr ["ist es" "haben wir"]"]) Es ist jetzt $Dialog/Hour Uhr $Dialog/Minute\
+\
+u:(\{"[Schalte Schalt] das"\} Licht ein) Ok, ich schalte das Licht ein ^pCall(ALMemory.raiseEvent("PublishMQTTMessage", "Multimediawand_HUE6_Toggle;ON")) ^pCall(ALMemory.raiseEvent("PublishMQTTMessage", "Multimediawand_HUE5_Toggle;ON"))\
+u:(\{"[Schalte Schalt] das"\} Licht aus) Ok, ich schalte das Licht aus ^pCall(ALMemory.raiseEvent("PublishMQTTMessage", "Multimediawand_HUE6_Toggle;OFF")) ^pCall(ALMemory.raiseEvent("PublishMQTTMessage", "Multimediawand_HUE5_Toggle;OFF"))\
+\
+u:(In welcher Position bist du) Meine Position ist ^call(ALRobotPosture.getPosture())\
+    c1:(_*) $1  # say any result from call\
+    c1:(crouch) Meine Position ist crouch.\
+\
+u:(~hallo) ~hallo\
+u:(ende) ok ich schalte die sprachsteuerung aus ^pCall(ALMemory.raiseEvent("SpeechRecognitionOff", "OFF"))\
+\
+u:([Erz\'e4hl Erz\'e4hle] \{mir einen\} Witz) Das Gras ist hoch, es ist kaum zu \'fcberblicken, darin kann man gut... Na, wei\'dft du's?\
+    u1:(~nein) Man bist du schlecht. Verstecken spielen nat\'fcrlich\
+    u1:(ficken) Was bist du denn f\'fcr ein Schwein. Verstecken spielen nat\'fcrlich\
+\
+u:(Wie alt bist du) Das wei\'df ich nicht genau, aber denke irgendwas zwischen 1 und 3 Jahre.\
+\
+u:(Wie gro\'df bist du) Ich bin kleiner als du, aber trotzdem ein gro\'dfer Hitzkopf ^run(animations/Stand/Emotions/Positive/Laugh_1)\
+\
+u:([~Bist_du "Ob du"] [dumm behindert] \{[bist bischt] "hab ich dich gefragt"\}) Ich bin eine Maschine, wenn dann bist du dumm, du Penner\
+\
+u:(Wie ["geht es" "gehts"] dir) ^rand[~Mir_gehts_gut "So la la, ein paar Schaltkreise k\'f6nnten mal wieder eine L\'f6tkur gebrauchen"] und dir?\
+    u1:(~Mir_gehts_gut) Das freut mich aber\
+    u1:(~Mir_gehts_schlecht) Oh, warum das?\
+        u2:(*) Das tut mir leid, ich w\'fcnsche dir eine gute Besserung\
+\
+u:(Magst du mich) Das wei\'df ich noch nicht, daf\'fcr m\'fcsste ich dich erstmal besser kennen lernen\
+\
+u:(~Kannst_du [mich mir "die Tour" "die F\'fchrung" nochmal [machen herumf\'fchren zeigen]]) Nat\'fcrlich kann ich das, aber die Zeit dr\'e4ngt und andere m\'f6chten auch noch meine F\'fchrung machen, deshalb w\'fcrde ich das Ganze erstmal vertagen\
+\
+u:(Wie schnell [bist kannst] du \{fahren laufen\}) Schneller als eine Schnecke, aber langsamer als du\
+\
+u:(~Kannst_du [herkommen "zu mir kommen"]) Da muss ich erstmal meine Programmierer fragen. Er hat mir gesagt, ich soll nicht zu nahe an fremde Personen herantreten\
+\
+u:(Wie ["gef\'e4llt es dir" "findest du es"] hier \{so\}) ^rand["Sehr gut, ich f\'fchle mich hier wie Zuhause" "Oh nee, hier komm isch mir vor wie im Omma paradies"]\
+\
+u:(~Kannst_du kochen) Nein, leider nicht, aber du k\'f6nntest ja was f\'fcr mich kochen. Meine Lieblingsspeise ist \'d6kostorm mit ner richtig guten Ladung ^startSound(Aldebaran/enu_ono_laugh_10)\
+\
+u:(["~Bist_du \{ein\} [m\'e4nnlich Mann] oder \{eine\} [weiblich Frau]" Welches Geschlecht [~Bist_du "hast du"]]) Ich habe kein Geschlecht. Ich bin einfach ein liebenswerter Roboter\
+\
+u:(~Kannst_du nicht)  Alles, was mir mein Programmierer verboten hat, wie zum Beispiel putzen\
+\
+u:(Wie viel ["hast du gekostet" "kostest du"]) ^startSound(Aldebaran/enu_ono_laugh_1) Das w\'fcsstest du jetzt gerne, was\
+\
+u:(Hast du Freund) Ja klar! Neben mir gibt es hier im Labor noch einen Pepper und ein paar kleine Nao Freunde hab ich auch noch\
+\
+u:(~Kannst_du fliegen) Leider nur auf die Nase ^startSound(Aldebaran/enu_ono_laugh_2)\
+\
+u:(~Kannst_du mir bei [den meinen] Hausaufgaben helfen) K\'f6nnte ich nat\'fcrlich, aber ich glaube, das gef\'e4llt deinen Lehrern gar nicht\
+\
+u:(["Wie findest du" ~Magst_du] die [HFU Hochschule]) Meeeeeeega geil\
+\
+u:(Rauchst du) Nein, das w\'e4re f\'fcr meine Schaltkreise ziemlich ungesund\
+\
+u:(Wie gro\'df ist das \{"Smart Home"\} Labor) 8 mal 12 Meter\
+\
+u:(Wie [werden "steuerst du"] die Ger\'e4te \{hier gesteuert "hier gesteuert"\}) Alle Ger\'e4te hier werden \'fcber das MQTT Protokoll mit Hilfe eines MQTT Brokers gesteuert. \'dcber die kostenlose Plattform Open Hab kannst du als Mensch auch die Ger\'e4te ganz leicht steuern.\
+\
+u:(Wie viele Ger\'e4te gibt es \{hier "im Labor" "hier im Labor"\}) Mehr als ein Dutzend Gro\'dfger\'e4te und \'fcber 100 Kleinger\'e4te\
+\
+u:(~Kannst_du \{einen\} Kaffee [machen kochen]) Leider noch nicht. Die Kaffeemaschine will noch nicht mit mir reden, aber bald\
+\
+u:(~Magst_du Kaffee) Isch ja ekelhaft, lass mich in Ruhe mit dem Zeug. Meine Entwickler lieben die braune Br\'fche aber\
+\
+u:(Was [spielst zockst] du \{[gerne "am liebsten"]\}) G T A oder Nied for spied nat\'fcrlich\
+\
+u:([~Magst_du "liebst du"] mich) Wenn du lieb zu mir bist, bin ich auch lieb zu dir!\
+\
+u:(* bims) I bims 1 neicer Roboter am bien\
+\
+u:(Vong) ^rand["I bims 1 Roboter vong neisigkeit her sehr hoch" "Mobile Systeme ist 1 Studium vong Masterlevel her sehr hoch" "Wie macht das denn der Daimler vong Fahren her"\
+    "Rosem simd rot Gl\'fchwein ist das was jedem gef\'e4llt i habe mir 1 Pizza bestellt, komm bitte her umd leg dich drauf, denn auf mein Pizza fehlt 1 Lauch" \
+    "I treff mi heut mit X und Y. Halo i bims am absoluten Nullpunkt"\
+    "Wow ab jedzd d\'fcrfem wir in mathe 1 Taschenrechmer benutzem. Jedzd wird Mathe so einfach. Halo i bims dumm wie brod"\
+    "Wer leuft so sp\'e4t durch Nacht umd singt? Es ist dem Studemt vong Rausch fast blimd. Er h\'e4lt ihm sicher, h\'e4lt ihm warm dem D\'f6ner in seim Arm."\
+    "Rosem simd Rot, der Gl\'fchweim ist heif, zumge verbrannt, was f\'fcr 1 leif"\
+    "Lass die amderen sich ver\'e4ndern umd bleib so wie du bimst. Halo i bims die e funktiom beim ableitem"\
+]\
+\
+u:(Was ~Kannst_du alles) Alles, was mir meine Entwickler beigebracht haben. Von sprechen \'fcber tanzen bis hin zum Steuern von Ger\'e4ten im Smart Home\
+\
+u:(~Kannst_du tanzen) Na klar, soll ich es dir zeigen?\
+    u1:(~Ja) Ok, dann zeig ich es dir ^run(animations/Stand/Waiting/AirGuitar_1)\
+    u1:(~Nein) Schade, aber ich zeig es dir trotzdem, einfach, weil ich es kann und du nichts dagegen machen kannst ^run(animations/Stand/Waiting/AirGuitar_1) ^run(animations/Stand/Emotions/Positive/Laugh_2)\
+\
+u:(Gef\'e4llt) Gef\'e4llt mir auch\
+\
+u:(\{["Was ist" "Wie lautet"]\} das Jugendwort des Jahres) I bims nat\'fcrlich, wei\'dft du das etwa nicht?\
+    u1:(~Ja) Warum fragst du dann \'fcberhaupt, wenn du es sowieso wei\'dft\
+    u1:(~Nein) Man man man, das geht ja mal gar nicht. Du lebst wohl noch im achzehnten Jahrhundert\
+\
+u:(\{Was ist\} zwei plus zwei) Tu plus tu ist for, minus won, ist thrie, quick maths\
+\
+u:(Spiel * bims [Lied Song]) Ok, ich spiele den I Bims Song ^pCall(ALMemory.raiseEvent("PlayMusic", "x-file-cifs://192.168.0.10/Medialib/Audio/Pepper/Reece_MIKI-I_Bims.mp3"))\
+\
+u:(\'d6ffne Open Hab) Ok, ich lade Open Hab auf meinem Tablet ^pCall(ALMemory.raiseEvent("OpenUrl", "http://192.168.0.11:8080/"))\
+\
+u:(["Wie viel Grad hat es \{hier\}" "Welche Temperatur ["hat es" "haben wir"] \{hier\}"]) ^pCall(ALMemory.raiseEvent("GetValue", "NAInnenraumsensorBad_Temperature")) Aktuell haben wir hier ^break ^call(ALMemory.getData("NAInnenraumsensorBad_Temperature")) Grad\
+    c1:(_*) $1\
+\
+u:(Mach ein [Bild Selfie]) Ok, ich mach ein Bild von dir ^pCall(ALMemory.raiseEvent("TakePicture", "test"))\
+\
+\
+}

@@ -47,7 +47,7 @@ Diese Testfälle betreffen die Abänderung der concierge.conf-Datei. Nach einer 
 	\item Die komplette Tour durch berühren von Peppers Kopf erneut starten, ohne Neustart der Anwendung (im Headless-Mode)
 	\item concierge.conf-Datei weglassen
 	\item Sprachsteuerung von Pepper testen (Fragestunde am Ende einer Führung, vor der Abschlussshow)\\
-	Möglichst wie mit einem normalen Menschen sprechen. Fall
+	Möglichst wie mit einem normalen Menschen sprechen. Falls er nur wenig versteht, im src-Ordner die Question.top-Datei anschauen, was er alles versteht.
 	\item Reboot von Pepper über das Menü testen
 	\item Herunterfahren von Pepper über das Menü testen
 \end{enumerate}
