@@ -1,6 +1,0 @@
-topic: ~kitchen()
-language: ged
-
-#proposal:  ^pCall(ALMemory.raiseEvent("GetValue", "MieleFridgeFreezer_CurrentTemperatureFridge")) Nun sind wir im wichtigsten Raum der Wohnung angekommen, der Küche. Hier gibt es informatikerfreundlichen starken Kaffee, einen Kühlschrank und auch einen intelligenten Herd. Ich könnte jetzt natürlich den Herd einschalten, aber ich will ja nicht das ganze Labor abfackeln, deshalb teile ich euch nur die Temperatur des Kühlschranks mit, welche aktuell ^break ^call(ALMemory.getData("MieleFridgeFreezer_CurrentTemperatureFridge")) Grad beträgt.
-proposal: Nun sind wir im wichtigsten Raum der Wohnung angekommen, der Küche. Hier gibt es informatikerfreundlichen starken Kaffee, einen Kühlschrank und auch einen intelligenten Herd. Ich könnte jetzt natürlich den Herd einschalten, aber ich will ja nicht das ganze Labor abfackeln, deshalb teile ich euch nur die Temperatur des Kühlschranks mit, welche aktuell ^break ^call(ALMemory.getData("MieleFridgeFreezer_CurrentTemperatureFridge")) Grad beträgt.
-    c1:(_*) $1
