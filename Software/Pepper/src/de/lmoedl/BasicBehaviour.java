@@ -805,7 +805,7 @@ public class BasicBehaviour implements MQTTSubscriberCallbackInterface {
             mQTTConnectionManager.publishToItem(Constants.MQTTTopics.Shutter.MAIN_SHUTTER_2, "UP");
             mQTTConnectionManager.publishToItem(Constants.MQTTTopics.Shutter.MAIN_SHUTTER_3, "UP");
             
-            Thread.sleep(7000);
+            Thread.sleep(9000);
         } catch (InterruptedException | IOException | SonosControllerException ex) {
             log(Level.SEVERE, ex);
             Logger.getLogger(BasicBehaviour.class.getName()).log(Level.SEVERE, null, ex);
