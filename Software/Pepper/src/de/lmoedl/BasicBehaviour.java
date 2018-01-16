@@ -644,10 +644,14 @@ public class BasicBehaviour implements MQTTSubscriberCallbackInterface {
                 public void run() {*/
 
         try {
+            mQTTConnectionManager.publishToItem(Constants.MQTTTopics.Shutter.INDOOR_SHUTTER_1, "UP");
+            mQTTConnectionManager.publishToItem(Constants.MQTTTopics.Shutter.INDOOR_SHUTTER_2, "UP");
+            mQTTConnectionManager.publishToItem(Constants.MQTTTopics.Shutter.INDOOR_SHUTTER_3, "UP");
+            mQTTConnectionManager.publishToItem(Constants.MQTTTopics.Shutter.INDOOR_SHUTTER_4, "UP");
             mQTTConnectionManager.publishToItem(Constants.MQTTTopics.Shutter.MAIN_SHUTTER_1, "DOWN");
             mQTTConnectionManager.publishToItem(Constants.MQTTTopics.Shutter.MAIN_SHUTTER_2, "DOWN");
             mQTTConnectionManager.publishToItem(Constants.MQTTTopics.Shutter.MAIN_SHUTTER_3, "DOWN");
-            Thread.sleep(6000);
+            Thread.sleep(7000);
 
             sonos.setMute(false);
             sonos.setVolume(70);
