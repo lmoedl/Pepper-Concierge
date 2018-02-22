@@ -1,7 +1,7 @@
 # Concierge behaviour with humanoid robot Pepper at Hochschule Furtwangen University (HFU)
 Pepper is an humanoid robot 🤖 from [Aldebaran](https://www.ald.softbankrobotics.com/en). Pepper can be programmed using it's SDK. This repository contains all project files for the concierge behaviour guiding through the Smart Home Lab of Hochschule Furtwangen University.
 
-A first impression can be found [here](https://youtu.be/ARXpej7blrY)📹
+ [![Pepper Video](https://github.com/lmoedl/MOS-Projekt/blob/master/Documentation/Video.png)](https://youtu.be/ARXpej7blrY)
 
 ## Usage
 This Software is written in Java. It includes all the SDKs for Mac, Linux and Windows to interact with Pepper. The movements and other stuff like the MQTT-Broker etc. only fits the setup at HFU. You need to adjust these parameters to fit your needs.
